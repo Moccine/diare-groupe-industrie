@@ -1,0 +1,142 @@
+@use "../abstracts/variables" as *;
+@use "../abstracts/mixins" as *;
+
+.contact-form label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-size: 0.82rem;
+  letter-spacing: 0.04em;
+}
+
+.contact-form input,
+.contact-form textarea {
+  width: 100%;
+  margin-bottom: 1.1rem;
+  padding: 0.75rem 0;
+  border: 0;
+  border-bottom: 1px solid var(--dgi-line);
+  border-radius: 0;
+  background: transparent;
+  color: var(--dgi-ink);
+}
+
+.contact-form input:focus,
+.contact-form textarea:focus {
+  outline: none;
+  border-bottom-color: var(--dgi-primary);
+  box-shadow: 0 1px 0 var(--dgi-accent);
+}
+
+.contact-form textarea {
+  min-height: 9rem;
+  resize: vertical;
+}
+
+.form-grid {
+  display: grid;
+  gap: 0 1.5rem;
+
+  @include from($bp-md) {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+.contact-form .form-error-message,
+.form-banner--error {
+  color: #8a2a22;
+}
+
+.form-banner {
+  padding: 0.9rem 0;
+  margin-bottom: 1rem;
+}
+
+.form-banner--success {
+  color: var(--dgi-primary);
+}
+
+.consent {
+  display: flex;
+  align-items: flex-start;
+  gap: 0.7rem;
+  margin: 0.2rem 0 1.4rem;
+}
+
+.consent label {
+  margin: 0;
+  letter-spacing: 0;
+  line-height: 1.45;
+}
+
+.contact-form input[type="checkbox"] {
+  width: 1.05rem;
+  height: 1.05rem;
+  margin: 0.25rem 0 0;
+}
+
+.contact-form .form-field input,
+.contact-form .form-field textarea {
+  margin-bottom: 0.35rem;
+}
+
+.form-field {
+  margin-bottom: 0.85rem;
+}
+
+.form-label--icon {
+  display: flex;
+  align-items: center;
+  gap: 0.45rem;
+}
+
+.form-field__icon {
+  display: inline-grid;
+  place-items: center;
+  width: 1.4rem;
+  height: 1.4rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--dgi-accent) 40%, #fff);
+  color: var(--dgi-secondary);
+}
+
+.form-field__icon .icon {
+  width: 0.85rem;
+  height: 0.85rem;
+}
+
+.field-error {
+  margin: 0.15rem 0 0.45rem;
+  color: #8a2a22;
+  font-size: 0.82rem;
+}
+
+.form-field.is-invalid input,
+.form-field.is-invalid textarea,
+.consent.is-invalid input {
+  border-bottom-color: #8a2a22;
+}
+
+.contact-form.is-submitting .button {
+  cursor: progress;
+}
+
+.button-spinner {
+  width: 0.9rem;
+  height: 0.9rem;
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  border-top-color: currentColor;
+  border-radius: 50%;
+  animation: button-spin 0.7s linear infinite;
+}
+
+@keyframes button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button-spinner {
+    animation: none;
+  }
+}

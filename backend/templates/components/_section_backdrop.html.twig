@@ -1,0 +1,5 @@
+{% if section.backgroundImage %}
+    <div class="section-bg" aria-hidden="true">
+        <div class="section-bg__media" data-parallax="16" style="background-image: url('{{ section.backgroundImage.publicPath|e('css') }}')"></div>
+    </div>
+{% endif %}

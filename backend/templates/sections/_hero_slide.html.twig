@@ -1,0 +1,42 @@
+<div class="swiper-slide hero-slide hero-slide--{{ position|default('start') }}">
+    <div class="hero-slide__shade hero-slide__shade--{{ overlay|default('medium') }}" aria-hidden="true"></div>
+    <div class="hero-slide__layout">
+        <div class="hero-slide__copy">
+            {% if eyebrow %}
+                <p class="eyebrow hero-slide__eyebrow">{{ eyebrow }}</p>
+            {% endif %}
+            {% if is_first|default(false) %}
+                <h1 class="hero-slide__title">{{ title }}</h1>
+            {% else %}
+                <p class="hero-slide__title">{{ title }}</p>
+            {% endif %}
+            {% if description %}
+                <p class="hero-slide__lead">{{ description|nl2br }}</p>
+            {% endif %}
+            {% if (buttonLabel|default and buttonUrl|default) or (secondaryButtonLabel|default and secondaryButtonUrl|default) %}
+                <div class="section-actions hero-slide__actions">
+                    {% include 'components/_button.html.twig' with { label: buttonLabel|default(null), url: buttonUrl|default(null), modifier: 'button--light' } %}
+                    {% include 'components/_button.html.twig' with { label: secondaryButtonLabel|default(null), url: secondaryButtonUrl|default(null), modifier: 'button--ghost hero-slide__button--secondary' } %}
+                </div>
+            {% endif %}
+        </div>
+        {% if image %}
+            <figure class="hero-slide__visual" data-parallax="22">
+                <picture>
+                    {% if mobileImage %}
+                        <source media="(max-width: 767px)" srcset="{{ mobileImage.publicPath }}">
+                    {% endif %}
+                    <img
+                        src="{{ image.publicPath }}"
+                        alt="{{ image.alt }}"
+                        {% if image.width %}width="{{ image.width }}"{% endif %}
+                        {% if image.height %}height="{{ image.height }}"{% endif %}
+                        loading="{{ eager|default(false) ? 'eager' : 'lazy' }}"
+                        {% if eager|default(false) %}fetchpriority="high"{% endif %}
+                        decoding="async"
+                    >
+                </picture>
+            </figure>
+        {% endif %}
+    </div>
+</div>

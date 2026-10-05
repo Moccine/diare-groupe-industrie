@@ -1,0 +1,21 @@
+{% set kind = type|default('dgi') %}
+{% set is_product = variant|default('') == 'product' or kind == 'produit' %}
+{% set caption = is_product ? '' : label|default('DGI') %}
+{% set is_decorative = is_product ? true : decorative|default(true) %}
+<div class="media-placeholder media-placeholder--{{ kind }}{% if is_product %} media-placeholder--product{% endif %} {{ modifier|default('') }}"{% if is_decorative %} aria-hidden="true"{% endif %}>
+    {% if is_product %}
+        <img class="media-placeholder__logo" src="{{ asset('brand/logo.png') }}" alt="" data-logo-mark width="635" height="704">
+    {% else %}
+        <span class="media-placeholder__disc">
+            {% set logo = site_settings().logo %}
+            {% if logo %}
+                <img class="media-placeholder__logo" src="{{ logo.publicPath }}" alt="" data-logo-mark>
+            {% else %}
+                <span class="media-placeholder__monogram">DGI</span>
+            {% endif %}
+        </span>
+        {% if caption %}
+            <span class="media-placeholder__caption">{{ caption }}</span>
+        {% endif %}
+    {% endif %}
+</div>

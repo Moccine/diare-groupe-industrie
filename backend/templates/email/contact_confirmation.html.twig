@@ -1,0 +1,11 @@
+{% extends 'email/layout.html.twig' %}
+
+{% block title %}Nous avons bien reçu votre message{% endblock %}
+
+{% block body %}
+    <h1 style="margin:0 0 12px;color:#185424;font-size:22px;">Nous avons bien reçu votre message</h1>
+    <p>Bonjour {{ request.firstName }},</p>
+    <p>Nous avons bien reçu votre message concernant « {{ request.subject }} ».</p>
+    <p>Notre équipe reviendra vers vous dès que possible.</p>
+    <p style="margin-top:24px;">{{ settings.companyName }}</p>
+{% endblock %}

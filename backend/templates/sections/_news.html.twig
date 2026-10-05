@@ -1,0 +1,17 @@
+<section class="section news theme-{{ section.theme.value }}">
+    <div class="container">
+        <div class="section-heading-row">
+            {% include 'components/_section_title.html.twig' with { section: section, icon: 'actualite' } %}
+            {% include 'components/_button.html.twig' with { label: section.buttonLabel, url: section.buttonUrl, modifier: 'button--ghost' } %}
+        </div>
+        {% if latest_news|default([]) is not empty %}
+            <div class="news-list">
+                {% for article in latest_news %}
+                    {% include 'components/_news_card.html.twig' with { article: article } %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <p class="empty-note">Les actualités seront publiées depuis le back-office.</p>
+        {% endif %}
+    </div>
+</section>

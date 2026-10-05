@@ -1,0 +1,9 @@
+<section class="section section--depth statement statement--vision theme-{{ section.theme.value }}{{ section.backgroundImage ? ' has-section-bg has-section-bg--screen' : '' }}" data-reveal="fade-up">
+    {% include 'components/_section_backdrop.html.twig' with { section: section } %}
+    <div class="container statement__grid">
+        {% include 'components/_section_title.html.twig' with { section: section, icon: 'vision' } %}
+        {% if section.content %}
+            <div class="prose prose--large">{{ section.content|nl2br }}</div>
+        {% endif %}
+    </div>
+</section>

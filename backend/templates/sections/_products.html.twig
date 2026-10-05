@@ -1,0 +1,29 @@
+<section class="section products theme-{{ section.theme.value }}">
+    <div class="products__bleed">
+        <div class="products__intro" data-reveal="fade-up">
+            {% include 'components/_section_title.html.twig' with { section: section, icon: 'produit' } %}
+            <div class="section-actions">
+                {% include 'components/_button.html.twig' with { label: section.buttonLabel, url: section.buttonUrl, modifier: 'button--ghost' } %}
+            </div>
+            {% if featured_products|default([])|length > 1 %}
+                <div class="products-slider__nav">
+                    <button class="slider-nav slider-nav--on-light slider-nav--prev" type="button" data-products-prev aria-label="Produits précédents"></button>
+                    <button class="slider-nav slider-nav--on-light slider-nav--next" type="button" data-products-next aria-label="Produits suivants"></button>
+                </div>
+            {% endif %}
+        </div>
+        {% if featured_products|default([]) is not empty %}
+            <div class="swiper products-slider" data-products-slider{% if featured_products|default([])|length > 1 %} data-products-autoplay="5000"{% endif %}>
+                <div class="swiper-wrapper">
+                    {% for product in featured_products %}
+                        <div class="swiper-slide">
+                            {% include 'components/_product_card.html.twig' with { product: product, slider: true } %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% else %}
+            <p class="empty-note">Les produits mis en avant se gèrent depuis le back-office.</p>
+        {% endif %}
+    </div>
+</section>

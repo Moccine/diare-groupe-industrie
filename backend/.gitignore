@@ -1,0 +1,11 @@
+/.env.local
+/.env.local.php
+/.env.*.local
+/var/
+/vendor/
+/node_modules/
+/.phpunit.cache/
+/public/bundles/
+/public/build/
+/public/uploads/media/*
+!/public/uploads/media/.gitkeep

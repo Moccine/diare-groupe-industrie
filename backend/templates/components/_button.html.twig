@@ -1,0 +1,6 @@
+{% if url and label %}
+    <a class="button {{ modifier|default('') }}" href="{{ url }}"{% if url starts with 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>
+        <span class="button__label">{{ label }}</span>
+        <span class="button__arrow" aria-hidden="true"></span>
+    </a>
+{% endif %}

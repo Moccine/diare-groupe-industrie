@@ -1,0 +1,50 @@
+{% extends 'base.html.twig' %}
+{% from 'components/icons.html.twig' import icon %}
+
+{% block main %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: product.name,
+        lead: product.shortDescription,
+        tone: 'produit',
+        eyebrow: product.category ? product.category.name : null,
+        crumbs: [
+            { label: 'Nos produits', url: path('products') },
+            { label: product.name }
+        ],
+        media: product.mainImage,
+        placeholder: product.mainImage is null,
+        action_label: 'Nous contacter',
+        action_url: path('contact')
+    } %}
+    {% if product.description or product.gallery is not empty %}
+        <article class="section product-detail">
+            <div class="container">
+                {% if product.description %}
+                    <div class="prose product-detail__copy">{{ product.description|nl2br }}</div>
+                {% endif %}
+                {% if product.gallery is not empty %}
+                    <div class="gallery__grid">
+                        {% for media in product.gallery %}
+                            <figure>
+                                {% include 'components/_media.html.twig' with { media: media } %}
+                            </figure>
+                        {% endfor %}
+                    </div>
+                {% endif %}
+            </div>
+        </article>
+    {% endif %}
+    {% if related_products|default([]) is not empty %}
+        <section class="section catalog product-related">
+            <div class="container">
+                <p class="eyebrow">Catalogue</p>
+                <h2>Découvrir aussi</h2>
+                <div class="product-grid">
+                    {% for related in related_products %}
+                        {% include 'components/_product_card.html.twig' with { product: related } %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
+{% endblock %}

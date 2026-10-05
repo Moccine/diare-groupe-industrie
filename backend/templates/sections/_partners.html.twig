@@ -1,0 +1,22 @@
+{% if partners|default([]) is not empty %}
+    <section class="section partners theme-{{ section.theme.value }}">
+        <div class="container">
+            {% include 'components/_section_title.html.twig' with { section: section, icon: 'partenaire' } %}
+            <ul class="partner-list">
+                {% for partner in partners %}
+                    <li>
+                        {% if partner.url %}
+                            <a href="{{ partner.url }}" target="_blank" rel="noopener noreferrer">
+                        {% endif %}
+                        {% if partner.logo %}
+                            {% include 'components/_media.html.twig' with { media: partner.logo, class: 'partner-list__logo', placeholder_type: 'partenaire', placeholder_label: partner.name, placeholder_modifier: 'media-placeholder--compact' } %}
+                        {% else %}
+                            {% include 'components/_media_placeholder.html.twig' with { type: 'partenaire', label: partner.name, modifier: 'media-placeholder--compact', decorative: false } %}
+                        {% endif %}
+                        {% if partner.url %}</a>{% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        </div>
+    </section>
+{% endif %}

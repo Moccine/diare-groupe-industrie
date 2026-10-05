@@ -1,0 +1,22 @@
+{% from 'components/icons.html.twig' import icon %}
+<div class="catalog-results__inner">
+    {% if products is not empty %}
+        <p class="catalog-count">{{ products|length }} produit{% if products|length > 1 %}s{% endif %}</p>
+        <div class="product-grid">
+            {% for product in products %}
+                {% include 'components/_product_card.html.twig' with { product: product } %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <div class="catalog-empty">
+            <span class="catalog-empty__icon" aria-hidden="true">{{ icon('produit') }}</span>
+            {% if active_category %}
+                <p class="catalog-empty__title">Aucun produit dans cette catégorie</p>
+                <p>Découvrez les autres gammes DGI.</p>
+                <a class="button button--small" href="{{ path('products') }}" data-catalog-link>Voir tous les produits</a>
+            {% else %}
+                <p class="catalog-empty__title">Aucun produit publié pour le moment.</p>
+            {% endif %}
+        </div>
+    {% endif %}
+</div>

@@ -1,0 +1,79 @@
+{% use 'form_div_layout.html.twig' %}
+
+{% block form_row %}
+    {% set row_class = (row_attr.class|default('') ~ (valid ? '' : ' is-invalid'))|trim %}
+    {% set row_attr = row_attr|merge({ class: (row_class ~ ' form-field')|trim }) %}
+    <div{% with { attr: row_attr } %}{{ block('attributes') }}{% endwith %}>
+        {{ form_label(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block form_label %}
+    {% if label is not same as(false) %}
+        {% set field_icons = {
+            email: 'email',
+            phone: 'telephone',
+            company: 'emploi',
+            message: 'actualite'
+        } %}
+        {% set icon_name = field_icons[name]|default('') %}
+        {% set label_attr = label_attr|merge({
+            for: id,
+            class: (label_attr.class|default('') ~ (icon_name ? ' form-label--icon' : ''))|trim
+        }) %}
+        <label{% with { attr: label_attr } %}{{ block('attributes') }}{% endwith %}>
+            {% if icon_name %}
+                <span class="form-field__icon" aria-hidden="true">
+                    <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
+                        {% if icon_name == 'email' %}
+                            <rect x="3.5" y="5.5" width="17" height="13" rx="1.5"/>
+                            <path d="m4.5 7 7.5 6L19.5 7"/>
+                        {% elseif icon_name == 'telephone' %}
+                            <path d="M7.2 4.8h2.2l1.2 3-1.5 1a12.5 12.5 0 0 0 5.1 5.1l1-1.5 3 1.2v2.2a1.5 1.5 0 0 1-1.6 1.5A14.5 14.5 0 0 1 5.7 6.4a1.5 1.5 0 0 1 1.5-1.6z"/>
+                        {% elseif icon_name == 'emploi' %}
+                            <rect x="3" y="7" width="18" height="12" rx="1.5"/>
+                            <path d="M8 7V5.5A1.5 1.5 0 0 1 9.5 4h5A1.5 1.5 0 0 1 16 5.5V7"/>
+                            <path d="M3 12h18"/>
+                        {% else %}
+                            <path d="M5 4.5h11.5A1.5 1.5 0 0 1 18 6v13.5H6.5A1.5 1.5 0 0 1 5 18V4.5z"/>
+                            <path d="M8 8.5h7M8 12h7M8 15.5h4"/>
+                        {% endif %}
+                    </svg>
+                </span>
+            {% endif %}
+            {{ label|trans({}, translation_domain) }}
+        </label>
+    {% endif %}
+{% endblock %}
+
+{% block form_errors %}
+    {% if errors|length > 0 %}
+        <p class="field-error" id="{{ id }}-error" role="alert">
+            {%- for error in errors -%}
+                {{ error.message }}{% if not loop.last %} {% endif %}
+            {%- endfor -%}
+        </p>
+    {% endif %}
+{% endblock %}
+
+{% block form_widget_simple %}
+    {% if errors|length > 0 %}
+        {% set attr = attr|merge({
+            'aria-invalid': 'true',
+            'aria-describedby': ((attr['aria-describedby']|default('')) ~ ' ' ~ id ~ '-error')|trim
+        }) %}
+    {% endif %}
+    {{ parent() }}
+{% endblock %}
+
+{% block checkbox_widget %}
+    {% if errors|length > 0 %}
+        {% set attr = attr|merge({
+            'aria-invalid': 'true',
+            'aria-describedby': id ~ '-error'
+        }) %}
+    {% endif %}
+    {{ parent() }}
+{% endblock %}

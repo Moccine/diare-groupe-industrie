@@ -1,0 +1,51 @@
+{% set slides = section.activeSlides %}
+{% set slide_count = slides|length > 0 ? slides|length : 1 %}
+<section class="hero-slider{% if slide_count < 2 %} hero-slider--single{% endif %}" data-hero-slider{% if slide_count > 1 %} data-hero-autoplay="6000"{% endif %} aria-roledescription="carousel" aria-label="{{ section.title|default('Accueil') }}">
+    <div class="swiper hero-slider__swiper">
+        <div class="swiper-wrapper">
+            {% if slides is not empty %}
+                {% for slide in slides %}
+                    {% include 'sections/_hero_slide.html.twig' with {
+                        eyebrow: slide.eyebrow,
+                        title: slide.title,
+                        description: slide.description,
+                        image: slide.image,
+                        mobileImage: slide.mobileImage,
+                        buttonLabel: slide.buttonLabel,
+                        buttonUrl: slide.buttonUrl,
+                        secondaryButtonLabel: slide.secondaryButtonLabel,
+                        secondaryButtonUrl: slide.secondaryButtonUrl,
+                        position: slide.contentPosition.value,
+                        overlay: slide.overlay.value,
+                        is_first: loop.first,
+                        eager: loop.first
+                    } %}
+                {% endfor %}
+            {% else %}
+                {% include 'sections/_hero_slide.html.twig' with {
+                    eyebrow: section.eyebrow,
+                    title: section.title,
+                    description: section.content,
+                    image: section.image,
+                    mobileImage: null,
+                    buttonLabel: section.buttonLabel,
+                    buttonUrl: section.buttonUrl,
+                    secondaryButtonLabel: section.secondaryButtonLabel,
+                    secondaryButtonUrl: section.secondaryButtonUrl,
+                    position: 'start',
+                    overlay: 'medium',
+                    is_first: true,
+                    eager: true
+                } %}
+            {% endif %}
+        </div>
+    </div>
+    <div class="hero-slider__controls">
+        <div class="hero-slider__pagination"></div>
+        <div class="hero-slider__nav">
+            <button class="slider-nav slider-nav--prev" type="button" data-hero-prev aria-label="Diapositive précédente"></button>
+            <button class="slider-nav slider-nav--next" type="button" data-hero-next aria-label="Diapositive suivante"></button>
+        </div>
+    </div>
+    <span class="hero-slider__orb" aria-hidden="true"></span>
+</section>

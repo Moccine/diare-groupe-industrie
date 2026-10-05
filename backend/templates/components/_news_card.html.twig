@@ -1,0 +1,19 @@
+<article class="news-item">
+    <a href="{{ path('news_show', { slug: article.slug }) }}">
+        <div class="news-item__media">
+            {% if article.image %}
+                {% include 'components/_media.html.twig' with { media: article.image, class: 'news-item__image', placeholder_type: 'actualite', placeholder_label: 'Actualité' } %}
+            {% else %}
+                {% include 'components/_media_placeholder.html.twig' with { type: 'actualite', label: 'Actualité', decorative: true } %}
+            {% endif %}
+        </div>
+        <div class="news-item__body">
+            <p class="eyebrow">{{ article.publishedAt|date('d/m/Y') }}</p>
+            <h3>{{ article.title }}</h3>
+            {% if article.excerpt %}
+                <p>{{ article.excerpt }}</p>
+            {% endif %}
+            <span class="news-item__more">Lire l’actualité</span>
+        </div>
+    </a>
+</article>

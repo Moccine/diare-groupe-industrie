@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Diaré Groupe Industrie{% endblock %}</title>
+</head>
+<body style="margin:0;padding:0;background:#f7f8f4;font-family:Arial,sans-serif;color:#142018;">
+    <table role="presentation" width="100%" cellspacing="0" cellpadding="0" style="background:#f7f8f4;padding:24px 12px;">
+        <tr>
+            <td align="center">
+                <table role="presentation" width="600" cellspacing="0" cellpadding="0" style="max-width:600px;background:#ffffff;border-radius:12px;overflow:hidden;">
+                    <tr>
+                        <td style="background:#0E3A18;color:#ffffff;padding:22px 28px;">
+                            <strong style="font-size:18px;">{{ settings.companyName|default('Diaré Groupe Industrie') }}</strong>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="height:4px;background:#90B43C;font-size:0;line-height:0;">&nbsp;</td>
+                    </tr>
+                    <tr>
+                        <td style="padding:28px;">
+                            {% block body %}{% endblock %}
+                        </td>
+                    </tr>
+                    <tr>
+                        <td style="padding:16px 28px 22px;color:#4e5c54;font-size:12px;">
+                            Message envoyé automatiquement par le site {{ settings.companyName|default('Diaré Groupe Industrie') }}.
+                        </td>
+                    </tr>
+                </table>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>

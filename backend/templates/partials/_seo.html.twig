@@ -1,0 +1,27 @@
+{% set settings = site_settings() %}
+{% set seo_title = seo is defined and seo.title ? seo.title : (settings.metaTitle ?: settings.companyName) %}
+{% set seo_description = seo is defined and seo.description ? seo.description : (settings.metaDescription ?: settings.companyName) %}
+{% set canonical = seo is defined ? absolute_url(seo.canonicalPath) : app.request.uri %}
+{% set share_image = seo is defined ? seo.imagePath : null %}
+<title>{{ seo_title }}</title>
+<meta name="description" content="{{ seo_description }}">
+<link rel="canonical" href="{{ canonical }}">
+<meta property="og:locale" content="fr_FR">
+<meta property="og:site_name" content="{{ settings.companyName }}">
+<meta property="og:title" content="{{ seo_title }}">
+<meta property="og:description" content="{{ seo_description }}">
+<meta property="og:url" content="{{ canonical }}">
+<meta property="og:type" content="{{ seo.type|default('website') }}">
+{% if share_image %}
+    <meta property="og:image" content="{{ absolute_url(share_image) }}">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:image" content="{{ absolute_url(share_image) }}">
+{% else %}
+    <meta name="twitter:card" content="summary">
+{% endif %}
+<meta name="twitter:title" content="{{ seo_title }}">
+<meta name="twitter:description" content="{{ seo_description }}">
+<script type="application/ld+json">{{ organization_json()|raw }}</script>
+{% if seo is defined and seo.jsonLd %}
+    <script type="application/ld+json">{{ seo.jsonLd|raw }}</script>
+{% endif %}

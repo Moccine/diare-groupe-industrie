@@ -1,0 +1,115 @@
+{% extends 'base.html.twig' %}
+{% from 'components/icons.html.twig' import icon %}
+
+{% block main %}
+    {% set settings = site_settings() %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: page.title|default('Contact'),
+        lead: 'Une question produit, une demande de distribution ou une candidature.',
+        tone: 'contact',
+        crumbs: [{ label: 'Contact' }]
+    } %}
+    <section class="section contact">
+        <div class="container">
+            <div class="contact__grid">
+                <div>
+                    <p class="eyebrow">{{ settings.companyName }}</p>
+                    <h2>Nos informations</h2>
+                    <ul class="contact-facts">
+                        {% if settings.address %}
+                            <li>
+                                <span class="icon-badge" aria-hidden="true">{{ icon('adresse') }}</span>
+                                <span>
+                                    <span class="contact-facts__label">Adresse</span>
+                                    <strong>{{ settings.address }}</strong>
+                                </span>
+                            </li>
+                        {% endif %}
+                        {% if settings.phoneHref %}
+                            <li>
+                                <span class="icon-badge" aria-hidden="true">{{ icon('telephone') }}</span>
+                                <span>
+                                    <span class="contact-facts__label">Téléphone</span>
+                                    <strong><a href="{{ settings.phoneHref }}">{{ settings.phone }}</a></strong>
+                                </span>
+                            </li>
+                        {% endif %}
+                        <li>
+                            <span class="icon-badge" aria-hidden="true">{{ icon('email') }}</span>
+                            <span>
+                                <span class="contact-facts__label">Email</span>
+                                <strong>
+                                    {% if settings.hasPublicEmail %}
+                                        <a href="mailto:{{ settings.email }}">{{ settings.email }}</a>
+                                    {% else %}
+                                        À renseigner depuis le back-office
+                                    {% endif %}
+                                </strong>
+                            </span>
+                        </li>
+                    </ul>
+                </div>
+                <div>
+                    {% form_theme form 'form/contact_layout.html.twig' %}
+                    {% for message in app.flashes('success') %}
+                        <p class="form-banner form-banner--success" role="status">{{ message }}</p>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <p class="form-banner form-banner--error" role="alert">{{ message }}</p>
+                    {% endfor %}
+                    {{ form_start(form, { attr: {
+                        class: 'contact-form',
+                        novalidate: 'novalidate',
+                        'data-validate': '1',
+                        'data-form-submit-lock': '1',
+                        'data-recaptcha-site-key': recaptcha_site_key|default('')
+                    } }) }}
+                        <div class="form-grid">
+                            {{ form_row(form.lastName) }}
+                            {{ form_row(form.firstName) }}
+                            {{ form_row(form.company) }}
+                            {{ form_row(form.email) }}
+                            {{ form_row(form.phone) }}
+                            {{ form_row(form.subject) }}
+                        </div>
+                        {{ form_row(form.message) }}
+                        <div class="consent">
+                            {{ form_widget(form.consent) }}
+                            {{ form_label(form.consent) }}
+                            {{ form_errors(form.consent) }}
+                        </div>
+                        {{ form_row(form.website) }}
+                        <button class="button" type="submit">Envoyer le message</button>
+                    {{ form_end(form) }}
+                </div>
+            </div>
+            {% if settings.hasMap and settings.mapEmbedUrl %}
+                <div class="contact-map">
+                    <iframe
+                        class="contact-map__frame"
+                        title="Carte OpenStreetMap : {{ settings.mapDisplayLabel }}"
+                        src="{{ settings.mapEmbedUrl }}"
+                        loading="lazy"
+                        referrerpolicy="no-referrer-when-downgrade"
+                    ></iframe>
+                    <div class="contact-map__card">
+                        <p class="contact-map__name">{{ settings.mapDisplayLabel }}</p>
+                        {% if settings.address %}
+                            <p>{{ settings.address }}</p>
+                        {% endif %}
+                        {% if settings.mapDirectionsUrl %}
+                            <a class="button button--small" href="{{ settings.mapDirectionsUrl }}" target="_blank" rel="noopener noreferrer">Itinéraire</a>
+                        {% endif %}
+                    </div>
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if recaptcha_site_key|default('') %}
+        <script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key|e('url') }}" async defer></script>
+    {% endif %}
+{% endblock %}

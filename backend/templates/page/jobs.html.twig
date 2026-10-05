@@ -1,0 +1,57 @@
+{% extends 'base.html.twig' %}
+{% from 'components/icons.html.twig' import icon %}
+
+{% block main %}
+    {% set settings = site_settings() %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: page.title|default('Rejoignez DGI'),
+        lead: 'Production, qualité, distribution et logistique : les postes ouverts à Dubréka.',
+        tone: 'nous-rejoindre',
+        crumbs: [{ label: 'Nous rejoindre' }]
+    } %}
+    {% for block in sections %}
+        {% include block.template with { section: block.section } %}
+    {% endfor %}
+    <section class="section jobs">
+        <div class="container">
+            {% if jobs is not empty %}
+                <div class="job-list">
+                    {% for job in jobs %}
+                        <article class="job-card">
+                            <div>
+                                <h2><a href="{{ path('job_show', { slug: job.slug }) }}">{{ job.title }}</a></h2>
+                                <ul class="job-card__meta">
+                                    {% if job.location %}
+                                        <li><span class="icon-badge" aria-hidden="true">{{ icon('adresse') }}</span>{{ job.location }}</li>
+                                    {% endif %}
+                                    <li><span class="icon-badge" aria-hidden="true">{{ icon('emploi') }}</span>{{ job.contractType.label }}</li>
+                                    {% if job.department %}
+                                        <li><span class="icon-badge" aria-hidden="true">{{ icon('industrie') }}</span>{{ job.department }}</li>
+                                    {% endif %}
+                                </ul>
+                                {% if job.shortDescription %}
+                                    <p>{{ job.shortDescription }}</p>
+                                {% endif %}
+                            </div>
+                            <a class="job-card__more" href="{{ path('job_show', { slug: job.slug }) }}">
+                                Voir l’offre
+                                {{ icon('fleche') }}
+                            </a>
+                        </article>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <div class="job-empty">
+                    <span class="icon-badge icon-badge--lg" aria-hidden="true">{{ icon('emploi', 'icon--lg') }}</span>
+                    <h2>Aucune offre ouverte actuellement</h2>
+                    <p>Nous sommes toujours intéressés par les bons profils. Vous pouvez nous transmettre une candidature spontanée.</p>
+                    {% if settings.hasPublicEmail %}
+                        <a class="button" href="mailto:{{ settings.email }}?subject={{ 'Candidature spontanée'|url_encode }}">Candidature spontanée</a>
+                    {% else %}
+                        <a class="button" href="{{ path('contact') }}">Nous écrire</a>
+                    {% endif %}
+                </div>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

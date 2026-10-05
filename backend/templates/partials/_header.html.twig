@@ -1,0 +1,29 @@
+{% set settings = site_settings() %}
+<header class="site-header" data-header data-overlay="{{ header_overlay|default(false) ? 'true' : 'false' }}">
+    <div class="container site-header__bar">
+        <a class="brand" href="{{ path('home') }}" aria-label="{{ settings.companyName }}, accueil">
+            {% if settings.logo %}
+                {% include 'components/_media.html.twig' with { media: settings.logo, loading: 'eager', class: 'brand__logo' } %}
+            {% else %}
+                <span class="brand__name">{{ settings.companyName }}</span>
+            {% endif %}
+        </a>
+        <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navigation" data-nav-toggle>
+            <span class="nav-toggle__lines" aria-hidden="true"></span>
+            <span class="visually-hidden">Ouvrir le menu</span>
+        </button>
+        <nav class="site-nav" id="navigation" data-nav aria-label="Navigation principale">
+            <ul class="site-nav__list">
+                {% for item in menu_pages() %}
+                    {% set current = app.request.pathInfo == item.publicPath %}
+                    <li>
+                        <a href="{{ item.publicPath }}" {% if current %}aria-current="page"{% endif %}>{{ item.menuLabel }}</a>
+                    </li>
+                {% endfor %}
+            </ul>
+            {% if settings.headerCtaLabel and settings.headerCtaUrl %}
+                <a class="button button--small button--header" href="{{ settings.headerCtaUrl }}">{{ settings.headerCtaLabel }}</a>
+            {% endif %}
+        </nav>
+    </div>
+</header>

@@ -1,0 +1,17 @@
+{% from 'components/icons.html.twig' import icon as dgi_icon %}
+<header class="section-heading"{% if reveal|default(true) %} data-reveal="fade-up"{% endif %}>
+    {% if icon|default(null) or section.eyebrow %}
+        <p class="eyebrow">
+            {% if icon|default(null) %}
+                <span class="icon-badge" aria-hidden="true">{{ dgi_icon(icon) }}</span>
+            {% endif %}
+            {% if section.eyebrow %}{{ section.eyebrow }}{% endif %}
+        </p>
+    {% endif %}
+    {% if section.title %}
+        <h2>{{ section.title }}</h2>
+    {% endif %}
+    {% if section.subtitle %}
+        <p class="section-heading__subtitle">{{ section.subtitle }}</p>
+    {% endif %}
+</header>

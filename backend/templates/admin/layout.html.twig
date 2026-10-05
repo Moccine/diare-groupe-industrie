@@ -1,0 +1,10 @@
+{% extends '@EasyAdmin/layout.html.twig' %}
+
+{% block content_help %}
+    {% set help = admin_page_help() %}
+    {% if ea().crud and help %}
+        {% include 'admin/help/_button.html.twig' with { help: help } only %}
+    {% elseif ea().crud %}
+        {{ parent() }}
+    {% endif %}
+{% endblock %}

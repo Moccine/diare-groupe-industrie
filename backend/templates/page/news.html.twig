@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: page.title|default('Actualités'),
+        lead: 'Lancements, distribution et vie industrielle du groupe.',
+        tone: 'actualites',
+        crumbs: [{ label: page.title|default('Actualités') }]
+    } %}
+    {% for block in sections %}
+        {% include block.template with { section: block.section } %}
+    {% endfor %}
+    <section class="section section--listing">
+        <div class="container">
+            {% if news_list is not empty %}
+                <div class="news-list">
+                    {% for article in news_list %}
+                        {% include 'components/_news_card.html.twig' with { article: article } %}
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-note">Aucune actualité n’est publiée pour le moment.</p>
+            {% endif %}
+        </div>
+    </section>
+{% endblock %}

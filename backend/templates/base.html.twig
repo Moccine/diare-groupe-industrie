@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="{{ site_settings().primaryColor }}">
+    {% include 'partials/_seo.html.twig' %}
+    {% block stylesheets %}
+        {{ encore_entry_link_tags('site') }}
+    {% endblock %}
+    {% include 'partials/_theme.html.twig' %}
+    {% set favicon = site_settings().favicon %}
+    {% if favicon %}
+        <link rel="icon" href="{{ favicon.publicPath }}" type="{{ favicon.mimeType }}">
+    {% endif %}
+</head>
+<body class="{{ header_overlay|default(false) ? 'has-overlay-header' : '' }}">
+    {% set loader_settings = site_settings() %}
+    <div class="site-loader" data-site-loader role="status" aria-live="polite">
+        <p class="visually-hidden">Chargement de la page</p>
+        {% if loader_settings.logo %}
+            <img class="site-loader__logo" src="{{ loader_settings.logo.publicPath }}" alt="" data-logo-mark width="120" height="120">
+        {% else %}
+            <span class="site-loader__word">DGI</span>
+        {% endif %}
+        <span class="site-loader__bar" aria-hidden="true"></span>
+    </div>
+    <noscript><style>.site-loader{display:none!important}</style></noscript>
+    <a class="skip-link" href="#contenu">Aller au contenu</a>
+    {% include 'partials/_header.html.twig' %}
+    <main id="contenu">
+        {% block main %}{% endblock %}
+    </main>
+    {% include 'partials/_footer.html.twig' %}
+    {% block javascripts %}
+        {{ encore_entry_script_tags('site') }}
+    {% endblock %}
+</body>
+</html>

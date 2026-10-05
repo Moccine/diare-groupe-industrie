@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+{% from 'components/icons.html.twig' import icon %}
+
+{% block main %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: offer.title,
+        lead: offer.shortDescription,
+        tone: 'nous-rejoindre',
+        crumbs: [
+            { label: 'Nous rejoindre', url: path('jobs') },
+            { label: offer.title }
+        ]
+    } %}
+    <article class="section job-detail">
+        <div class="container prose-block">
+            <ul class="job-card__meta">
+                {% if offer.location %}
+                    <li><span class="icon-badge" aria-hidden="true">{{ icon('adresse') }}</span>{{ offer.location }}</li>
+                {% endif %}
+                <li><span class="icon-badge" aria-hidden="true">{{ icon('emploi') }}</span>{{ offer.contractType.label }}</li>
+                {% if offer.department %}
+                    <li><span class="icon-badge" aria-hidden="true">{{ icon('industrie') }}</span>{{ offer.department }}</li>
+                {% endif %}
+                {% if offer.experienceLevel %}
+                    <li>{{ offer.experienceLevel }}</li>
+                {% endif %}
+                {% if offer.salaryLabel %}
+                    <li>{{ offer.salaryLabel }}</li>
+                {% endif %}
+            </ul>
+            {% if offer.description %}
+                <div class="prose">{{ offer.description|nl2br }}</div>
+            {% endif %}
+            {% if offer.requirements %}
+                <h2>Profil recherché</h2>
+                <div class="prose">{{ offer.requirements|nl2br }}</div>
+            {% endif %}
+            <div class="section-actions">
+                {% if offer.applicationHref %}
+                    <a class="button" href="{{ offer.applicationHref }}"{% if offer.applicationUrl|default('') starts with 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>Postuler</a>
+                {% else %}
+                    <a class="button" href="{{ path('contact') }}">Candidater</a>
+                {% endif %}
+            </div>
+        </div>
+    </article>
+{% endblock %}

@@ -1,0 +1,186 @@
+{% extends '@EasyAdmin/page/content.html.twig' %}
+
+{% block main %}
+    <section class="dgi-dashboard">
+        <header class="dgi-home">
+            {% set page_help = admin_page_help() %}
+            <p class="dgi-kicker">Bonjour{% if app.user %} {{ app.user.fullName }}{% endif %}</p>
+            <h1>Que souhaitez-vous faire aujourd’hui ?{% if page_help %}{% include 'admin/help/_button.html.twig' with { help: page_help } only %}{% endif %}</h1>
+            <p>Gérez ici le contenu et les informations visibles sur le site Diaré Groupe Industrie.</p>
+        </header>
+
+        <div class="dgi-action-grid">
+            <a class="dgi-action-card" href="{{ links.pages }}">
+                <span class="dgi-action-card__icon" aria-hidden="true"><i class="fa fa-file-lines"></i></span>
+                <span class="dgi-action-card__title">Modifier le site</span>
+                <span class="dgi-action-card__text">Gérer les pages et les contenus affichés sur le site.</span>
+            </a>
+            <a class="dgi-action-card" href="{{ links.newProduct }}">
+                <span class="dgi-action-card__icon" aria-hidden="true"><i class="fa fa-box"></i></span>
+                <span class="dgi-action-card__title">Ajouter un produit</span>
+                <span class="dgi-action-card__text">Ajouter une nouvelle référence au catalogue.</span>
+            </a>
+            <a class="dgi-action-card" href="{{ links.newNews }}">
+                <span class="dgi-action-card__icon" aria-hidden="true"><i class="fa fa-newspaper"></i></span>
+                <span class="dgi-action-card__title">Publier une actualité</span>
+                <span class="dgi-action-card__text">Ajouter une information dans la rubrique Actualités.</span>
+            </a>
+            <a class="dgi-action-card" href="{{ links.newJob }}">
+                <span class="dgi-action-card__icon" aria-hidden="true"><i class="fa fa-briefcase"></i></span>
+                <span class="dgi-action-card__title">Ajouter une offre d’emploi</span>
+                <span class="dgi-action-card__text">Publier un nouveau poste.</span>
+            </a>
+            <a class="dgi-action-card" href="{{ links.newMedia }}">
+                <span class="dgi-action-card__icon" aria-hidden="true"><i class="fa fa-image"></i></span>
+                <span class="dgi-action-card__title">Ajouter une image</span>
+                <span class="dgi-action-card__text">Ajouter une image à la bibliothèque pour pouvoir la réutiliser sur le site.</span>
+            </a>
+            <a class="dgi-action-card" href="{{ links.messages }}">
+                <span class="dgi-action-card__icon" aria-hidden="true"><i class="fa fa-envelope"></i></span>
+                <span class="dgi-action-card__title">Consulter les messages</span>
+                <span class="dgi-action-card__text">Voir les demandes envoyées depuis le formulaire de contact.</span>
+                {% if overview.unreadMessages > 0 %}
+                    <span class="dgi-action-card__count">{{ overview.unreadMessages }} non lu{{ overview.unreadMessages > 1 ? 's' : '' }}</span>
+                {% endif %}
+            </a>
+            <a class="dgi-action-card" href="{{ links.site }}" target="_blank" rel="noopener noreferrer">
+                <span class="dgi-action-card__icon" aria-hidden="true"><i class="fa fa-arrow-up-right-from-square"></i></span>
+                <span class="dgi-action-card__title">Voir le site</span>
+                <span class="dgi-action-card__text">Ouvrir le site public dans un nouvel onglet.</span>
+            </a>
+        </div>
+
+        <section class="dgi-panel">
+            <h2>En un coup d’œil</h2>
+            <div class="dgi-kpis">
+                <a class="dgi-kpi" href="{{ links.messages }}">
+                    <strong>{{ overview.unreadMessages }}</strong>
+                    <span>Messages non lus</span>
+                </a>
+                <a class="dgi-kpi" href="{{ links.messages }}">
+                    <strong>{{ overview.totalMessages }}</strong>
+                    <span>Messages reçus</span>
+                </a>
+                <a class="dgi-kpi" href="{{ links.products }}">
+                    <strong>{{ overview.publishedProducts }}</strong>
+                    <span>Produits publiés</span>
+                </a>
+                <a class="dgi-kpi" href="{{ links.news }}">
+                    <strong>{{ overview.publishedNews }}</strong>
+                    <span>Actualités publiées</span>
+                </a>
+                <a class="dgi-kpi" href="{{ links.jobs }}">
+                    <strong>{{ overview.activeJobOffers }}</strong>
+                    <span>Offres d’emploi actives</span>
+                </a>
+                <a class="dgi-kpi" href="{{ links.partners }}">
+                    <strong>{{ overview.publishedPartners }}</strong>
+                    <span>Partenaires publiés</span>
+                </a>
+                <a class="dgi-kpi" href="{{ links.pages }}">
+                    <strong>{{ overview.publishedPages }}</strong>
+                    <span>Pages publiées</span>
+                </a>
+            </div>
+        </section>
+
+        <div class="dgi-dashboard__columns">
+            <section class="dgi-panel">
+                <h2>À vérifier</h2>
+                {% if overview.gaps is empty %}
+                    <p>Rien à signaler pour les contrôles disponibles.</p>
+                {% else %}
+                    <ul class="dgi-gaps">
+                        {% for gap in overview.gaps %}
+                            <li class="dgi-gap dgi-gap--{{ gap.type }}">
+                                <p>{{ gap.label }}</p>
+                                <a href="{{ gap.url }}">{{ gap.action }}</a>
+                            </li>
+                        {% endfor %}
+                    </ul>
+                {% endif %}
+            </section>
+
+            <section class="dgi-panel">
+                <h2>Configuration du site</h2>
+                <dl class="dgi-status">
+                    <div>
+                        <dt>Email de contact</dt>
+                        <dd>
+                            {% if overview.emailConfigured %}
+                                <span class="dgi-check dgi-check--ok">Configuré</span>
+                            {% else %}
+                                <a class="dgi-check dgi-check--todo" href="{{ overview.settingsUrl }}">À compléter</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Carte</dt>
+                        <dd>
+                            {% if overview.mapConfigured %}
+                                <span class="dgi-check dgi-check--ok">Configuré</span>
+                            {% else %}
+                                <a class="dgi-check dgi-check--todo" href="{{ overview.settingsUrl }}">À compléter</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Logo</dt>
+                        <dd>
+                            {% if overview.logoConfigured %}
+                                <span class="dgi-check dgi-check--ok">Configuré</span>
+                            {% else %}
+                                <a class="dgi-check dgi-check--todo" href="{{ overview.settingsUrl }}">À compléter</a>
+                            {% endif %}
+                        </dd>
+                    </div>
+                    <div>
+                        <dt>Pages publiées</dt>
+                        <dd><a href="{{ links.pages }}">{{ overview.publishedPages }}</a></dd>
+                    </div>
+                </dl>
+            </section>
+        </div>
+
+        <section class="dgi-panel">
+            <div class="dgi-panel__head">
+                <h2>Derniers messages</h2>
+                <a href="{{ links.messages }}">Voir tous les messages{% if overview.totalMessages > 0 %} ({{ overview.totalMessages }}){% endif %}</a>
+            </div>
+            {% if overview.recentMessages is empty %}
+                <p>Aucun message pour le moment.</p>
+            {% else %}
+                <div class="dgi-table-wrap">
+                    <table class="dgi-table">
+                        <thead>
+                            <tr>
+                                <th>Nom</th>
+                                <th>Objet</th>
+                                <th>Date</th>
+                                <th>Statut</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for message in overview.recentMessages %}
+                                <tr class="{{ message.read ? '' : 'is-unread' }}">
+                                    <td>
+                                        <a href="{{ ea_url().unsetAll().setController('App\\Controller\\Admin\\Crud\\ContactRequestCrudController').setAction('detail').setEntityId(message.id) }}">{{ message.fullName }}</a>
+                                    </td>
+                                    <td>{{ message.subject }}</td>
+                                    <td>{{ message.createdAt|date('d/m/Y H:i') }}</td>
+                                    <td>
+                                        {% if message.read %}
+                                            <span class="dgi-badge dgi-badge--muted">Lu</span>
+                                        {% else %}
+                                            <span class="dgi-badge">Non lu</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            {% endif %}
+        </section>
+    </section>
+{% endblock %}

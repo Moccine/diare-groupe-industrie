@@ -1,0 +1,8 @@
+{% set settings = site_settings() %}
+<style>
+    :root {
+        --dgi-primary: {{ settings.primaryColor }};
+        --dgi-secondary: {{ settings.secondaryColor }};
+        --dgi-accent: {{ settings.accentColor }};
+    }
+</style>

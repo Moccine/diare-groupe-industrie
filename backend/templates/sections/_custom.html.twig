@@ -1,0 +1,18 @@
+<section class="section custom theme-{{ section.theme.value }}">
+    <div class="container prose-block">
+        {% include 'components/_section_title.html.twig' with { section: section } %}
+        {% if section.content %}
+            <div class="prose">{{ section.content|nl2br }}</div>
+        {% endif %}
+        {% if section.items is not empty %}
+            <div class="value-grid">
+                {% for item in section.items %}
+                    <article>
+                        <h3>{{ item.title }}</h3>
+                        {% if item.text %}<p>{{ item.text|nl2br }}</p>{% endif %}
+                    </article>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>

@@ -1,0 +1,138 @@
+.swal2-popup.dgi-help-popup {
+  border-radius: 0.5rem;
+  padding: 1.35rem 1.2rem 1.15rem;
+}
+
+.swal2-popup .dgi-help-title {
+  color: #0e3a18;
+  font-size: 1.35rem;
+  font-weight: 700;
+  padding-inline: 2.5rem;
+}
+
+.swal2-popup .dgi-help-body {
+  max-height: min(60vh, 32rem);
+  overflow-y: auto;
+  text-align: start;
+  color: #3d4a42;
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+}
+
+.swal2-popup .dgi-help-block {
+  margin: 0 0 0.95rem;
+}
+
+.swal2-popup .dgi-help-block:last-child {
+  margin-bottom: 0;
+}
+
+.swal2-popup .dgi-help-body h3 {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  margin: 0 0 0.35rem;
+  color: #163222;
+  font-size: 1rem;
+  font-weight: 600;
+  text-align: start;
+}
+
+.swal2-popup .dgi-help-ico {
+  display: inline-flex;
+  flex: 0 0 auto;
+  align-items: center;
+  justify-content: center;
+  width: 1.7rem;
+  height: 1.7rem;
+  border-radius: 0.4rem;
+  font-size: 0.82rem;
+}
+
+.swal2-popup .dgi-help-block--info .dgi-help-ico {
+  background: #e8f1fb;
+  color: #2f5f8a;
+}
+
+.swal2-popup .dgi-help-block--prepare .dgi-help-ico {
+  background: #eef5e8;
+  color: #185424;
+}
+
+.swal2-popup .dgi-help-block--flow .dgi-help-ico {
+  background: #eef0f6;
+  color: #4d5678;
+}
+
+.swal2-popup .dgi-help-block--example .dgi-help-ico {
+  background: #f8efdc;
+  color: #8a5a12;
+}
+
+.swal2-popup .dgi-help-block--warning .dgi-help-ico {
+  background: #f6edd6;
+  color: #8a6a12;
+}
+
+.swal2-popup .dgi-help-block--result .dgi-help-ico {
+  background: #eef5e8;
+  color: #185424;
+}
+
+.swal2-popup .dgi-help-block--link .dgi-help-ico {
+  background: #e7eef0;
+  color: #3d5c66;
+}
+
+.swal2-popup .dgi-help-block--example,
+.swal2-popup .dgi-help-block--warning {
+  padding: 0.7rem 0.8rem 0.45rem;
+  border-radius: 0.45rem;
+}
+
+.swal2-popup .dgi-help-block--example {
+  background: #fbf8f1;
+}
+
+.swal2-popup .dgi-help-block--warning {
+  background: #fbf7ef;
+}
+
+.swal2-popup .dgi-help-body p,
+.swal2-popup .dgi-help-body li {
+  margin: 0.15rem 0 0.4rem;
+  font-weight: 400;
+  text-align: start;
+}
+
+.swal2-popup .dgi-help-body ul,
+.swal2-popup .dgi-help-body ol {
+  margin: 0.15rem 0 0.55rem;
+  padding-left: 1.2rem;
+  text-align: start;
+}
+
+.swal2-popup .dgi-help-confirm {
+  background-color: #185424;
+}
+
+.swal2-popup .dgi-help-confirm:focus-visible {
+  box-shadow: 0 0 0 3px #90b43c;
+}
+
+@media (max-width: 640px) {
+  .swal2-popup.dgi-help-popup {
+    width: calc(100vw - 1.25rem);
+    padding-inline: 0.85rem;
+  }
+
+  .swal2-popup .dgi-help-title {
+    font-size: 1.15rem;
+    padding-inline: 1.75rem;
+  }
+
+  .swal2-popup .dgi-help-body {
+    max-height: 62vh;
+  }
+}

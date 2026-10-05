@@ -1,0 +1,24 @@
+<section class="section section--depth distribution theme-{{ section.theme.value }}{{ section.backgroundImage ? ' has-section-bg' : '' }}">
+    {% include 'components/_section_backdrop.html.twig' with { section: section } %}
+    <div class="container distribution__grid">
+        <div>
+            {% include 'components/_section_title.html.twig' with { section: section, icon: 'distribution' } %}
+            {% if section.content %}
+                <div class="prose">{{ section.content|nl2br }}</div>
+            {% endif %}
+            <div class="section-actions">
+                {% include 'components/_button.html.twig' with { label: section.buttonLabel, url: section.buttonUrl } %}
+            </div>
+        </div>
+        {% if section.items is not empty %}
+            <ul class="distribution-list">
+                {% for item in section.items %}
+                    <li data-reveal="fade-up" style="--reveal-delay: {{ loop.index0 * 70 }}ms">
+                        <h3>{{ item.title }}</h3>
+                        {% if item.text %}<p>{{ item.text }}</p>{% endif %}
+                    </li>
+                {% endfor %}
+            </ul>
+        {% endif %}
+    </div>
+</section>

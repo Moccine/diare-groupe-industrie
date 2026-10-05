@@ -1,0 +1,20 @@
+<section class="section gallery theme-{{ section.theme.value }}">
+    <div class="container">
+        {% include 'components/_section_title.html.twig' with { section: section } %}
+        <div class="gallery__grid">
+            {% if section.image %}
+                <figure>
+                    {% include 'components/_media.html.twig' with { media: section.image } %}
+                </figure>
+            {% endif %}
+            {% for item in section.items %}
+                {% if item.image %}
+                    <figure>
+                        {% include 'components/_media.html.twig' with { media: item.image } %}
+                        {% if item.title %}<figcaption>{{ item.title }}</figcaption>{% endif %}
+                    </figure>
+                {% endif %}
+            {% endfor %}
+        </div>
+    </div>
+</section>

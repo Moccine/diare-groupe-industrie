@@ -1,0 +1,17 @@
+<section class="section section--depth cta theme-{{ section.theme.value }}{{ section.backgroundImage ? ' has-section-bg' : '' }}">
+    {% include 'components/_section_backdrop.html.twig' with { section: section } %}
+    <div class="container cta__panel" data-reveal="fade-up">
+        {% if section.eyebrow %}
+            <p class="eyebrow">{{ section.eyebrow }}</p>
+        {% endif %}
+        {% if section.title %}
+            <h2>{{ section.title }}</h2>
+        {% endif %}
+        {% if section.content %}
+            <p>{{ section.content }}</p>
+        {% endif %}
+        <div class="section-actions">
+            {% include 'components/_button.html.twig' with { label: section.buttonLabel, url: section.buttonUrl, modifier: 'button--light' } %}
+        </div>
+    </div>
+</section>

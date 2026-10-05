@@ -1,0 +1,59 @@
+---
+description: "Champs booléens oui/non: utiliser un switch lorsque le champ représente un état activé/désactivé, en respectant les exceptions du site public."
+alwaysApply: true
+---
+
+# Champs booléens
+
+## Règle
+
+Pour un booléen d'état ou de réglage dans l'admin (actif/inactif, visible/masqué, publié, mis en avant, option on/off), utiliser le pattern de switch fourni par EasyAdmin ou Bootstrap.
+
+## Pattern HTML/Twig
+
+```html
+<div class="form-check form-switch">
+    <input class="form-check-input" type="checkbox" role="switch" id="unique-id" checked>
+    <label class="form-check-label" for="unique-id">Libellé</label>
+</div>
+```
+
+## Pattern Symfony FormType
+
+```php
+->add('isPublished', CheckboxType::class, [
+    'attr' => [
+        'class' => 'form-check-input',
+        'role' => 'switch',
+    ],
+])
+```
+
+Et dans Twig:
+
+```twig
+<div class="form-check form-switch">
+    {{ form_widget(form.isPublished) }}
+    {{ form_label(form.isPublished, null, {'label_attr': {'class': 'form-check-label'}}) }}
+</div>
+```
+
+## EasyAdmin
+
+- Pour les CRUD EasyAdmin, préférer `BooleanField` lorsque c'est possible.
+- Ne pas réimplémenter un switch si EasyAdmin rend déjà un contrôle cohérent.
+
+## Exceptions
+
+Ne pas convertir automatiquement en switch:
+
+- consentements légaux (`consent`) dans les formulaires publics;
+- cases de sélection multiple;
+- radios ou cartes de choix personnalisées;
+- checklists métier;
+- champs dont le design public utilise déjà un style de consentement dédié.
+
+## Vérification
+
+- Rechercher les nouveaux `CheckboxType` et vérifier s'ils représentent un état on/off ou un consentement.
+- Vérifier que les nouveaux switches ont un label accessible et `role="switch"` quand le rendu est manuel.

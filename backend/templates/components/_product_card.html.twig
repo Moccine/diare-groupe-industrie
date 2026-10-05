@@ -1,0 +1,28 @@
+{% from 'components/icons.html.twig' import icon %}
+<article class="product-tile{% if slider|default(false) %} product-tile--slide{% endif %}{% if product.category %} product-tile--{{ product.category.slug }}{% endif %}"{% if product.category %} style="--tile-accent: {{ product.category.accentCss }}; --tile-ink: {{ product.category.accentInk }}"{% endif %}>
+    <a class="product-tile__link" href="{{ path('product_show', { slug: product.slug }) }}">
+        <div class="product-tile__media">
+            {% if product.mainImage %}
+                {% include 'components/_media.html.twig' with { media: product.mainImage, placeholder_type: 'produit', placeholder_label: 'Produit' } %}
+            {% else %}
+                {% include 'components/_media_placeholder.html.twig' with { type: 'produit', label: 'Produit', decorative: true } %}
+            {% endif %}
+        </div>
+        <div class="product-tile__body">
+            {% if product.category %}
+                <p class="product-tile__category">
+                    <span class="product-tile__mark">{{ icon(product.category.iconKey) }}</span>
+                    <span>{{ product.category.name }}</span>
+                </p>
+            {% endif %}
+            <h3>{{ product.name }}</h3>
+            {% if product.shortDescription %}
+                <p class="product-tile__excerpt">{{ product.shortDescription }}</p>
+            {% endif %}
+            <span class="product-tile__cue">
+                <span class="product-tile__more">Découvrir</span>
+                {{ icon('fleche') }}
+            </span>
+        </div>
+    </a>
+</article>

@@ -1,0 +1,23 @@
+{% if media %}
+    <span class="media-slot" data-media-slot>
+        <img
+            class="{{ class|default('') }}"
+            src="{{ media.publicPath }}"
+            alt="{{ alt is defined ? alt : media.alt }}"
+            {% if media.width %}width="{{ media.width }}"{% endif %}
+            {% if media.height %}height="{{ media.height }}"{% endif %}
+            loading="{{ loading|default('lazy') }}"
+            {% if fetchpriority|default(false) %}fetchpriority="{{ fetchpriority }}"{% endif %}
+            decoding="async"
+            data-media-image
+        >
+        <span class="media-slot__fallback" data-media-fallback hidden>
+            {% include 'components/_media_placeholder.html.twig' with {
+                type: placeholder_type|default('dgi'),
+                label: placeholder_label|default(media.alt|default('DGI')),
+                modifier: placeholder_modifier|default(''),
+                decorative: placeholder_label|default(media.alt|default('')) == ''
+            } %}
+        </span>
+    </span>
+{% endif %}

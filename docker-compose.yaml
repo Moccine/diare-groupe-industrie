@@ -1,0 +1,86 @@
+services:
+    php-apache:
+        build:
+            context: ./docker/php
+        container_name: dgi-php-apache
+        volumes:
+            - ./backend:/var/www/backend
+            - ./frontend:/var/www/frontend
+            - ./docker/php/php.ini:/usr/local/etc/php/php.ini
+            - ./docker/apache/vhost.conf:/etc/apache2/sites-available/000-default.conf
+        ports:
+            - "8086:80"
+        networks:
+            - dgi_network
+        environment:
+            TZ: Europe/Paris
+            APP_ENV: dev
+            MAILER_DSN: smtp://mailpit:1025
+        depends_on:
+            db:
+                condition: service_healthy
+
+    db:
+        image: mariadb:11.4
+        container_name: dgi-mariadb
+        environment:
+            MYSQL_ROOT_PASSWORD: root_password
+            MYSQL_DATABASE: diare_groupe
+            MYSQL_USER: symfony
+            MYSQL_PASSWORD: symfony_password
+        volumes:
+            - db-data:/var/lib/mysql
+        networks:
+            - dgi_network
+        ports:
+            - "3311:3306"
+        healthcheck:
+            test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+            interval: 5s
+            timeout: 5s
+            retries: 20
+
+    phpmyadmin:
+        image: phpmyadmin/phpmyadmin
+        container_name: dgi-phpmyadmin
+        environment:
+            PMA_HOST: db
+            PMA_PORT: 3306
+            PMA_USER: symfony
+            PMA_PASSWORD: symfony_password
+            UPLOAD_LIMIT: 12M
+        ports:
+            - "8089:80"
+        networks:
+            - dgi_network
+        depends_on:
+            db:
+                condition: service_healthy
+
+    mailpit:
+        image: axllent/mailpit
+        container_name: dgi-mailpit
+        ports:
+            - "8029:8025"
+            - "1028:1025"
+        networks:
+            - dgi_network
+
+    node:
+        image: node:20-alpine
+        container_name: dgi-node
+        working_dir: /var/www/backend
+        volumes:
+            - ./backend:/var/www/backend
+            - ./frontend:/var/www/frontend
+        networks:
+            - dgi_network
+        profiles:
+            - tools
+
+volumes:
+    db-data:
+
+networks:
+    dgi_network:
+        driver: bridge

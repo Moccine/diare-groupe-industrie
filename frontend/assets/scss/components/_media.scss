@@ -1,0 +1,134 @@
+.icon {
+  display: block;
+  width: 1.5rem;
+  height: 1.5rem;
+  flex: none;
+}
+
+.icon--lg {
+  width: 2rem;
+  height: 2rem;
+}
+
+.icon-badge {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  flex: none;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--dgi-accent) 28%, #fff);
+  color: var(--dgi-secondary);
+  box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--dgi-accent) 70%, transparent);
+}
+
+.icon-badge .icon {
+  width: 1.1rem;
+  height: 1.1rem;
+}
+
+.icon-badge--lg {
+  width: 3.25rem;
+  height: 3.25rem;
+  background: color-mix(in srgb, var(--dgi-accent) 35%, var(--dgi-secondary));
+  color: #fff;
+}
+
+.icon-badge--lg .icon {
+  width: 1.55rem;
+  height: 1.55rem;
+}
+
+.media-slot {
+  display: contents;
+}
+
+.media-slot.is-broken {
+  display: block;
+  width: 100%;
+}
+
+.media-placeholder {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 0.65rem;
+  width: 100%;
+  min-height: 11rem;
+  padding: 1.25rem;
+  background:
+    radial-gradient(circle at 50% 42%, rgba(24, 84, 36, 0.07), transparent 58%),
+    var(--dgi-surface);
+  color: var(--dgi-secondary);
+}
+
+.media-placeholder__disc {
+  display: grid;
+  place-items: center;
+  width: 5.5rem;
+  height: 5.5rem;
+  border-radius: 50%;
+  background: color-mix(in srgb, var(--dgi-primary) 6%, #fff);
+  box-shadow: inset 0 0 0 1px rgba(24, 84, 36, 0.1);
+}
+
+.media-placeholder__logo {
+  width: 4.2rem;
+  height: auto;
+  max-height: 4.2rem;
+  object-fit: contain;
+  filter: grayscale(1) contrast(0.92);
+  opacity: 0.72;
+}
+
+.media-placeholder__monogram {
+  color: var(--dgi-secondary);
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+  letter-spacing: 0.08em;
+}
+
+.media-placeholder__caption {
+  color: var(--dgi-secondary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.media-placeholder--compact {
+  min-height: 4.5rem;
+  padding: 0.65rem;
+}
+
+.media-placeholder--compact .media-placeholder__disc {
+  width: 3.25rem;
+  height: 3.25rem;
+}
+
+.media-placeholder--compact .media-placeholder__logo {
+  width: 2.4rem;
+  max-height: 2.4rem;
+}
+
+.media-placeholder.media-placeholder--product {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  min-height: 100%;
+  padding: 0;
+  background: transparent;
+  gap: 0;
+}
+
+.media-placeholder.media-placeholder--product .media-placeholder__logo {
+  width: clamp(72px, 26%, 108px);
+  max-width: 108px;
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  filter: grayscale(1);
+  opacity: 0.32;
+}

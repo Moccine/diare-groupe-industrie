@@ -1,0 +1,17 @@
+{% from 'components/icons.html.twig' import icon, value_icon %}
+<section class="section values theme-{{ section.theme.value }}">
+    <div class="container">
+        {% include 'components/_section_title.html.twig' with { section: section } %}
+        {% if section.content %}
+            <p class="section-intro">{{ section.content }}</p>
+        {% endif %}
+        <div class="value-grid">
+            {% for item in section.items %}
+                <article data-reveal="fade-up" style="--reveal-delay: {{ loop.index0 * 80 }}ms">
+                    <h3><span class="icon-badge" aria-hidden="true">{{ icon(value_icon(item.title)|trim) }}</span>{{ item.title }}</h3>
+                    {% if item.text %}<p>{{ item.text|nl2br }}</p>{% endif %}
+                </article>
+            {% endfor %}
+        </div>
+    </div>
+</section>

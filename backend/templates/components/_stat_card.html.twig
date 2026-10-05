@@ -1,0 +1,7 @@
+<article class="stat">
+    <p class="stat__value{% if not statistic.numeric %} stat__value--text{% endif %}"{% if statistic.numeric %} data-counter="{{ statistic.value }}"{% endif %}>{{ statistic.value }}</p>
+    <h3>{{ statistic.label }}</h3>
+    {% if statistic.description %}
+        <p>{{ statistic.description }}</p>
+    {% endif %}
+</article>

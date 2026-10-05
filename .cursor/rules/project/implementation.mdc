@@ -1,0 +1,120 @@
+---
+description: "Regles d'implementation pour le projet Diaré Groupe Industrie: Symfony 7, EasyAdmin, Doctrine, Twig, Webpack Encore et Docker."
+alwaysApply: true
+---
+
+# Implementation
+
+Implémente en respectant strictement l'existant.
+
+## Scope
+
+- Ne modifie que le nécessaire.
+- Pas de refactor opportuniste, renommage gratuit ou déplacement de fichiers hors besoin.
+- Ne change pas un comportement fonctionnel sans demande explicite ou bug prouvé.
+- Préserve les conventions du projet: namespaces `App\`, structure Twig, routes, services, repositories, FormTypes, migrations et SCSS/JS.
+
+## Architecture Symfony
+
+- Controllers fins: orchestration HTTP seulement.
+- Logique métier dans `backend/src/Service`.
+- Requêtes Doctrine dans `backend/src/Repository`.
+- Formulaires dans `backend/src/Form`.
+- Templates dans `backend/templates`, sans requêtes ni logique métier lourde.
+- Réutilise les services existants avant d'en créer un nouveau (`PublicContent`, `MediaUploader`, `SectionTemplateResolver`, `SeoFactory`, etc.).
+- Utilise l'autowiring/autoconfigure; évite de déclarer un service dans `services.yaml` si Symfony peut l'inférer.
+
+## PHP 8.2
+
+- Types précis sur les paramètres, retours et propriétés.
+- Pas de propriétés dynamiques.
+- Utilise `readonly` pour les services immuables quand c'est cohérent.
+- Ne rends pas les entités Doctrine `readonly`.
+- Ne pas utiliser de FQCN dans les signatures de type: ajouter un `use`, puis utiliser le nom court.
+- Suivre le style du projet (pas de `declare(strict_types=1)` si l'existant ne l'utilise pas).
+- Utilise `#[\SensitiveParameter]` pour les paramètres contenant secrets, mots de passe, tokens ou clés.
+
+## Sécurité
+
+- CSRF obligatoire sur actions sensibles.
+- Contrôles d'accès cohérents avec l'existant:
+  - admin sous `/administration`,
+  - `ROLE_ADMIN` pour le back-office.
+- Ne pas exposer de données personnelles ou tokens dans les vues publiques, logs ou erreurs.
+- Normaliser et valider les inputs via FormType/Validator.
+- Les messages d'erreur utilisateur ne doivent pas révéler de détails internes.
+- Pas de credentials dans Git; garder `ADMIN_PASSWORD` dans `.env.local`.
+
+## Contenu public
+
+- Respecter le système de pages dynamiques:
+  - entités `Page`, `Section`, `SectionItem`,
+  - rendu via `sections/_{type}.html.twig`,
+  - résolution sécurisée via `SectionTemplateResolver` (type inconnu = ignore, pas d'erreur fatale).
+- Produits via `Product` / `ProductCategory` et routes `/nos-produits`, `/nos-produits/{slug}`.
+- Contact via `ContactRequest` + honeypot + rate limiter; consultation admin.
+- Pour les médias, passer par `MediaUploader`; ne jamais écrire des chemins médias en dur.
+- Paramètres globaux via `SiteSettings` (logo, couleurs, contact, réseaux, footer).
+
+## Doctrine
+
+- Toute requête non triviale doit être dans un Repository.
+- Évite les QueryBuilder lourds dans les Controllers, Services et Templates.
+- Évite les N+1, les lazy loads en boucle et les flush multiples inutiles.
+- Utilise une transaction quand plusieurs écritures liées doivent être atomiques.
+- Attention production: migrations risquées, locks, colonnes obligatoires et renommages doivent être explicités.
+- `DATABASE_URL` doit garder `serverVersion=mariadb-...` pour MariaDB.
+
+## Frontend
+
+- Pas de CSS/JS inline volumineux.
+- JS dans `frontend/assets/js` et modules dans `frontend/assets/js/modules`.
+- SCSS dans `frontend/assets/scss` (abstracts, base, components, layout, pages, sections).
+- Respecte Webpack Encore dans `backend/webpack.config.js`.
+- Ne pas ajouter de dépendance front sans accord explicite.
+- Ne pas introduire React, Vue, Angular ou Tailwind sans nécessité.
+- Ne pas utiliser `alert()` natif.
+- Respecter l'accessibilité: focus, labels, `aria-*`, navigation clavier, `prefers-reduced-motion`.
+- Couleurs via variables CSS `--dgi-*`, idéalement depuis `SiteSettings`.
+
+## UI / Contenus
+
+- Pour l'admin EasyAdmin, réutiliser les champs EasyAdmin et les CRUD existants.
+- Pour les pages publiques, respecter les partials Twig et les sections pilotées par la base.
+- Le contenu éditorial public se gère via les entités administrables et les fixtures honnêtes.
+- Ne jamais inventer de données métier non confirmées.
+- Ne pas casser les pages légales, SEO, sitemap ou robots.
+
+## Emails
+
+- Utiliser le mailer Symfony et les templates dans `backend/templates/email` si présents.
+- Logger via `LoggerInterface`.
+- Ne pas utiliser `error_log()`.
+- Si aucun email public n'est configuré dans `SiteSettings`, ne pas forcer un envoi fictif.
+
+## Commandes
+
+- Le projet fonctionne via Docker Compose.
+- Commandes Symfony:
+  - `docker compose exec php-apache php bin/console <commande>`
+- Tests:
+  - `docker compose exec php-apache php vendor/bin/phpunit`
+- Assets:
+  - `docker compose run --rm node npm run build`
+  - `docker compose run --rm node npm run watch`
+- Ne pas installer de dépendance sans accord explicite.
+- Ne pas changer les ports Docker (8086 / 3311 / 8089 / 8029) sans raison.
+
+## Git
+
+- Ne jamais faire `git add`, `git commit` ou `git push` sans accord explicite.
+- Ne jamais revert des changements utilisateur.
+- Vérifier les changements locaux avant toute opération Git demandée.
+
+## Réponse attendue
+
+1. Résumé
+2. Changements ou patch
+3. Explications par fichier
+4. Checklist de tests
+5. Risques et points d'attention

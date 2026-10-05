@@ -1,0 +1,50 @@
+:root {
+  --dgi-primary: #185424;
+  --dgi-secondary: #0e3a18;
+  --dgi-accent: #90b43c;
+  --dgi-dark: #0b2414;
+  --dgi-light: #f3f6ef;
+  --dgi-paper: #f7f8f4;
+  --dgi-surface: color-mix(in srgb, var(--dgi-primary) 7%, var(--dgi-paper));
+  --dgi-ink: #142018;
+  --dgi-muted: #4e5c54;
+  --dgi-warm: #5c564e;
+  --dgi-line: rgba(24, 84, 36, 0.16);
+  --dgi-biscuit: #e2a423;
+  --dgi-rose: #b55260;
+  --dgi-product-red: #a8443a;
+  --dgi-kicker: #ed1c25;
+  --dgi-heading: #185423;
+  --dgi-gold: #a97830;
+  --dgi-cream: #f6f1e4;
+  --font-display: "Iowan Old Style", "Palatino Linotype", Palatino, Georgia, serif;
+  --font-text: "Avenir Next", "Segoe UI", "Helvetica Neue", Arial, sans-serif;
+  --header-height: 6.4rem;
+  --header-height-scrolled: 5.25rem;
+  --section-space-xs: 1.25rem;
+  --section-space-sm: 2rem;
+  --section-space-md: 3rem;
+  --section-space-lg: 4rem;
+  --section-space-xl: 5rem;
+  --space-section: var(--section-space-md);
+  --measure: 62ch;
+  --container-max: 1320px;
+  --page-gutter: 1.25rem;
+}
+
+@media (max-width: 767px) {
+  :root {
+    --section-space-sm: 1.35rem;
+    --section-space-md: 2rem;
+    --section-space-lg: 2.5rem;
+    --section-space-xl: 3rem;
+    --space-section: 2rem;
+    --header-height: 4.9rem;
+    --header-height-scrolled: 4.5rem;
+  }
+}
+
+$bp-sm: 430px;
+$bp-md: 768px;
+$bp-lg: 1024px;
+$bp-xl: 1280px;

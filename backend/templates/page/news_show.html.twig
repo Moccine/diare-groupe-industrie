@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: article.title,
+        lead: article.excerpt,
+        tone: 'actualites',
+        eyebrow: article.publishedAt|date('d/m/Y'),
+        crumbs: [
+            { label: 'Actualités', url: path('news') },
+            { label: article.title }
+        ]
+    } %}
+    <article class="section article">
+        <div class="container prose-block">
+            <figure>
+                {% if article.image %}
+                    {% include 'components/_media.html.twig' with { media: article.image, loading: 'eager', placeholder_type: 'actualite', placeholder_label: 'Actualité' } %}
+                {% else %}
+                    {% include 'components/_media_placeholder.html.twig' with { type: 'actualite', label: 'Actualité', decorative: true } %}
+                {% endif %}
+            </figure>
+            {% if article.content %}
+                <div class="prose">{{ article.content|nl2br }}</div>
+            {% endif %}
+        </div>
+    </article>
+{% endblock %}

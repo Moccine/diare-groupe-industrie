@@ -1,0 +1,46 @@
+parameters:
+    app.media_upload_dir: '%kernel.project_dir%/public/uploads/media'
+    app.fixture_media_dir: '%kernel.project_dir%/assets/fixtures'
+    env(ADMIN_EMAIL): 'admin@diare.local'
+    env(ADMIN_PASSWORD): ''
+    env(MAIL_FROM_EMAIL): 'noreply@diaregroupe.local'
+    env(MAIL_FROM_NAME): 'Diaré Groupe Industrie'
+    env(DEFAULT_URI): 'http://localhost:8086'
+    env(RECAPTCHA_ENABLED): '0'
+    env(RECAPTCHA_SITE_KEY): ''
+    env(RECAPTCHA_SECRET_KEY): ''
+    env(RECAPTCHA_MIN_SCORE): '0.5'
+
+services:
+    _defaults:
+        autowire: true
+        autoconfigure: true
+        bind:
+            $mediaUploadDir: '%app.media_upload_dir%'
+            $fixtureMediaDir: '%app.fixture_media_dir%'
+            $mailFromEmail: '%env(MAIL_FROM_EMAIL)%'
+            $mailFromName: '%env(MAIL_FROM_NAME)%'
+            $adminEmail: '%env(ADMIN_EMAIL)%'
+            $adminPassword: '%env(ADMIN_PASSWORD)%'
+            $defaultUri: '%env(DEFAULT_URI)%'
+
+    App\:
+        resource: '../src/'
+        exclude:
+            - '../src/Entity/'
+            - '../src/Kernel.php'
+
+    App\Controller\ContactController:
+        arguments:
+            $contactFormLimiter: '@limiter.contact_form'
+
+    App\Service\RecaptchaVerifier:
+        arguments:
+            $enabled: '%env(bool:RECAPTCHA_ENABLED)%'
+            $siteKey: '%env(RECAPTCHA_SITE_KEY)%'
+            $secretKey: '%env(RECAPTCHA_SECRET_KEY)%'
+            $minScore: '%env(float:RECAPTCHA_MIN_SCORE)%'
+
+    App\Service\SectionTemplateResolver:
+        arguments:
+            $templatesDir: '%kernel.project_dir%/templates'

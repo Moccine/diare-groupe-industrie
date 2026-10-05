@@ -1,0 +1,20 @@
+{% from 'components/icons.html.twig' import icon, activity_icon %}
+<section class="section activities theme-{{ section.theme.value }}">
+    <div class="container">
+        {% include 'components/_section_title.html.twig' with { section: section, icon: 'industrie' } %}
+        {% if section.content %}
+            <div class="prose">{{ section.content|nl2br }}</div>
+        {% endif %}
+        <ol class="activity-list">
+            {% for item in section.items %}
+                <li data-reveal="fade-up" style="--reveal-delay: {{ loop.index0 * 70 }}ms">
+                    <span>{{ '%02d'|format(loop.index) }}</span>
+                    <div>
+                        <h3><span class="icon-badge" aria-hidden="true">{{ icon(activity_icon(item.title)|trim) }}</span>{{ item.title }}</h3>
+                        {% if item.text %}<p>{{ item.text|nl2br }}</p>{% endif %}
+                    </div>
+                </li>
+            {% endfor %}
+        </ol>
+    </div>
+</section>

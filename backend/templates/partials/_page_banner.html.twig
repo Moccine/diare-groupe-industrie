@@ -1,0 +1,51 @@
+{% set stage_products = banner_products|default([])|filter(product => product.mainImage)|slice(0, 3) %}
+<header class="page-intro page-intro--{{ tone|default('default') }}">
+    <div class="container{% if stage_products is empty and (media|default(null) or placeholder|default(false)) %} page-intro__split{% endif %}">
+        <div class="page-intro__copy">
+            {% include 'partials/_breadcrumbs.html.twig' with { crumbs: crumbs|default([]) } %}
+            {% if eyebrow|default(null) %}
+                <p class="eyebrow">{{ eyebrow }}</p>
+            {% endif %}
+            <h1>{{ title }}</h1>
+            {% if lead|default(null) %}
+                {% set lead_mark = highlight|default('') %}
+                {% set lead_parts = lead_mark ? lead|split(lead_mark, 2) : [] %}
+                <p class="page-intro__lead">
+                    {% if lead_parts|length == 2 %}
+                        {{ lead_parts[0] }}<span class="page-intro__mark">{{ lead_mark }}</span>{{ lead_parts[1] }}
+                    {% else %}
+                        {{ lead }}
+                    {% endif %}
+                </p>
+            {% endif %}
+            {% if action_url|default(null) and action_label|default(null) %}
+                <div class="section-actions">
+                    {% include 'components/_button.html.twig' with { label: action_label, url: action_url } %}
+                </div>
+            {% endif %}
+        </div>
+        {% if stage_products is not empty %}
+            <div class="page-intro__stage page-intro__stage--count-{{ stage_products|length }}" aria-hidden="true">
+                <span class="page-intro__spark"></span>
+                <span class="page-intro__filament"></span>
+                {% for product in stage_products %}
+                    <figure class="page-intro__float page-intro__float--{{ loop.index }}">
+                        {% include 'components/_media.html.twig' with {
+                            media: product.mainImage,
+                            alt: '',
+                            loading: 'eager'
+                        } %}
+                    </figure>
+                {% endfor %}
+            </div>
+        {% elseif media|default(null) or placeholder|default(false) %}
+            <figure class="page-intro__pack">
+                {% if media|default(null) %}
+                    {% include 'components/_media.html.twig' with { media: media, loading: 'eager', placeholder_type: 'produit', placeholder_label: 'Produit' } %}
+                {% else %}
+                    {% include 'components/_media_placeholder.html.twig' with { type: 'produit', label: 'Produit', decorative: true } %}
+                {% endif %}
+            </figure>
+        {% endif %}
+    </div>
+</header>

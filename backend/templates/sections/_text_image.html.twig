@@ -1,0 +1,25 @@
+{# Le fond biscuits de l’accueil est sur fond noir : screen l’efface. Les autres photos produit restent en multiply. #}
+<section class="section text-image theme-{{ section.theme.value }}{{ section.theme.value == 'image_left' or section.backgroundImage ? ' section--depth' : '' }}{{ section.backgroundImage ? ' has-section-bg' : '' }}{{ section.backgroundImage and section.page and section.page.slug == 'accueil' ? ' has-section-bg--screen' : '' }}">
+    {% include 'components/_section_backdrop.html.twig' with { section: section } %}
+    <div class="container text-image__grid">
+        <div data-reveal="fade-up">
+            {% include 'components/_section_title.html.twig' with { section: section, reveal: false } %}
+            {% if section.content %}
+                <div class="prose">{{ section.content|nl2br }}</div>
+            {% endif %}
+            <div class="section-actions">
+                {% include 'components/_button.html.twig' with { label: section.buttonLabel, url: section.buttonUrl } %}
+            </div>
+        </div>
+        {% if section.image %}
+            <figure class="text-image__figure" data-reveal="{{ section.theme.value == 'image_left' ? 'fade-right' : 'fade-left' }}">
+                <div class="text-image__frame" data-parallax="16">
+                    {% include 'components/_media.html.twig' with { media: section.image } %}
+                </div>
+                {% if section.image.caption %}
+                    <figcaption>{{ section.image.caption }}</figcaption>
+                {% endif %}
+            </figure>
+        {% endif %}
+    </div>
+</section>

@@ -1,0 +1,14 @@
+<nav class="breadcrumbs" aria-label="Fil d’Ariane">
+    <ol>
+        <li><a href="{{ path('home') }}">Accueil</a></li>
+        {% for crumb in crumbs|default([]) %}
+            <li>
+                {% if crumb.url|default(null) %}
+                    <a href="{{ crumb.url }}">{{ crumb.label }}</a>
+                {% else %}
+                    <span aria-current="page">{{ crumb.label }}</span>
+                {% endif %}
+            </li>
+        {% endfor %}
+    </ol>
+</nav>

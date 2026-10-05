@@ -1,0 +1,96 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  overflow-x: clip;
+  background: var(--dgi-paper);
+  color: var(--dgi-ink);
+  font-family: var(--font-text);
+  font-size: clamp(1rem, 0.25vw + 0.95rem, 1.125rem);
+  line-height: 1.65;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+a {
+  color: inherit;
+}
+
+button,
+input,
+textarea {
+  font: inherit;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1,
+h2,
+h3 {
+  font-family: var(--font-display);
+  font-weight: 500;
+  letter-spacing: -0.03em;
+  line-height: 1.02;
+}
+
+h1 {
+  font-size: clamp(2.35rem, 4.8vw, 4.35rem);
+  line-height: 0.96;
+}
+
+h2 {
+  font-size: clamp(1.7rem, 2.55vw, 2.45rem);
+  line-height: 0.98;
+}
+
+h3 {
+  font-size: clamp(1.15rem, 1.4vw, 1.4rem);
+  letter-spacing: -0.02em;
+  line-height: 1.15;
+}
+
+ul,
+ol {
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  width: min(100% - 2.5rem, var(--container-max));
+  margin-inline: auto;
+}
+
+.prose {
+  max-width: var(--measure);
+  color: var(--dgi-muted);
+}
+
+.prose--large {
+  font-size: clamp(1.2rem, 1.6vw, 1.55rem);
+  line-height: 1.45;
+  color: var(--dgi-ink);
+}
+
+.lede {
+  max-width: 40rem;
+  color: var(--dgi-muted);
+  font-size: clamp(1.08rem, 1.3vw, 1.28rem);
+  line-height: 1.5;
+}

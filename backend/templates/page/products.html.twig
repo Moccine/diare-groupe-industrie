@@ -1,0 +1,42 @@
+{% extends 'base.html.twig' %}
+{% from 'components/icons.html.twig' import icon %}
+
+{% block main %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: page.title|default('Nos produits'),
+        lead: 'Biscuits, lait et sucre : une gamme à parcourir, du packaging au rayon.',
+        highlight: 'packaging',
+        tone: 'nos-produits',
+        crumbs: [{ label: page.title|default('Nos produits') }],
+        banner_products: banner_products|default([])
+    } %}
+    {% for block in sections %}
+        {% include block.template with { section: block.section } %}
+    {% endfor %}
+    <section class="section catalog" data-catalog>
+        <div class="container">
+            {% if categories is not empty %}
+                <ul class="catalog-filters" data-catalog-filters aria-label="Catégories">
+                    <li>
+                        <a class="catalog-filter" href="{{ path('products') }}" data-catalog-link{% if active_category is empty %} aria-current="true"{% endif %}>
+                            <span class="catalog-filter__dot" aria-hidden="true"></span>
+                            <span>Tout</span>
+                        </a>
+                    </li>
+                    {% for category in categories %}
+                        <li>
+                            <a class="catalog-filter" href="{{ path('products', { categorie: category.slug }) }}" data-catalog-link{% if active_category == category.slug %} aria-current="true"{% endif %} style="--filter-accent: {{ category.accentCss }}">
+                                <span class="catalog-filter__dot" aria-hidden="true"></span>
+                                {{ icon(category.iconKey) }}
+                                <span>{{ category.name }}</span>
+                            </a>
+                        </li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+            <div class="catalog-results" data-catalog-results aria-busy="false" aria-live="polite">
+                {% include 'product/_catalog_results.html.twig' %}
+            </div>
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,13 @@
+{% from 'components/icons.html.twig' import icon %}
+<section class="section section--depth quality theme-{{ section.theme.value }}{{ section.backgroundImage ? ' has-section-bg' : '' }}">
+    {% include 'components/_section_backdrop.html.twig' with { section: section } %}
+    <div class="container quality__panel" data-reveal="fade-up">
+        <p class="eyebrow"><span class="icon-badge" aria-hidden="true">{{ icon('qualite') }}</span>{% if section.eyebrow %}{{ section.eyebrow }}{% endif %}</p>
+        {% if section.title %}
+            <h2>{{ section.title }}</h2>
+        {% endif %}
+        {% if section.content %}
+            <p>{{ section.content }}</p>
+        {% endif %}
+    </div>
+</section>

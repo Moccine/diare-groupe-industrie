@@ -1,0 +1,88 @@
+---
+description: "Mode CTO pour Symfony 7, EasyAdmin, Doctrine, Twig, Webpack Encore et Docker Compose sur le projet Diaré Groupe Industrie."
+alwaysApply: true
+---
+
+# Symfony + Webpack Encore - CTO Mode
+
+## Objectif
+
+- Implémenter avec un diff minimal.
+- Préserver la maintenabilité, la sécurité, les performances et la compatibilité production.
+- Toujours comprendre le parcours utilisateur avant de modifier un flux public ou admin.
+
+## Environnement
+
+- Projet Docker Compose.
+- Ne pas lancer PHP directement sur l'hôte pour les commandes Symfony.
+- Services:
+  - `php-apache` pour Symfony/PHP (port 8086);
+  - `node` (profile `tools`) pour Webpack Encore;
+  - `db` pour MariaDB (port 3311);
+  - `phpmyadmin` (port 8089);
+  - `mailpit` pour les emails locaux (UI 8029).
+- Exemples:
+  - `docker compose exec php-apache php bin/console list app`
+  - `docker compose exec php-apache php vendor/bin/phpunit`
+  - `docker compose run --rm node npm run build`
+
+## Travail attendu
+
+1. Identifier les fichiers impactés.
+2. Lire l'existant proche avant modification.
+3. Réutiliser les services, repositories, forms, templates et modules JS existants.
+4. Modifier le moins possible.
+5. Vérifier les routes, DI/autowiring, formulaires, sécurité, assets et tests existants.
+6. Expliquer les impacts et les tests.
+
+## Symfony
+
+- Controller fin.
+- Logique métier dans un service.
+- QueryBuilder dans les repositories.
+- FormType pour les formulaires.
+- Twig pour l'affichage seulement.
+- Éviter les duplications de logique de rendu de sections.
+
+## Contenu et données
+
+- Aucun contenu métier important en dur dans Twig s'il doit être administrable.
+- Les pages publiques sont composées via `Page` + `Section` + `SectionTemplateResolver` / `PublicContent`.
+- Les réglages globaux passent par `SiteSettings`.
+- Les images passent par `Media` / `MediaUploader`, jamais des chemins `/images/...` en dur.
+- Ne pas inventer de chiffres clés, certifications ou capacités industrielles: placeholder « À renseigner depuis le back-office ».
+- Ne pas logguer les payloads complets des demandes de contact.
+
+## Assets
+
+- Entrées Encore dans `backend/webpack.config.js`.
+- Sources JS: `frontend/assets/js`.
+- Sources SCSS: `frontend/assets/scss`.
+- Build local:
+  - `docker compose run --rm node npm run build`
+- Watch local:
+  - `docker compose run --rm node npm run watch`
+
+## Dépendances
+
+- Aucune installation sans accord explicite.
+- Vérifier avant de proposer:
+  - `docker compose exec php-apache composer show vendor/package`
+  - `docker compose run --rm node npm ls package`
+
+## Migrations
+
+- Générer via Symfony lorsque pertinent.
+- Ne pas écrire ou appliquer une migration destructive sans expliquer:
+  - impact données,
+  - rollback,
+  - verrouillage potentiel,
+  - commande de test.
+
+## Sortie attendue
+
+- Résumé court.
+- Changements par fichier.
+- Commandes de test Docker.
+- Tests manuels pertinents.
+- Risques et points d'attention.

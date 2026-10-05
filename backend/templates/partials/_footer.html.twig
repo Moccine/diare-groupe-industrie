@@ -1,0 +1,53 @@
+{% set settings = site_settings() %}
+<footer class="site-footer">
+    <div class="container site-footer__grid">
+        <div>
+            {% if settings.logo %}
+                {% include 'components/_media.html.twig' with { media: settings.logo, class: 'site-footer__logo' } %}
+            {% endif %}
+            <p class="site-footer__brand">{{ settings.companyName }}</p>
+            {% if settings.footerText %}
+                <p>{{ settings.footerText }}</p>
+            {% endif %}
+        </div>
+        <div>
+            <p class="site-footer__label">Navigation</p>
+            <ul>
+                {% for item in menu_pages() %}
+                    <li><a href="{{ item.publicPath }}">{{ item.menuLabel }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div>
+            <p class="site-footer__label">Contact</p>
+            <ul>
+                {% if settings.address %}
+                    <li>{{ settings.address }}</li>
+                {% endif %}
+                {% if settings.phoneHref %}
+                    <li><a href="{{ settings.phoneHref }}">{{ settings.phone }}</a></li>
+                {% endif %}
+                {% if settings.hasPublicEmail %}
+                    <li><a href="mailto:{{ settings.email }}">{{ settings.email }}</a></li>
+                {% else %}
+                    <li>Email : à renseigner depuis le back-office</li>
+                {% endif %}
+            </ul>
+            {% set socials = settings.socialLinks %}
+            {% if socials %}
+                <ul class="site-footer__social">
+                    {% for label, url in socials %}
+                        <li><a href="{{ url }}" target="_blank" rel="noopener noreferrer">{{ label }}</a></li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+    <div class="container site-footer__bottom">
+        <p>© {{ settings.companyName }} {{ 'now'|date('Y') }}. {{ settings.copyright }}</p>
+        <p>
+            <a href="{{ path('page_show', { slug: 'mentions-legales' }) }}">Mentions légales</a>
+            <a href="{{ path('page_show', { slug: 'politique-de-confidentialite' }) }}">Confidentialité</a>
+        </p>
+    </div>
+</footer>

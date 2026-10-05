@@ -1,0 +1,17 @@
+<section class="section statistics theme-{{ section.theme.value }}">
+    <div class="container">
+        {% include 'components/_section_title.html.twig' with { section: section } %}
+        {% if section.content %}
+            <p class="section-intro">{{ section.content }}</p>
+        {% endif %}
+        {% if statistics|default([]) is not empty %}
+            <div class="stat-grid">
+                {% for statistic in statistics %}
+                    <div data-reveal="fade-up" style="--reveal-delay: {{ loop.index0 * 80 }}ms">
+                        {% include 'components/_stat_card.html.twig' with { statistic: statistic } %}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+</section>

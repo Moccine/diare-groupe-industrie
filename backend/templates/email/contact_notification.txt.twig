@@ -1,0 +1,12 @@
+Nouveau message reçu
+
+Nom : {{ request.fullName }}
+Entreprise : {{ request.company|default('—') }}
+Email : {{ request.email }}
+Téléphone : {{ request.phone|default('—') }}
+Objet : {{ request.subject }}
+Date : {{ request.createdAt|date('d/m/Y H:i') }}
+
+{{ request.message }}
+
+Répondre : {{ request.email }}
