@@ -5,6 +5,8 @@ namespace App\Controller\Admin\Crud;
 use App\Admin\FormColumns;
 use App\Entity\Media;
 use App\Repository\MediaRepository;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
@@ -17,9 +19,22 @@ use Vich\UploaderBundle\Form\Type\VichImageType;
 
 final class MediaCrudController extends AbstractCrudController
 {
+    private const DELETE_CONFIRMATION = 'Cette image sera supprimée de la bibliothèque et des contenus qui l’utilisent ne l’afficheront plus.';
+
     public function __construct(
         private readonly MediaRepository $mediaRepository,
     ) {
+    }
+
+    public function configureActions(Actions $actions): Actions
+    {
+        return $actions
+            ->update(Crud::PAGE_INDEX, Action::DELETE, $this->labelDeleteAction(...))
+            ->update(Crud::PAGE_DETAIL, Action::DELETE, $this->labelDeleteAction(...))
+            ->add(Crud::PAGE_EDIT, Action::new(Action::DELETE, 'Supprimer l’image', 'fa fa-trash')
+                ->linkToCrudAction(Action::DELETE)
+                ->asDangerAction()
+                ->askConfirmation(self::DELETE_CONFIRMATION, 'Supprimer l’image'));
     }
 
     public static function getEntityFqcn(): string
@@ -62,15 +77,18 @@ final class MediaCrudController extends AbstractCrudController
             ->onlyOnIndex();
 
         $current = $this->getContext()?->getEntity()?->getInstance();
+        $fileAttributes = [
+            'accept' => 'image/jpeg,image/png,image/webp,image/gif,image/avif',
+            'data-dgi-upload-preview' => '1',
+        ];
         $currentHelp = 'Fichier image à enregistrer. Il est converti en WebP lorsque c’est possible. Poids maximum : 8 Mo.';
         if ($pageName !== Crud::PAGE_NEW && $current instanceof Media && $current->getFileName() !== '') {
-            $currentHelp = sprintf(
-                'Image actuelle : %s — %s — %s — %s. Laissez le fichier vide pour la conserver, ou choisissez-en un autre pour la remplacer.',
-                $current->getOriginalName() !== '' ? $current->getOriginalName() : $current->getFileName(),
-                $current->getDimensionsLabel(),
-                $current->getFormattedSize(),
-                $current->getMimeType() !== '' ? $current->getMimeType() : 'type inconnu',
-            );
+            $currentHelp = 'Laissez le fichier vide pour conserver l’image actuelle, ou remplacez-la. La suppression définitive se fait avec « Supprimer l’image ».';
+            $fileAttributes['data-dgi-current-name'] = $current->getOriginalName() !== '' ? $current->getOriginalName() : $current->getFileName();
+            $fileAttributes['data-dgi-current-dimensions'] = $current->getDimensionsLabel();
+            $fileAttributes['data-dgi-current-size'] = $current->getFormattedSize();
+            $fileAttributes['data-dgi-current-mime'] = $current->getMimeType();
+            $fileAttributes['data-dgi-current-alt'] = $current->getAlt();
         }
 
         yield FormField::addFieldset('Fichier', 'fa fa-file-image')->onlyOnForms();
@@ -84,10 +102,7 @@ final class MediaCrudController extends AbstractCrudController
                 'image_uri' => static function (Media $media, ?string $uri = null): ?string {
                     return $media->getThumbnailPath() !== '' ? $media->getThumbnailPath() : $uri;
                 },
-                'attr' => [
-                    'accept' => 'image/jpeg,image/png,image/webp,image/gif,image/avif',
-                    'data-dgi-upload-preview' => '1',
-                ],
+                'attr' => $fileAttributes,
                 'constraints' => [
                     new File(
                         maxSize: '8M',
@@ -117,6 +132,15 @@ final class MediaCrudController extends AbstractCrudController
             yield FormField::addFieldset('Utilisation', 'fa fa-link')
                 ->setHelp($this->usageNote());
         }
+    }
+
+    private function labelDeleteAction(Action $action): Action
+    {
+        return $action
+            ->setLabel('Supprimer l’image')
+            ->setIcon('fa fa-trash')
+            ->asDangerAction()
+            ->askConfirmation(self::DELETE_CONFIRMATION, 'Supprimer l’image');
     }
 
     private function usageNote(): string
