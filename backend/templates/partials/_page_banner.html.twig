@@ -1,5 +1,14 @@
 {% set stage_products = banner_products|default([])|filter(product => product.mainImage)|slice(0, 3) %}
-<header class="page-intro page-intro--{{ tone|default('default') }}">
+{% set banner_media = null %}
+{% if page is defined and page %}
+    {% if page.bannerImage and page.bannerImage.fileName %}
+        {% set banner_media = page.bannerImage %}
+    {% endif %}
+    {% if page.bannerLead %}
+        {% set lead = page.bannerLead %}
+    {% endif %}
+{% endif %}
+<header class="page-intro page-intro--{{ tone|default('default') }}{{ banner_media ? ' page-intro--photo' }}"{% if banner_media %} style="--page-banner-image: url('{{ banner_media.publicPath|e('css') }}')"{% endif %}>
     <div class="container{% if stage_products is empty and (media|default(null) or placeholder|default(false)) %} page-intro__split{% endif %}">
         <div class="page-intro__copy">
             {% include 'partials/_breadcrumbs.html.twig' with { crumbs: crumbs|default([]) } %}

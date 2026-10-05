@@ -1,6 +1,7 @@
 import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.css';
 import '../scss/admin.scss';
+import './admin/media-picker';
 
 function openPageHelp(button) {
     const title = button.getAttribute('data-dgi-help-title') || 'Aide';

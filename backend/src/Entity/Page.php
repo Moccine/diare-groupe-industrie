@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\PageRepository;
+use App\Validator\ValidPageBannerMedia;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
@@ -50,6 +51,14 @@ class Page
 
     #[ORM\Column]
     private int $menuPosition = 0;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(onDelete: 'SET NULL')]
+    #[ValidPageBannerMedia]
+    private ?Media $bannerImage = null;
+
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $bannerLead = null;
 
     /** @var Collection<int, Section> */
     #[ORM\OneToMany(mappedBy: 'page', targetEntity: Section::class, cascade: ['persist'], orphanRemoval: false)]
@@ -166,6 +175,30 @@ class Page
     public function setMenuPosition(int $menuPosition): static
     {
         $this->menuPosition = $menuPosition;
+
+        return $this;
+    }
+
+    public function getBannerImage(): ?Media
+    {
+        return $this->bannerImage;
+    }
+
+    public function setBannerImage(?Media $bannerImage): static
+    {
+        $this->bannerImage = $bannerImage;
+
+        return $this;
+    }
+
+    public function getBannerLead(): ?string
+    {
+        return $this->bannerLead;
+    }
+
+    public function setBannerLead(?string $bannerLead): static
+    {
+        $this->bannerLead = $bannerLead;
 
         return $this;
     }

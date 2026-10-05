@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Admin\FormColumns;
+use App\Admin\MediaAssociationField;
 use App\Admin\SectionFormVisibility;
 use App\Entity\Section;
 use App\Enum\SectionTheme;
@@ -119,14 +120,14 @@ final class SectionCrudController extends AbstractCrudController
             ->addCssClass('dgi-sec-group')
             ->setHelp('Choisissez les images dans la '.$library.'.');
         yield $this->show(
-            AssociationField::new('image', 'Image principale')
+            MediaAssociationField::new('image', 'Image principale')
                 ->setColumns(FormColumns::MEDIUM)
                 ->setHelp('Illustration du bloc. Pour une bannière, elle sert seulement tant qu’aucune bannière active n’a d’image.')
                 ->hideOnIndex(),
             'image',
         );
         yield $this->show(
-            AssociationField::new('backgroundImage', 'Image de fond')
+            MediaAssociationField::new('backgroundImage', 'Image de fond')
                 ->setColumns(FormColumns::MEDIUM)
                 ->setHelp('Image placée derrière le bloc, lorsque le type le prévoit. Laissez vide pour un fond uni.')
                 ->hideOnIndex(),

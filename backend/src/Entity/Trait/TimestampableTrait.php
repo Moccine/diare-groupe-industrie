@@ -45,4 +45,9 @@ trait TimestampableTrait
     {
         return $this->updatedAt;
     }
+
+    public function touchUpdatedAt(): void
+    {
+        $this->updatedAt = new \DateTimeImmutable();
+    }
 }

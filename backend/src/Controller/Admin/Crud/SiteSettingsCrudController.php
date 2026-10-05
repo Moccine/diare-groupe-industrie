@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Admin\FormColumns;
+use App\Admin\MediaAssociationField;
 use App\Entity\SiteSettings;
 use App\Repository\SiteSettingsRepository;
 use App\Service\AdminLinkFactory;
@@ -11,7 +12,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\ColorField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\EmailField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -56,12 +56,12 @@ final class SiteSettingsCrudController extends AbstractCrudController
         yield TextField::new('companyName', 'Nom de l’entreprise')
             ->setColumns(FormColumns::LARGE)
             ->setHelp('Nom affiché dans l’en-tête, le pied de page et les résultats de recherche.');
-        yield AssociationField::new('logo', 'Logo')
+        yield MediaAssociationField::new('logo', 'Logo')
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Logo officiel, affiché dans l’en-tête, le pied de page et l’écran de chargement. Ajoutez-le d’abord dans la bibliothèque d’images.');
-        yield AssociationField::new('favicon', 'Favicon')
+        yield MediaAssociationField::new('favicon', 'Favicon')
             ->setColumns(FormColumns::MEDIUM)
-            ->setHelp('Petite icône affichée dans l’onglet du navigateur.')
+            ->setHelp('Petite icône affichée dans l’onglet du navigateur, sur le site public et dans l’administration. Si elle est vide, le logo DGI est utilisé.')
             ->hideOnIndex();
 
         yield FormField::addFieldset('Palette', 'fa fa-palette')

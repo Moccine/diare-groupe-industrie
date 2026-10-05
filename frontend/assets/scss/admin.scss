@@ -136,3 +136,62 @@
     max-height: 62vh;
   }
 }
+
+.dgi-admin-thumb {
+  display: block;
+  width: 72px;
+  height: 54px;
+  object-fit: contain;
+  background: #f3f0e8;
+  border-radius: 0.2rem;
+}
+
+.dgi-admin-thumb--library {
+  width: 84px;
+  height: 64px;
+}
+
+.dgi-admin-thumb--logo {
+  object-fit: contain;
+  background: transparent;
+  opacity: 0.45;
+}
+
+.dgi-admin-thumb-empty {
+  color: #8a918c;
+}
+
+.vich-image img,
+.dgi-file-preview img {
+  display: block;
+  max-width: 240px;
+  max-height: 160px;
+  margin-top: 0.5rem;
+  object-fit: contain;
+  background: #f3f0e8;
+}
+
+.dgi-media-option {
+  display: flex;
+  gap: 0.45rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.dgi-media-option img {
+  flex: none;
+  width: 36px;
+  height: 28px;
+  object-fit: contain;
+  background: #f3f0e8;
+}
+
+.dgi-media-option span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ts-wrapper.multi .dgi-media-option span {
+  max-width: 9rem;
+}

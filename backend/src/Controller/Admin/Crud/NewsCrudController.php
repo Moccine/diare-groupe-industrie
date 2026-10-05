@@ -3,13 +3,13 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Admin\FormColumns;
+use App\Admin\MediaAssociationField;
 use App\Admin\PublicSiteAction;
 use App\Entity\News;
 use App\Service\AdminLinkFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\DateTimeField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
@@ -53,12 +53,13 @@ final class NewsCrudController extends AbstractCrudController
     {
         $library = $this->adminLinks->anchor(MediaCrudController::class, 'bibliothèque d’images');
 
+        yield MediaAssociationField::index('image');
         yield FormField::addFieldset('Article', 'fa fa-newspaper')
             ->setHelp('L’image se choisit dans la '.$library.'.');
         yield TextField::new('title', 'Titre')
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Titre de l’actualité, affiché dans la liste et en haut de l’article.');
-        yield AssociationField::new('image', 'Image')
+        yield MediaAssociationField::new('image', 'Image')
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Illustration de l’article. Ajoutez-la d’abord dans la bibliothèque d’images.')
             ->hideOnIndex();

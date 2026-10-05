@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Admin\FormColumns;
+use App\Admin\MediaAssociationField;
 use App\Admin\PublicSiteAction;
 use App\Entity\Product;
 use App\Service\AdminLinkFactory;
@@ -54,6 +55,8 @@ final class ProductCrudController extends AbstractCrudController
         $categories = $this->adminLinks->anchor(ProductCategoryCrudController::class, 'Catégories de produits');
         $library = $this->adminLinks->anchor(MediaCrudController::class, 'bibliothèque d’images');
 
+        yield MediaAssociationField::index('mainImage', 'Miniature', true)
+            ->setSortable(false);
         yield FormField::addFieldset('Informations principales', 'fa fa-box')
             ->setHelp('La catégorie se crée d’abord dans '.$categories.'.');
         yield TextField::new('name', 'Nom')
@@ -75,11 +78,11 @@ final class ProductCrudController extends AbstractCrudController
 
         yield FormField::addFieldset('Images', 'fa fa-image')
             ->setHelp('Les images se choisissent dans la '.$library.'. Sans image principale, le logo DGI s’affiche à la place.');
-        yield AssociationField::new('mainImage', 'Image principale')
+        yield MediaAssociationField::new('mainImage', 'Image principale')
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Image utilisée dans le catalogue et sur la fiche produit. Ajoutez-la d’abord dans la bibliothèque d’images.')
             ->hideOnIndex();
-        yield AssociationField::new('gallery', 'Galerie')
+        yield MediaAssociationField::new('gallery', 'Galerie')
             ->setColumns(FormColumns::LARGE)
             ->setHelp('Images supplémentaires affichées sur la fiche du produit.')
             ->hideOnIndex();

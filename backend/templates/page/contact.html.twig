@@ -12,7 +12,7 @@
     <section class="section contact">
         <div class="container">
             <div class="contact__grid">
-                <div>
+                <div class="contact__aside">
                     <p class="eyebrow">{{ settings.companyName }}</p>
                     <h2>Nos informations</h2>
                     <ul class="contact-facts">
@@ -48,8 +48,28 @@
                             </span>
                         </li>
                     </ul>
+                    {% if settings.hasMap and settings.mapEmbedUrl %}
+                        <div class="contact-map">
+                            <iframe
+                                class="contact-map__frame"
+                                title="Carte OpenStreetMap : {{ settings.mapDisplayLabel }}"
+                                src="{{ settings.mapEmbedUrl }}"
+                                loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade"
+                            ></iframe>
+                            <div class="contact-map__card">
+                                <p class="contact-map__name">{{ settings.mapDisplayLabel }}</p>
+                                {% if settings.address %}
+                                    <p>{{ settings.address }}</p>
+                                {% endif %}
+                                {% if settings.mapDirectionsUrl %}
+                                    <a class="button button--small" href="{{ settings.mapDirectionsUrl }}" target="_blank" rel="noopener noreferrer">Itinéraire</a>
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endif %}
                 </div>
-                <div>
+                <div class="contact__form">
                     {% form_theme form 'form/contact_layout.html.twig' %}
                     {% for message in app.flashes('success') %}
                         <p class="form-banner form-banner--success" role="status">{{ message }}</p>
@@ -83,26 +103,6 @@
                     {{ form_end(form) }}
                 </div>
             </div>
-            {% if settings.hasMap and settings.mapEmbedUrl %}
-                <div class="contact-map">
-                    <iframe
-                        class="contact-map__frame"
-                        title="Carte OpenStreetMap : {{ settings.mapDisplayLabel }}"
-                        src="{{ settings.mapEmbedUrl }}"
-                        loading="lazy"
-                        referrerpolicy="no-referrer-when-downgrade"
-                    ></iframe>
-                    <div class="contact-map__card">
-                        <p class="contact-map__name">{{ settings.mapDisplayLabel }}</p>
-                        {% if settings.address %}
-                            <p>{{ settings.address }}</p>
-                        {% endif %}
-                        {% if settings.mapDirectionsUrl %}
-                            <a class="button button--small" href="{{ settings.mapDirectionsUrl }}" target="_blank" rel="noopener noreferrer">Itinéraire</a>
-                        {% endif %}
-                    </div>
-                </div>
-            {% endif %}
         </div>
     </section>
 {% endblock %}

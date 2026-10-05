@@ -3,13 +3,18 @@
 namespace App\Entity;
 
 use App\Entity\Trait\TimestampableTrait;
+use App\Media\MediaImageRules;
 use App\Repository\MediaRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\HttpFoundation\File\File;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
+use Vich\UploaderBundle\Mapping\Annotation as Vich;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[Vich\Uploadable]
 class Media
 {
     use TimestampableTrait;
@@ -47,6 +52,16 @@ class Media
     #[ORM\Column(nullable: true)]
     private ?int $height = null;
 
+    #[Vich\UploadableField(mapping: 'media', fileNameProperty: 'fileName', size: 'size', mimeType: 'mimeType', originalName: 'originalName')]
+    #[Assert\File(
+        maxSize: '8M',
+        mimeTypes: MediaImageRules::ALLOWED_MIME_TYPES,
+        mimeTypesMessage: 'Formats acceptés : JPEG, PNG, WebP, GIF, AVIF.',
+    )]
+    private ?File $imageFile = null;
+
+    private ?string $clientOriginalName = null;
+
     public function __construct()
     {
         $this->initializeTimestamps();
@@ -62,9 +77,9 @@ class Media
         return $this->fileName;
     }
 
-    public function setFileName(string $fileName): static
+    public function setFileName(?string $fileName): static
     {
-        $this->fileName = $fileName;
+        $this->fileName = $fileName ?? '';
 
         return $this;
     }
@@ -74,9 +89,9 @@ class Media
         return $this->originalName;
     }
 
-    public function setOriginalName(string $originalName): static
+    public function setOriginalName(?string $originalName): static
     {
-        $this->originalName = $originalName;
+        $this->originalName = $originalName ?? '';
 
         return $this;
     }
@@ -122,9 +137,9 @@ class Media
         return $this->mimeType;
     }
 
-    public function setMimeType(string $mimeType): static
+    public function setMimeType(?string $mimeType): static
     {
-        $this->mimeType = $mimeType;
+        $this->mimeType = $mimeType ?? '';
 
         return $this;
     }
@@ -134,9 +149,9 @@ class Media
         return $this->size;
     }
 
-    public function setSize(int $size): static
+    public function setSize(?int $size): static
     {
-        $this->size = $size;
+        $this->size = $size ?? 0;
 
         return $this;
     }
@@ -165,9 +180,56 @@ class Media
         return $this;
     }
 
+    public function getImageFile(): ?File
+    {
+        return $this->imageFile;
+    }
+
+    public function setImageFile(?File $imageFile): void
+    {
+        $this->imageFile = $imageFile;
+        if ($imageFile instanceof UploadedFile) {
+            $this->clientOriginalName = $imageFile->getClientOriginalName();
+        }
+
+        if ($imageFile !== null) {
+            $this->touchUpdatedAt();
+        }
+    }
+
+    public function rememberOriginalName(string $name): void
+    {
+        $this->clientOriginalName = $name;
+    }
+
+    public function getClientOriginalName(): ?string
+    {
+        return $this->clientOriginalName;
+    }
+
     public function getPublicPath(): string
     {
         return '/uploads/media/'.$this->fileName;
+    }
+
+    public function getThumbnailPath(): string
+    {
+        if ($this->fileName === '') {
+            return '';
+        }
+
+        $stem = pathinfo($this->fileName, PATHINFO_FILENAME);
+
+        return $stem !== '' ? '/uploads/media/thumbnails/'.$stem.'.webp' : '';
+    }
+
+    public function getDimensionsLabel(): string
+    {
+        if ($this->width === null || $this->height === null) {
+            return '—';
+        }
+
+        return $this->width.' × '.$this->height;
     }
 
     public function getFormattedSize(): string

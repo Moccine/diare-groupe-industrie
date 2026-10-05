@@ -21,7 +21,7 @@ Implémente en respectant strictement l'existant.
 - Requêtes Doctrine dans `backend/src/Repository`.
 - Formulaires dans `backend/src/Form`.
 - Templates dans `backend/templates`, sans requêtes ni logique métier lourde.
-- Réutilise les services existants avant d'en créer un nouveau (`PublicContent`, `MediaUploader`, `SectionTemplateResolver`, `SeoFactory`, etc.).
+- Réutilise les services existants avant d'en créer un nouveau (`PublicContent`, `MediaImageProcessor`, `SectionTemplateResolver`, `SeoFactory`, etc.).
 - Utilise l'autowiring/autoconfigure; évite de déclarer un service dans `services.yaml` si Symfony peut l'inférer.
 
 ## PHP 8.2
@@ -53,7 +53,7 @@ Implémente en respectant strictement l'existant.
   - résolution sécurisée via `SectionTemplateResolver` (type inconnu = ignore, pas d'erreur fatale).
 - Produits via `Product` / `ProductCategory` et routes `/nos-produits`, `/nos-produits/{slug}`.
 - Contact via `ContactRequest` + honeypot + rate limiter; consultation admin.
-- Pour les médias, passer par `MediaUploader`; ne jamais écrire des chemins médias en dur.
+- Pour les médias, passer par la bibliothèque `Media` et VichUploader. Le traitement image (validation, WebP, dimensions, miniature) reste dans les services dédiés. Ne jamais écrire des chemins médias en dur.
 - Paramètres globaux via `SiteSettings` (logo, couleurs, contact, réseaux, footer).
 
 ## Doctrine
@@ -84,6 +84,10 @@ Implémente en respectant strictement l'existant.
 - Le contenu éditorial public se gère via les entités administrables et les fixtures honnêtes.
 - Ne jamais inventer de données métier non confirmées.
 - Ne pas casser les pages légales, SEO, sitemap ou robots.
+- Ne pas utiliser de `border-top` coloré comme motif décoratif générique sur les cartes, sections, CTA ou blocs de contenu.
+- Éviter les filets décoratifs automatiques qui donnent un rendu générique/« template IA ».
+- Préférer hiérarchie typographique, surfaces, espacements, icônes, badges ou accents intégrés.
+- Un `border-top` reste autorisé uniquement lorsqu'il a un rôle structurel clair et justifié (séparateur réel, composant technique, état de formulaire, etc.).
 
 ## Emails
 

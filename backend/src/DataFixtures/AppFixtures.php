@@ -160,11 +160,21 @@ final class AppFixtures extends Fixture
             return;
         }
 
-        foreach (scandir($this->mediaUploadDir) ?: [] as $file) {
+        $this->deleteUploadedFiles($this->mediaUploadDir);
+        $this->deleteUploadedFiles($this->mediaUploadDir.'/thumbnails');
+    }
+
+    private function deleteUploadedFiles(string $directory): void
+    {
+        if (!is_dir($directory)) {
+            return;
+        }
+
+        foreach (scandir($directory) ?: [] as $file) {
             if ($file === '.' || $file === '..' || $file === '.gitkeep') {
                 continue;
             }
-            $path = $this->mediaUploadDir.'/'.$file;
+            $path = $directory.'/'.$file;
             if (is_file($path)) {
                 unlink($path);
             }

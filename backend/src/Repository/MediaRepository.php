@@ -5,6 +5,7 @@ namespace App\Repository;
 use App\Entity\HeroSlide;
 use App\Entity\Media;
 use App\Entity\News;
+use App\Entity\Page;
 use App\Entity\Partner;
 use App\Entity\Product;
 use App\Entity\Section;
@@ -79,6 +80,17 @@ class MediaRepository extends ServiceEntityRepository
             $labels[] = $title !== ''
                 ? 'Contenu « '.$title.' » de la page « '.$section['pageTitle'].' »'
                 : 'Contenu de la page « '.$section['pageTitle'].' »';
+        }
+
+        $pages = $manager->createQueryBuilder()
+            ->select('pg.title')
+            ->from(Page::class, 'pg')
+            ->where('pg.bannerImage = :media')
+            ->setParameter('media', $media)
+            ->getQuery()
+            ->getSingleColumnResult();
+        foreach ($pages as $title) {
+            $labels[] = 'Bannière de la page « '.$title.' »';
         }
 
         $slides = $manager->createQueryBuilder()

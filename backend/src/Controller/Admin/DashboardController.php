@@ -72,6 +72,7 @@ final class DashboardController extends AbstractDashboardController
             ->overrideTemplate('layout', 'admin/layout.html.twig')
             ->setFormThemes([
                 '@EasyAdmin/crud/form_theme.html.twig',
+                '@VichUploader/Form/fields.html.twig',
                 'admin/form/field_help_tooltip.html.twig',
             ]);
     }

@@ -3,11 +3,11 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Admin\FormColumns;
+use App\Admin\MediaAssociationField;
 use App\Entity\Partner;
 use App\Service\AdminLinkFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\AssociationField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\BooleanField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\IntegerField;
@@ -41,14 +41,16 @@ final class PartnerCrudController extends AbstractCrudController
     {
         $library = $this->adminLinks->anchor(MediaCrudController::class, 'bibliothèque d’images');
 
+        yield MediaAssociationField::index('logo');
         yield FormField::addFieldset('Partenaire', 'fa fa-handshake')
             ->setHelp('Le logo se choisit dans la '.$library.'.');
         yield TextField::new('name', 'Nom')
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Nom du partenaire. Il sert aussi de texte de remplacement si le logo est absent.');
-        yield AssociationField::new('logo', 'Logo')
+        yield MediaAssociationField::new('logo', 'Logo')
             ->setColumns(FormColumns::MEDIUM)
-            ->setHelp('Logo affiché dans les blocs Partenaires du site. Ajoutez-le d’abord dans la bibliothèque d’images.');
+            ->setHelp('Logo affiché dans les blocs Partenaires du site. Ajoutez-le d’abord dans la bibliothèque d’images.')
+            ->hideOnIndex();
         yield UrlField::new('url', 'Site')
             ->setColumns(FormColumns::LARGE)
             ->setHelp('Adresse du site internet du partenaire. Exemple : https://exemple.com. Si elle est renseignée, le logo devient un lien.')

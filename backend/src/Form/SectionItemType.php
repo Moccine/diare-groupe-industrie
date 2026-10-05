@@ -2,6 +2,7 @@
 
 namespace App\Form;
 
+use App\Admin\MediaChoiceAttributes;
 use App\Entity\Media;
 use App\Entity\SectionItem;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -36,6 +37,12 @@ final class SectionItemType extends AbstractType
                 'required' => false,
                 'placeholder' => 'Aucune image',
                 'help' => 'Image de la ligne. Elle est affichée dans une galerie. Ajoutez-la d’abord dans la bibliothèque d’images.',
+                'choice_label' => MediaChoiceAttributes::label(...),
+                'choice_attr' => MediaChoiceAttributes::attributes(...),
+                'attr' => [
+                    'data-ea-widget' => 'ea-autocomplete',
+                    'data-dgi-media-picker' => '1',
+                ],
             ]);
     }
 

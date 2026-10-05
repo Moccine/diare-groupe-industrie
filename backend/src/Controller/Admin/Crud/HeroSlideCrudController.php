@@ -3,6 +3,7 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Admin\FormColumns;
+use App\Admin\MediaAssociationField;
 use App\Entity\HeroSlide;
 use App\Enum\HeroContentPosition;
 use App\Enum\HeroOverlay;
@@ -48,6 +49,7 @@ final class HeroSlideCrudController extends AbstractCrudController
         $sections = $this->adminLinks->anchor(SectionCrudController::class, 'Contenus des pages');
         $library = $this->adminLinks->anchor(MediaCrudController::class, 'bibliothèque d’images');
 
+        yield MediaAssociationField::index('image');
         yield FormField::addFieldset('Emplacement et ordre', 'fa fa-location-dot')
             ->setHelp('Une bannière doit être rattachée à un contenu de page de type Bannière. S’il n’en existe pas, créez-le d’abord dans '.$sections.'.');
         yield AssociationField::new('section', 'Bloc bannière')
@@ -81,11 +83,11 @@ final class HeroSlideCrudController extends AbstractCrudController
 
         yield FormField::addFieldset('Images', 'fa fa-image')
             ->setHelp('Choisissez les images dans la '.$library.'. Sans image pour grand écran, la bannière n’est pas affichée.');
-        yield AssociationField::new('image', 'Image pour grand écran')
+        yield MediaAssociationField::new('image', 'Image pour grand écran')
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Image de fond sur ordinateur. Ajoutez-la d’abord dans la bibliothèque d’images.')
             ->hideOnIndex();
-        yield AssociationField::new('mobileImage', 'Image pour téléphone')
+        yield MediaAssociationField::new('mobileImage', 'Image pour téléphone')
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Image utilisée sur téléphone. Si elle est vide, l’image pour grand écran est utilisée.')
             ->hideOnIndex();

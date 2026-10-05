@@ -10,8 +10,10 @@
     {% endblock %}
     {% include 'partials/_theme.html.twig' %}
     {% set favicon = site_settings().favicon %}
-    {% if favicon %}
+    {% if favicon and favicon.fileName %}
         <link rel="icon" href="{{ favicon.publicPath }}" type="{{ favicon.mimeType }}">
+    {% else %}
+        <link rel="icon" href="{{ asset('brand/logo.png') }}" type="image/png">
     {% endif %}
 </head>
 <body class="{{ header_overlay|default(false) ? 'has-overlay-header' : '' }}">

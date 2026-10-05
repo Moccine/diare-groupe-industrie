@@ -3,8 +3,10 @@
 namespace App\Controller\Admin\Crud;
 
 use App\Admin\FormColumns;
+use App\Admin\MediaAssociationField;
 use App\Admin\PublicSiteAction;
 use App\Entity\Page;
+use App\Media\PageBannerSpec;
 use App\Service\AdminLinkFactory;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Actions;
@@ -91,6 +93,24 @@ final class PageCrudController extends AbstractCrudController
             ->setUnlockConfirmationMessage(self::SLUG_UNLOCK)
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Partie visible du lien, par exemple nos-produits. Évitez de la changer après avoir partagé la page.');
+
+        yield FormField::addFieldset('Bannière', 'fa fa-image')
+            ->setHelp('L’image se choisit dans la bibliothèque. Sans image, la bannière graphique du site reste affichée. Le titre de la page n’est pas dupliqué ici.');
+        yield MediaAssociationField::new('bannerImage', 'Image de bannière')
+            ->setColumns(FormColumns::MEDIUM)
+            ->setHelp(sprintf(
+                'Format recommandé : %d × %d px. Minimum : %d × %d px. Formats : JPEG, PNG, WebP, AVIF. Poids maximum : 8 Mo. Une image trop petite est refusée.',
+                PageBannerSpec::RECOMMENDED_WIDTH,
+                PageBannerSpec::RECOMMENDED_HEIGHT,
+                PageBannerSpec::MIN_WIDTH,
+                PageBannerSpec::MIN_HEIGHT,
+            ))
+            ->hideOnIndex();
+        yield TextareaField::new('bannerLead', 'Texte d’introduction')
+            ->setColumns(FormColumns::LARGE)
+            ->setNumOfRows(3)
+            ->setHelp('Court texte sous le titre de la bannière. S’il est vide, le texte prévu par la page reste affiché. Le titre principal reste celui de la page.')
+            ->hideOnIndex();
 
         yield FormField::addFieldset('Référencement Google', 'fa fa-magnifying-glass')
             ->setHelp('Ces champs choisissent le titre et le texte qui peuvent apparaître dans Google. S’ils sont vides, le site utilise les informations de la page.');

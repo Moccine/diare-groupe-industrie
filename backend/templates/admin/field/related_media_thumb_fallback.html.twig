@@ -1,0 +1,6 @@
+{% set media = field.value %}
+{% if media %}
+    <img class="dgi-admin-thumb" src="{{ media.thumbnailPath }}" alt="" width="72" height="54" loading="lazy">
+{% else %}
+    <img class="dgi-admin-thumb dgi-admin-thumb--logo" src="{{ asset('brand/logo.png') }}" alt="" width="72" height="54" loading="lazy">
+{% endif %}

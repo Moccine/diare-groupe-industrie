@@ -1,5 +1,14 @@
 {% extends '@EasyAdmin/layout.html.twig' %}
 
+{% block head_favicon %}
+    {% set favicon = site_settings().favicon %}
+    {% if favicon and favicon.fileName %}
+        <link rel="icon" href="{{ favicon.publicPath }}" type="{{ favicon.mimeType }}">
+    {% else %}
+        <link rel="icon" href="{{ asset('brand/logo.png') }}" type="image/png">
+    {% endif %}
+{% endblock %}
+
 {% block content_help %}
     {% set help = admin_page_help() %}
     {% if ea().crud and help %}
