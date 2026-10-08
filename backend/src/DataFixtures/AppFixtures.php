@@ -39,6 +39,11 @@ final class AppFixtures extends Fixture
         $this->clearUploadedMedia();
 
         $logo = $this->importMedia($manager, 'logo.png', 'Logo Diaré Groupe Industrie', 'Logo DGI');
+        $laitImage = $this->importMedia($manager, 'lait-et-derives.png', 'Lait et dérivés', 'Lait et dérivés');
+        $fraisImage = $this->importMedia($manager, 'produits-laitiers-frais.png', 'Produits laitiers frais', 'Produits laitiers frais');
+        $derivesImage = $this->importMedia($manager, 'produits-derives.png', 'Produits dérivés', 'Produits dérivés');
+        $miniMais = $this->importMedia($manager, 'biscuit-mini-mais.png', 'Biscuit Mini Maïs', 'Biscuit Mini Maïs');
+        $miniKansy = $this->importMedia($manager, 'biscuit-mini-kansy.png', 'Biscuit Mini Kansy', 'Biscuit Mini Kansy');
         $biscuitAbc = $this->importMedia($manager, 'biscuit.png', 'Biscuit ABC', 'Biscuit ABC');
         $sugar = $this->importMedia($manager, 'sucre.png', 'Sucre raffiné', 'Sucre raffiné');
         $vanilla = $this->importMedia($manager, 'biscuits-vanille.png', 'Biscuits vanille', 'Biscuits vanille');
@@ -64,11 +69,11 @@ final class AppFixtures extends Fixture
         $biscuits = $this->category($manager, 'Biscuits', 'biscuits', 'Gammes de biscuits.', 2, CategoryIcon::Biscuit, CategoryAccent::Biscuit);
         $sucre = $this->category($manager, 'Sucre', 'sucre', 'Sucre raffiné.', 3, CategoryIcon::Sugar, CategoryAccent::Rose);
 
-        $this->product($manager, 'Lait et dérivés', 'lait-et-derives', $lait, 'Un lait frais, riche et nutritif, produit selon des normes strictes.', 'Un lait frais, riche et nutritif, produit selon des normes strictes, qui apporte douceur et santé dans chaque verre.', null, true, 1);
-        $this->product($manager, 'Produits laitiers frais', 'produits-laitiers-frais', $lait, 'Lait pasteurisé, lait UHT et lait en poudre.', 'Lait pasteurisé, lait UHT et lait en poudre, pour les foyers, les commerces et les distributeurs.', null, false, 2);
-        $this->product($manager, 'Produits dérivés', 'produits-derives', $lait, 'Yaourts, fromages, beurre et crème fraîche.', 'Yaourts, fromages, beurre et crème fraîche complètent la gamme laitière.', null, false, 3);
-        $this->product($manager, 'Biscuit Mini Maïs', 'biscuit-mini-mais', $biscuits, 'Biscuit sucré et croquant au maïs cultivé localement.', 'Le biscuit « Mini Maïs » est une gourmandise sucrée, croquante et savoureuse, fabriquée à partir de maïs cultivé localement. Il offre une expérience authentique et chaleureuse, évoquant la simplicité et la douceur du terroir, idéal pour une pause gourmande.', null, true, 4);
-        $this->product($manager, 'Biscuit Mini Kansy', 'biscuit-mini-kansy', $biscuits, 'Biscuit à la pâte d’arachide locale.', 'Ce biscuit à la pâte d’arachide locale est une création savoureuse au goût authentique, croquante et riche en traditions. Il offre une expérience gustative unique qui met en valeur la diversité et la richesse des saveurs de la région.', null, true, 5);
+        $this->product($manager, 'Lait et dérivés', 'lait-et-derives', $lait, 'Un lait frais, riche et nutritif, produit selon des normes strictes.', 'Un lait frais, riche et nutritif, produit selon des normes strictes, qui apporte douceur et santé dans chaque verre.', $laitImage, true, 1);
+        $this->product($manager, 'Produits laitiers frais', 'produits-laitiers-frais', $lait, 'Lait pasteurisé, lait UHT et lait en poudre.', 'Lait pasteurisé, lait UHT et lait en poudre, pour les foyers, les commerces et les distributeurs.', $fraisImage, false, 2);
+        $this->product($manager, 'Produits dérivés', 'produits-derives', $lait, 'Yaourts, fromages, beurre et crème fraîche.', 'Yaourts, fromages, beurre et crème fraîche complètent la gamme laitière.', $derivesImage, false, 3);
+        $this->product($manager, 'Biscuit Mini Maïs', 'biscuit-mini-mais', $biscuits, 'Biscuit sucré et croquant au maïs cultivé localement.', 'Le biscuit « Mini Maïs » est une gourmandise sucrée, croquante et savoureuse, fabriquée à partir de maïs cultivé localement. Il offre une expérience authentique et chaleureuse, évoquant la simplicité et la douceur du terroir, idéal pour une pause gourmande.', $miniMais, true, 4);
+        $this->product($manager, 'Biscuit Mini Kansy', 'biscuit-mini-kansy', $biscuits, 'Biscuit à la pâte d’arachide locale.', 'Ce biscuit à la pâte d’arachide locale est une création savoureuse au goût authentique, croquante et riche en traditions. Il offre une expérience gustative unique qui met en valeur la diversité et la richesse des saveurs de la région.', $miniKansy, true, 5);
         $this->product($manager, 'Biscuit ABC', 'biscuit-abc', $biscuits, 'Biscuit en forme de lettres, peu sucré, pour les tout-petits.', 'Ce biscuit en forme de lettres de l’alphabet allie plaisir et apprentissage. Confectionné avec du lait, de la farine et des ingrédients de qualité, il est croquant, peu sucré et idéal pour les tout-petits. Un goûter à la fois ludique, sain et savoureux.', $biscuitAbc, true, 6);
         $this->product($manager, 'Biscuits vanille', 'biscuits-vanille', $biscuits, 'Biscuits sandwich à la crème vanille.', 'Quatre biscuits sandwich à la crème vanille, de la gamme Good Morning.', $vanilla, true, 7);
         $this->product($manager, 'Sucre raffiné', 'sucre-raffine', $sucre, 'Sucre blanc en poudre pour la cuisine de tous les jours.', 'Sucre blanc en poudre Good Morning, conditionné pour les usages culinaires, de la pâtisserie aux boissons.', $sugar, true, 8);

@@ -68,9 +68,11 @@
 
 .page-intro--nos-produits {
   background-image:
-    linear-gradient(102deg, rgba(246, 241, 228, 0.97) 0%, rgba(246, 241, 228, 0.9) 46%, rgba(246, 241, 228, 0.62) 100%),
-    url("../../images/page-banner.svg");
-  background-position: 78% center;
+    linear-gradient(102deg, rgba(246, 241, 228, 0.48) 0%, rgba(246, 241, 228, 0.1) 38%, rgba(246, 241, 228, 0) 62%),
+    url("../../images/bg-section.jpg");
+  background-repeat: no-repeat;
+  background-position: center, center bottom;
+  background-size: cover;
 }
 
 .page-intro--nos-produits .page-intro__copy {
@@ -696,6 +698,20 @@
 
 .product-related h2 {
   margin-bottom: 1rem;
+}
+
+.page-intro--produit {
+  background-image:
+    linear-gradient(102deg, rgba(246, 241, 228, 0.94) 0%, rgba(246, 241, 228, 0.8) 42%, rgba(246, 241, 228, 0.38) 100%),
+    url("../../images/product-page-banner.jpg");
+}
+
+.page-intro--produit .eyebrow {
+  color: #ee292a;
+}
+
+.page-intro--produit h1 {
+  color: var(--dgi-heading);
 }
 
 .page-intro--produit h1::after {
