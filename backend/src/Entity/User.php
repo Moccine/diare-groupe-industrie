@@ -4,6 +4,8 @@ namespace App\Entity;
 
 use App\Entity\Trait\TimestampableTrait;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -12,6 +14,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Table(name: 'app_user')]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\UniqueConstraint(name: 'uniq_user_email', columns: ['email'])]
+#[ORM\UniqueConstraint(name: 'uniq_user_reset_token', columns: ['reset_token'])]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     use TimestampableTrait;
@@ -33,6 +36,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private string $password = '';
+
+    #[ORM\Column(length: 64, nullable: true)]
+    private ?string $resetToken = null;
+
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $resetTokenExpiresAt = null;
 
     public function __construct()
     {
@@ -100,6 +109,39 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         $this->password = $password;
 
         return $this;
+    }
+
+    public function getResetToken(): ?string
+    {
+        return $this->resetToken;
+    }
+
+    public function setResetToken(?string $resetToken): static
+    {
+        $this->resetToken = $resetToken;
+
+        return $this;
+    }
+
+    public function getResetTokenExpiresAt(): ?DateTimeImmutable
+    {
+        return $this->resetTokenExpiresAt;
+    }
+
+    public function setResetTokenExpiresAt(?DateTimeImmutable $resetTokenExpiresAt): static
+    {
+        $this->resetTokenExpiresAt = $resetTokenExpiresAt;
+
+        return $this;
+    }
+
+    public function isResetTokenValid(): bool
+    {
+        if ($this->resetToken === null || $this->resetTokenExpiresAt === null) {
+            return false;
+        }
+
+        return $this->resetTokenExpiresAt > new DateTimeImmutable();
     }
 
     public function eraseCredentials(): void

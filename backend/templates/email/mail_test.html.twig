@@ -1,0 +1,10 @@
+{% extends 'email/layout.html.twig' %}
+
+{% block title %}Email de test{% endblock %}
+
+{% block body %}
+    <h1 style="margin:0 0 12px;color:#185424;font-size:22px;">Email de test</h1>
+    <p>Ceci est un email de test envoyé pour vérifier la configuration du mailer.</p>
+    <p>Destinataire : {{ recipient }}</p>
+    <p style="margin-top:24px;">{{ settings.companyName }}</p>
+{% endblock %}

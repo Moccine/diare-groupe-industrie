@@ -36,6 +36,8 @@ security:
 
     access_control:
         - { path: ^/administration/connexion$, roles: PUBLIC_ACCESS }
+        - { path: ^/administration/mot-de-passe-oublie$, roles: PUBLIC_ACCESS }
+        - { path: ^/administration/reinitialisation/, roles: PUBLIC_ACCESS }
         - { path: ^/administration(?:/|$), roles: ROLE_ADMIN }
 
 when@test:

@@ -436,6 +436,7 @@ final class AdminHelpRegistry
             ], icon: 'fa-lightbulb', tone: 'example'),
             $this->section('À savoir', [
                 'Le mot de passe n’est jamais réaffiché après l’enregistrement. Choisissez-en un long. Chaque personne qui gère le site doit avoir son propre compte.',
+                'En cas d’oubli, la page de connexion envoie un lien de réinitialisation par email. Ce lien reste valable une heure.',
             ], icon: 'fa-triangle-exclamation', tone: 'warning'),
         ]);
     }

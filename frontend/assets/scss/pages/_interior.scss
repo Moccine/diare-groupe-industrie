@@ -1001,3 +1001,18 @@
   padding-top: calc(var(--header-height) + 3rem);
   padding-bottom: 4rem;
 }
+
+.login__links {
+  margin: 0.2rem 0 0;
+}
+
+.login__links a {
+  color: var(--dgi-primary);
+  font-size: 0.92rem;
+}
+
+.login__hint {
+  margin: 0 0 1.1rem;
+  color: var(--dgi-muted);
+  font-size: 0.86rem;
+}

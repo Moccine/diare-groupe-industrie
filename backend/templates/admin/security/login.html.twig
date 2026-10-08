@@ -5,6 +5,12 @@
         <div class="container login__panel">
             <p class="eyebrow">Administration</p>
             <h1>Connexion</h1>
+            {% for message in app.flashes('success') %}
+                <p class="form-banner form-banner--success" role="status">{{ message }}</p>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <p class="form-banner form-banner--error" role="alert">{{ message }}</p>
+            {% endfor %}
             {% if error %}
                 <p class="form-banner form-banner--error" role="alert">Identifiants incorrects.</p>
             {% endif %}
@@ -30,6 +36,7 @@
                 <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate') }}">
                 <button class="button" type="submit">Se connecter</button>
             </form>
+            <p class="login__links"><a href="{{ path('admin_forgot_password') }}">Mot de passe oublié ?</a></p>
         </div>
     </section>
 {% endblock %}
