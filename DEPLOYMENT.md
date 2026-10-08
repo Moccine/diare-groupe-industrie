@@ -97,8 +97,7 @@ APP_SECRET=
 APP_TIMEZONE=Europe/Paris
 DEFAULT_URI=
 DATABASE_URL=
-BREVO_SMTP_LOGIN=
-BREVO_SMTP_KEY=
+BREVO_API_KEY=
 MAILER_DSN=
 MAIL_FROM_EMAIL=
 MAIL_FROM_NAME=
@@ -119,11 +118,7 @@ Préproduction : un autre dossier ou le même dossier avec un autre `DEFAULT_URI
 
 `APP_SECRET` : au moins 32 caractères, différent du placeholder.
 
-Clé SMTP Brevo : si elle contient `@`, `:`, `/`, `?`, `#`, `%` ou un espace, coller la valeur encodée une seule fois :
-
-```bash
-php -r 'echo rawurlencode($argv[1]), PHP_EOL;' 'la-cle-smtp'
-```
+`BREVO_API_KEY` est la clé API Brevo (`xkeysib-…`), la même variable que dans le projet catalogue. Ce n’est pas le login SMTP ni la clé SMTP.
 
 ## 6. Premier déploiement
 
@@ -220,12 +215,11 @@ Si un certificat existe déjà, le script s’arrête. `--force` réécrit le vh
 
 ## 10. Brevo
 
-Transport : SMTP Symfony Mailer, pas l’API HTTP Brevo, pas Mailjet.
+Transport : API HTTP Brevo, comme le projet catalogue. Le mailer Symfony rend les templates, puis le worker appelle `https://api.brevo.com/v3/smtp/email` avec l’en-tête `api-key`. Il n’y a pas de username SMTP.
 
 ```text
-BREVO_SMTP_LOGIN=
-BREVO_SMTP_KEY=
-MAILER_DSN="smtp://${BREVO_SMTP_LOGIN}:${BREVO_SMTP_KEY}@smtp-relay.brevo.com:587?require_tls=true"
+BREVO_API_KEY=
+MAILER_DSN=brevo+api://default
 MAIL_FROM_EMAIL=no-reply@domaine
 MAIL_FROM_NAME="Diaré Groupe Industrie"
 ```
@@ -252,7 +246,7 @@ Il n’y a pas de variable `CONTACT_EMAIL` : l’adresse de réception a une seu
 5. Publier le DMARC indiqué par Brevo.
 6. Créer et valider l’expéditeur `no-reply@domaine`.
 
-Brevo SMTP n’héberge pas les boîtes. `contact@`, `direction@` et `commercial@` restent des boîtes professionnelles séparées. Le site envoie depuis `no-reply@` vers `contact@` sans supposer que les deux sont chez Brevo.
+Brevo n’héberge pas les boîtes. `contact@`, `direction@` et `commercial@` restent des boîtes professionnelles séparées. Le site envoie depuis `no-reply@` vers `contact@` sans supposer que les deux sont chez Brevo.
 
 ## 12. reCAPTCHA
 

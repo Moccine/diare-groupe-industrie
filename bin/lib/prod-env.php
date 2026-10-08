@@ -83,14 +83,10 @@ try {
 }
 
 $dsn = envValue('MAILER_DSN');
-$mailerOk = str_contains($dsn, 'smtp-relay.brevo.com')
-    && str_contains($dsn, 'require_tls=true')
-    && !str_contains($dsn, '${')
-    && !str_contains($dsn, 'CHANGE_ME')
-    && !str_contains($dsn, 'mailpit');
+$mailerOk = $dsn === 'brevo+api://default';
 $failed = !check('MAILER_DSN', $mailerOk) || $failed;
-$failed = !check('BREVO_SMTP_LOGIN', envValue('BREVO_SMTP_LOGIN') !== '') || $failed;
-$failed = !check('BREVO_SMTP_KEY', envValue('BREVO_SMTP_KEY') !== '' && !str_contains(envValue('BREVO_SMTP_KEY'), 'CHANGE_ME')) || $failed;
+$apiKey = envValue('BREVO_API_KEY');
+$failed = !check('BREVO_API_KEY', $apiKey !== '' && !str_contains($apiKey, 'CHANGE_ME')) || $failed;
 $failed = !check('MAIL_FROM_EMAIL', filter_var(envValue('MAIL_FROM_EMAIL'), FILTER_VALIDATE_EMAIL) !== false && !str_contains(envValue('MAIL_FROM_EMAIL'), 'example.com')) || $failed;
 $failed = !check('MAIL_FROM_NAME', envValue('MAIL_FROM_NAME') !== '') || $failed;
 

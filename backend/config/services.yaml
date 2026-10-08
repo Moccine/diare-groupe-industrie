@@ -13,8 +13,7 @@ parameters:
     env(GOOGLE_ANALYTICS_MEASUREMENT_ID): ''
     env(APP_INDEXABLE): '1'
     env(MESSENGER_TRANSPORT_DSN): 'sync://'
-    env(BREVO_SMTP_LOGIN): ''
-    env(BREVO_SMTP_KEY): ''
+    env(BREVO_API_KEY): ''
 
 services:
     _defaults:
@@ -25,6 +24,7 @@ services:
             $fixtureMediaDir: '%app.fixture_media_dir%'
             $mailFromEmail: '%env(MAIL_FROM_EMAIL)%'
             $mailFromName: '%env(MAIL_FROM_NAME)%'
+            $brevoApiKey: '%env(BREVO_API_KEY)%'
             $adminEmail: '%env(ADMIN_EMAIL)%'
             $adminPassword: '%env(ADMIN_PASSWORD)%'
             $defaultUri: '%env(DEFAULT_URI)%'
