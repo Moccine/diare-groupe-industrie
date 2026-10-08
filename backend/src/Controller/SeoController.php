@@ -17,12 +17,19 @@ final class SeoController extends AbstractController
         private readonly ProductRepository $productRepository,
         private readonly NewsRepository $newsRepository,
         private readonly JobOfferRepository $jobOfferRepository,
+        private readonly bool $appIndexable,
     ) {
     }
 
     #[Route('/robots.txt', name: 'robots', methods: ['GET'])]
     public function robots(): Response
     {
+        if (!$this->appIndexable) {
+            $body = "User-agent: *\nDisallow: /\n";
+
+            return new Response($body, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
+        }
+
         $sitemap = $this->generateUrl('sitemap', [], 0);
         $body = "User-agent: *\nAllow: /\nDisallow: /administration\n\nSitemap: ".$sitemap."\n";
 

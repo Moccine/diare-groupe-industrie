@@ -48,6 +48,9 @@
         <p>
             <a href="{{ path('page_show', { slug: 'mentions-legales' }) }}">Mentions légales</a>
             <a href="{{ path('page_show', { slug: 'politique-de-confidentialite' }) }}">Confidentialité</a>
+            {% if google_analytics_id|default('')|trim starts with 'G-' %}
+                <button type="button" class="site-footer__consent" data-analytics-consent-reset>Mesure d'audience</button>
+            {% endif %}
         </p>
     </div>
 </footer>

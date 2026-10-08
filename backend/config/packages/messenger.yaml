@@ -1,0 +1,17 @@
+framework:
+    messenger:
+        failure_transport: failed
+
+        transports:
+            # Le DSN vient de l'environnement : sync:// en local, doctrine:// en production.
+            # auto_setup=0 en production : la table est créée par la migration Doctrine.
+            async:
+                dsn: '%env(MESSENGER_TRANSPORT_DSN)%'
+                retry_strategy:
+                    max_retries: 3
+                    multiplier: 2
+                    delay: 1000
+            failed: 'doctrine://default?queue_name=failed&auto_setup=0'
+
+        routing:
+            Symfony\Component\Mailer\Messenger\SendEmailMessage: async

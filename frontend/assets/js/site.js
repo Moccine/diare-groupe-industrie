@@ -12,6 +12,7 @@ import { initCatalogFilter } from "./modules/catalog-filter";
 import { initFormValidation } from "./modules/form-validation";
 import { initFormSubmitLock } from "./modules/form-submit-lock";
 import { initRecaptchaForms } from "./modules/recaptcha-form";
+import { initAnalyticsConsent } from "./modules/analytics-consent";
 
 initLoader();
 initImageFallback();
@@ -28,4 +29,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initFormValidation();
   initRecaptchaForms();
   initFormSubmitLock();
+  initAnalyticsConsent();
 });

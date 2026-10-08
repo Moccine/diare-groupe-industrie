@@ -36,6 +36,17 @@ final class RecaptchaVerifierTest extends TestCase
         self::assertFalse($this->verifier($client)->verify('token-ko', '127.0.0.1')->isAccepted());
     }
 
+    public function testUnexpectedActionIsRejected(): void
+    {
+        $client = new MockHttpClient([new MockResponse(json_encode([
+            'success' => true,
+            'score' => 0.9,
+            'action' => 'login',
+        ], JSON_THROW_ON_ERROR))]);
+
+        self::assertFalse($this->verifier($client)->verify('token-action', '127.0.0.1')->isAccepted());
+    }
+
     public function testLowScoreIsRejected(): void
     {
         $client = new MockHttpClient([new MockResponse($this->payload(true, 0.2))]);

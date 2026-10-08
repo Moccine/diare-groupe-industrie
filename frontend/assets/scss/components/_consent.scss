@@ -1,0 +1,55 @@
+.consent-banner {
+  position: fixed;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 30;
+  padding: 1rem 0;
+  background: var(--dgi-dark);
+  color: rgba(255, 255, 255, 0.88);
+}
+
+.consent-banner__inner {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem 1.5rem;
+}
+
+.consent-banner__title {
+  margin-bottom: 0.35rem;
+  color: #fff;
+  font-family: var(--font-display);
+}
+
+.consent-banner a {
+  color: var(--dgi-accent);
+}
+
+.consent-banner__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+body.has-consent-banner {
+  padding-bottom: 9rem;
+}
+
+.site-footer__consent {
+  padding: 0;
+  border: 0;
+  background: none;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.15em;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .consent-banner .button {
+    transition: none;
+  }
+}

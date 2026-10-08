@@ -16,3 +16,9 @@ backend/public/uploads/media/*
 
 # Docker local overrides
 docker-compose.override.yml
+
+# Sauvegardes et secrets locaux
+/backups/
+*.sql
+*.sql.gz
+*.pem

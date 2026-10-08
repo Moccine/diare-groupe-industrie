@@ -10,6 +10,11 @@ parameters:
     env(RECAPTCHA_SITE_KEY): ''
     env(RECAPTCHA_SECRET_KEY): ''
     env(RECAPTCHA_MIN_SCORE): '0.5'
+    env(GOOGLE_ANALYTICS_MEASUREMENT_ID): ''
+    env(APP_INDEXABLE): '1'
+    env(MESSENGER_TRANSPORT_DSN): 'sync://'
+    env(BREVO_SMTP_LOGIN): ''
+    env(BREVO_SMTP_KEY): ''
 
 services:
     _defaults:
@@ -23,6 +28,7 @@ services:
             $adminEmail: '%env(ADMIN_EMAIL)%'
             $adminPassword: '%env(ADMIN_PASSWORD)%'
             $defaultUri: '%env(DEFAULT_URI)%'
+            bool $appIndexable: '%env(bool:APP_INDEXABLE)%'
 
     App\:
         resource: '../src/'

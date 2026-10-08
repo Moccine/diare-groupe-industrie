@@ -1,0 +1,20 @@
+{% set ga_id = google_analytics_id|default('')|trim %}
+{% set analytics_choice = app.request.cookies.get('analytics_consent') %}
+{% if ga_id starts with 'G-' and analytics_choice != 'accepted' and analytics_choice != 'refused' %}
+    <div class="consent-banner" data-analytics-banner role="dialog" aria-labelledby="analytics-consent-title" aria-describedby="analytics-consent-text">
+        <div class="container consent-banner__inner">
+            <div>
+                <p id="analytics-consent-title" class="consent-banner__title">Mesure d'audience</p>
+                <p id="analytics-consent-text">
+                    Google Analytics 4 peut mesurer la fréquentation de ce site.
+                    Aucun script de mesure n'est chargé avant votre choix.
+                    <a href="{{ path('page_show', { slug: 'politique-de-confidentialite' }) }}">Politique de confidentialité</a>
+                </p>
+            </div>
+            <div class="consent-banner__actions">
+                <button type="button" class="button" data-analytics-accept>Accepter</button>
+                <button type="button" class="button button--light" data-analytics-refuse>Refuser</button>
+            </div>
+        </div>
+    </div>
+{% endif %}

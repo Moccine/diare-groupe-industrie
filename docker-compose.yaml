@@ -25,6 +25,7 @@ services:
         container_name: dgi-mariadb
         environment:
             MYSQL_ROOT_PASSWORD: root_password
+            # Base locale Docker uniquement. La production utilise diare_groupe_industrie.
             MYSQL_DATABASE: diare_groupe
             MYSQL_USER: symfony
             MYSQL_PASSWORD: symfony_password

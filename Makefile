@@ -77,4 +77,6 @@ help:
 	@echo "  make cache-clear     Vider le cache Symfony"
 	@echo "  make lint            Twig, YAML, schéma Doctrine, cache"
 	@echo "  make test            PHPUnit"
+	@echo "  bin/install.sh       Préparation production sur le VPS (pas les fixtures)"
+	@echo "  bin/deploy.sh        Déploiement production sur le VPS"
 	@echo "  make export-chatgpt  Archive légère sur le Bureau"

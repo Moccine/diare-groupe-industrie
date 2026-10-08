@@ -5,6 +5,9 @@
 {% set share_image = seo is defined ? seo.imagePath : null %}
 <title>{{ seo_title }}</title>
 <meta name="description" content="{{ seo_description }}">
+{% if not app_indexable %}
+    <meta name="robots" content="noindex, nofollow">
+{% endif %}
 <link rel="canonical" href="{{ canonical }}">
 <meta property="og:locale" content="fr_FR">
 <meta property="og:site_name" content="{{ settings.companyName }}">

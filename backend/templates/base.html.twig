@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="theme-color" content="{{ site_settings().primaryColor }}">
     {% include 'partials/_seo.html.twig' %}
+    {% include 'partials/_google_analytics.html.twig' %}
     {% block stylesheets %}
         {{ encore_entry_link_tags('site') }}
     {% endblock %}
@@ -16,7 +17,9 @@
         <link rel="icon" href="{{ asset('brand/logo.png') }}" type="image/png">
     {% endif %}
 </head>
-<body class="{{ header_overlay|default(false) ? 'has-overlay-header' : '' }}">
+{% set analytics_id = google_analytics_id|default('')|trim %}
+{% set analytics_choice = app.request.cookies.get('analytics_consent') %}
+<body class="{{ header_overlay|default(false) ? 'has-overlay-header' : '' }}{{ analytics_id starts with 'G-' and analytics_choice != 'accepted' and analytics_choice != 'refused' ? ' has-consent-banner' : '' }}">
     {% set loader_settings = site_settings() %}
     <div class="site-loader" data-site-loader role="status" aria-live="polite">
         <p class="visually-hidden">Chargement de la page</p>
@@ -34,6 +37,7 @@
         {% block main %}{% endblock %}
     </main>
     {% include 'partials/_footer.html.twig' %}
+    {% include 'partials/_analytics_consent.html.twig' %}
     {% block javascripts %}
         {{ encore_entry_script_tags('site') }}
     {% endblock %}

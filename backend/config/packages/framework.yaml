@@ -14,3 +14,13 @@ when@test:
         test: true
         session:
             storage_factory_id: session.storage.factory.mock_file
+
+when@prod:
+    framework:
+        disallow_search_engine_index: false
+        session:
+            cookie_secure: auto
+            cookie_httponly: true
+            cookie_samesite: lax
+        php_errors:
+            log: true
