@@ -119,8 +119,6 @@
   position: relative;
   z-index: 2;
   margin-top: -2.25rem;
-  border-top-left-radius: 1.35rem;
-  border-top-right-radius: 1.35rem;
 }
 
 .text-image {
@@ -1221,8 +1219,6 @@
 .has-overlay-header .products.theme-default {
   margin-top: -1.35rem;
   padding-top: 2.4rem;
-  border-top-left-radius: 1.5rem;
-  border-top-right-radius: 1.5rem;
   background:
     radial-gradient(ellipse 32rem 16rem at 0% 0%, color-mix(in srgb, var(--dgi-biscuit) 22%, transparent), transparent 70%),
     linear-gradient(180deg, #f7f3ea 0%, #eef3ea 100%);
