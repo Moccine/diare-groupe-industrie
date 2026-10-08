@@ -58,9 +58,7 @@ final class SecurityController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid()) {
             if (trim((string) $form->get('website')->getData()) !== '') {
-                $this->addFlash('success', 'Si un compte correspond à cette adresse, un email de réinitialisation vient d’être envoyé.');
-
-                return $this->redirectToRoute('admin_login');
+                return $this->redirectToRoute('admin_forgot_password_sent');
             }
 
             $limiter = $this->passwordResetLimiter->create($request->getClientIp() ?? 'unknown');
@@ -74,15 +72,23 @@ final class SecurityController extends AbstractController
                     $passwordResetService->sendResetEmail($user, $token, $this->publicContent->settings());
                 }
 
-                $this->addFlash('success', 'Si un compte correspond à cette adresse, un email de réinitialisation vient d’être envoyé.');
-
-                return $this->redirectToRoute('admin_login');
+                return $this->redirectToRoute('admin_forgot_password_sent');
             }
         }
 
         return $this->render('admin/security/forgot_password.html.twig', [
             'form' => $form,
         ]);
+    }
+
+    #[Route('/administration/mot-de-passe-oublie/envoye', name: 'admin_forgot_password_sent', methods: ['GET'])]
+    public function forgotPasswordSent(): Response
+    {
+        if ($this->getUser()) {
+            return $this->redirectToRoute('admin');
+        }
+
+        return $this->render('admin/security/forgot_password_sent.html.twig');
     }
 
     #[Route('/administration/reinitialisation/{token}', name: 'admin_reset_password', requirements: ['token' => '[a-f0-9]{64}'], methods: ['GET', 'POST'])]

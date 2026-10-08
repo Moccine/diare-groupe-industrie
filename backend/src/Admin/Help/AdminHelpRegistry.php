@@ -429,14 +429,14 @@ final class AdminHelpRegistry
             ], icon: 'fa-compass', tone: 'info'),
             $this->section('Comment ça fonctionne ?', [
                 'Le nom est affiché dans l’administration, par exemple sur le tableau de bord. L’email sert à se connecter.',
-                'À la création, le mot de passe est obligatoire et doit être confirmé. Le bouton « Générer » remplit les deux champs. L’œil affiche le mot de passe le temps de le copier. Lors d’une modification, laissez les deux champs vides pour conserver l’actuel.',
+                'À la création, le mot de passe est obligatoire, confirmé, et doit contenir au moins 8 caractères, une majuscule, une minuscule, un chiffre et un caractère spécial. Le bouton « Générer » remplit les deux champs. Lors d’une modification, laissez les deux champs vides pour conserver l’actuel.',
             ], icon: 'fa-gears', tone: 'flow'),
             $this->section('Exemple', [
                 'Vous créez le compte d’un collègue, vous lui transmettez l’email et le mot de passe par un moyen sûr, puis vous lui demandez de le changer à la première connexion en rouvrant sa fiche.',
             ], icon: 'fa-lightbulb', tone: 'example'),
             $this->section('À savoir', [
                 'Le mot de passe n’est jamais réaffiché après l’enregistrement. Choisissez-en un long. Chaque personne qui gère le site doit avoir son propre compte.',
-                'En cas d’oubli, la page de connexion envoie un lien de réinitialisation par email. Ce lien reste valable une heure.',
+                'En cas d’oubli, la page « Mot de passe oublié » envoie un lien de réinitialisation à l’adresse du compte, puis affiche une confirmation. Ce lien reste valable une heure.',
             ], icon: 'fa-triangle-exclamation', tone: 'warning'),
         ]);
     }

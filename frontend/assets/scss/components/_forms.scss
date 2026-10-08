@@ -112,6 +112,32 @@
   display: none;
 }
 
+.password-meter {
+  display: grid;
+  gap: 0.2rem;
+  margin: 0.35rem 0 1rem;
+  padding: 0;
+  list-style: none;
+  color: #8a2a22;
+  font-size: 0.86rem;
+}
+
+.password-meter[hidden] {
+  display: none;
+}
+
+.password-meter__state {
+  font-weight: 700;
+}
+
+.password-meter .is-met {
+  color: var(--dgi-primary);
+}
+
+.password-meter .is-idle {
+  color: var(--dgi-muted);
+}
+
 .contact-form .form-field input,
 .contact-form .form-field textarea {
   margin-bottom: 0.35rem;

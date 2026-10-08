@@ -4,6 +4,7 @@ namespace App\Controller\Admin\Crud;
 
 use App\Admin\FormColumns;
 use App\Entity\User;
+use App\Security\PasswordPolicy;
 use Doctrine\ORM\EntityManagerInterface;
 use EasyCorp\Bundle\EasyAdminBundle\Config\Crud;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
@@ -14,7 +15,6 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
-use Symfony\Component\Validator\Constraints\NotBlank;
 
 final class UserCrudController extends AbstractCrudController
 {
@@ -67,13 +67,14 @@ final class UserCrudController extends AbstractCrudController
                     'attr' => [
                         'autocomplete' => 'new-password',
                         'data-dgi-password-generator' => '1',
+                        'data-password-policy' => '1',
                     ],
                 ],
                 'second_options' => [
                     'label' => 'Confirmation',
                     'attr' => ['autocomplete' => 'new-password'],
                 ],
-                'constraints' => $isNew ? [new NotBlank(message: 'Indiquez un mot de passe.')] : [],
+                'constraints' => PasswordPolicy::constraints($isNew),
             ])
             ->onlyOnForms();
     }

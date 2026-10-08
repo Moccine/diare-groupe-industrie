@@ -1002,6 +1002,12 @@
   padding-bottom: 4rem;
 }
 
+.login h1 {
+  margin-bottom: 0.85rem;
+  font-size: clamp(1.7rem, 2.4vw, 2.05rem);
+  line-height: 1.2;
+}
+
 .login__links {
   margin: 0.2rem 0 0;
 }
@@ -1015,4 +1021,19 @@
   margin: 0 0 1.1rem;
   color: var(--dgi-muted);
   font-size: 0.86rem;
+}
+
+.login__confirm {
+  margin: 0 0 1.2rem;
+  padding: 1rem 1.05rem;
+  background: var(--dgi-surface, #f7f5f0);
+  border-radius: 0.5rem;
+}
+
+.login__confirm p {
+  margin: 0 0 0.7rem;
+}
+
+.login__confirm p:last-child {
+  margin-bottom: 0;
 }

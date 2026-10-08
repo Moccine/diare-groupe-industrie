@@ -2,10 +2,13 @@ import Swal from 'sweetalert2';
 import 'sweetalert2/dist/sweetalert2.css';
 import '../scss/admin.scss';
 import './admin/media-picker';
-import './admin/password-generator';
+import { initPasswordGenerator } from './admin/password-generator';
 import { initPasswordToggle } from './modules/password-toggle';
+import { initPasswordStrength } from './modules/password-strength';
 
 initPasswordToggle();
+initPasswordStrength();
+initPasswordGenerator();
 
 function openPageHelp(button) {
     const title = button.getAttribute('data-dgi-help-title') || 'Aide';

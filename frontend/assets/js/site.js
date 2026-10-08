@@ -14,6 +14,7 @@ import { initFormSubmitLock } from "./modules/form-submit-lock";
 import { initRecaptchaForms } from "./modules/recaptcha-form";
 import { initAnalyticsConsent } from "./modules/analytics-consent";
 import { initPasswordToggle } from "./modules/password-toggle";
+import { initPasswordStrength } from "./modules/password-strength";
 
 initLoader();
 initImageFallback();
@@ -32,4 +33,5 @@ document.addEventListener("DOMContentLoaded", () => {
   initFormSubmitLock();
   initAnalyticsConsent();
   initPasswordToggle();
+  initPasswordStrength();
 });

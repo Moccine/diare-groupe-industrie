@@ -106,7 +106,12 @@ function enhance(input) {
 
     tools.append(generate, copy, status);
     const anchor = input.closest('.password-field') ?? input;
-    anchor.insertAdjacentElement('afterend', tools);
+    const meter = anchor.nextElementSibling?.classList.contains('password-meter') ? anchor.nextElementSibling : null;
+    (meter ?? anchor).insertAdjacentElement('afterend', tools);
+}
+
+export function initPasswordGenerator() {
+    document.querySelectorAll('[data-dgi-password-generator]').forEach(enhance);
 }
 
 function confirmationField(input) {
@@ -125,5 +130,3 @@ function fill(input, password) {
     input.value = password;
     input.dispatchEvent(new Event('input', { bubbles: true }));
 }
-
-document.querySelectorAll('[data-dgi-password-generator]').forEach(enhance);

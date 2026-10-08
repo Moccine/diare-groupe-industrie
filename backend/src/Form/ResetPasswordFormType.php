@@ -2,14 +2,12 @@
 
 namespace App\Form;
 
+use App\Security\PasswordPolicy;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
 use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
-use Symfony\Component\Validator\Constraints\Length;
-use Symfony\Component\Validator\Constraints\NotBlank;
-use Symfony\Component\Validator\Constraints\Regex;
 
 final class ResetPasswordFormType extends AbstractType
 {
@@ -20,20 +18,16 @@ final class ResetPasswordFormType extends AbstractType
             'invalid_message' => 'Les deux mots de passe ne correspondent pas.',
             'first_options' => [
                 'label' => 'Nouveau mot de passe',
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'data-password-policy' => '1',
+                ],
             ],
             'second_options' => [
                 'label' => 'Confirmer le mot de passe',
                 'attr' => ['autocomplete' => 'new-password'],
             ],
-            'constraints' => [
-                new NotBlank(message: 'Indiquez un mot de passe.'),
-                new Length(min: 8, minMessage: 'Le mot de passe doit contenir au moins 8 caractères.', max: 4096),
-                new Regex(
-                    pattern: '/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&#\-_\.+=])[A-Za-z\d@$!%*?&#\-_\.+=]{8,}$/',
-                    message: 'Le mot de passe doit contenir une minuscule, une majuscule, un chiffre et un caractère spécial.',
-                ),
-            ],
+            'constraints' => PasswordPolicy::constraints(true),
         ]);
     }
 

@@ -63,9 +63,10 @@ final class PasswordResetTest extends WebTestCase
             'forgot_password_form[email]' => 'inconnu@example.com',
         ]);
 
-        self::assertResponseRedirects('/administration/connexion');
+        self::assertResponseRedirects('/administration/mot-de-passe-oublie/envoye');
         $this->client->followRedirect();
-        self::assertSelectorTextContains('body', 'Si un compte correspond à cette adresse');
+        self::assertSelectorTextContains('h1', 'Vérifiez votre boîte mail');
+        self::assertSelectorTextContains('body', 'l’email de réinitialisation vient d’être envoyé');
         self::assertEmailCount(0);
     }
 
@@ -78,7 +79,7 @@ final class PasswordResetTest extends WebTestCase
             'forgot_password_form[email]' => 'Admin@Diare.local',
         ]);
 
-        self::assertResponseRedirects('/administration/connexion');
+        self::assertResponseRedirects('/administration/mot-de-passe-oublie/envoye');
         self::assertEmailCount(1);
 
         $token = $this->resetTokenFromMail();
@@ -158,7 +159,7 @@ final class PasswordResetTest extends WebTestCase
             'forgot_password_form[website]' => 'https://spam.example',
         ]);
 
-        self::assertResponseRedirects('/administration/connexion');
+        self::assertResponseRedirects('/administration/mot-de-passe-oublie/envoye');
         self::assertEmailCount(0);
         $user = $this->users()->findOneByEmail('admin@diare.local');
         self::assertInstanceOf(User::class, $user);
