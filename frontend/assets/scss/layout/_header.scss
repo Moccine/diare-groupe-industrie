@@ -31,6 +31,10 @@
   backdrop-filter: blur(16px);
 }
 
+body.nav-open .site-header {
+  backdrop-filter: none;
+}
+
 .site-header__bar {
   display: flex;
   align-items: center;
