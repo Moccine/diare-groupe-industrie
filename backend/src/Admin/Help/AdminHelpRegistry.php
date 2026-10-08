@@ -429,7 +429,7 @@ final class AdminHelpRegistry
             ], icon: 'fa-compass', tone: 'info'),
             $this->section('Comment ça fonctionne ?', [
                 'Le nom est affiché dans l’administration, par exemple sur le tableau de bord. L’email sert à se connecter.',
-                'À la création, le mot de passe est obligatoire. Lors d’une modification, laissez-le vide pour conserver l’actuel. S’il est renseigné, il remplace l’ancien.',
+                'À la création, le mot de passe est obligatoire et doit être confirmé. Le bouton « Générer » remplit les deux champs. L’œil affiche le mot de passe le temps de le copier. Lors d’une modification, laissez les deux champs vides pour conserver l’actuel.',
             ], icon: 'fa-gears', tone: 'flow'),
             $this->section('Exemple', [
                 'Vous créez le compte d’un collègue, vous lui transmettez l’email et le mot de passe par un moyen sûr, puis vous lui demandez de le changer à la première connexion en rouvrant sa fiche.',

@@ -307,3 +307,68 @@
 .ts-wrapper.multi .dgi-media-option span {
   max-width: 9rem;
 }
+
+.form-widget .password-field {
+  position: relative;
+}
+
+.form-widget .password-field .form-control {
+  padding-right: 2.6rem;
+}
+
+.form-widget .password-field__toggle {
+  position: absolute;
+  top: 0;
+  right: 0;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 100%;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: #5c675f;
+  cursor: pointer;
+}
+
+.form-widget .password-field__toggle:hover,
+.form-widget .password-field__toggle[aria-pressed='true'] {
+  color: #185424;
+}
+
+.form-widget .password-field__toggle:focus-visible {
+  outline: 2px solid #185424;
+  outline-offset: -2px;
+}
+
+.form-widget .password-field__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.form-widget .password-field__icon[hidden] {
+  display: none;
+}
+
+.dgi-password-tools {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-top: 0.65rem;
+}
+
+.dgi-password-tools .btn:focus-visible {
+  box-shadow: 0 0 0 3px #90b43c;
+}
+
+.dgi-password-tools__status {
+  flex-basis: 100%;
+  margin: 0;
+  color: #3d4a42;
+  font-size: 0.9rem;
+}
+
+.dgi-password-tools__status:empty {
+  display: none;
+}

@@ -12,7 +12,9 @@ use EasyCorp\Bundle\EasyAdminBundle\Field\Field;
 use EasyCorp\Bundle\EasyAdminBundle\Field\FormField;
 use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
 use Symfony\Component\Form\Extension\Core\Type\PasswordType;
+use Symfony\Component\Form\Extension\Core\Type\RepeatedType;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
+use Symfony\Component\Validator\Constraints\NotBlank;
 
 final class UserCrudController extends AbstractCrudController
 {
@@ -46,18 +48,32 @@ final class UserCrudController extends AbstractCrudController
             ->setColumns(FormColumns::MEDIUM)
             ->setHelp('Identifiant utilisé pour se connecter. Il n’est pas affiché sur le site.');
 
+        $isNew = $pageName === Crud::PAGE_NEW;
         yield FormField::addFieldset('Mot de passe', 'fa fa-key')
-            ->setHelp('Le mot de passe n’est jamais réaffiché après l’enregistrement. Choisissez-en un long et difficile à deviner.');
-        yield Field::new('plainPassword', $pageName === Crud::PAGE_NEW ? 'Mot de passe' : 'Nouveau mot de passe')
+            ->setHelp('Le mot de passe n’est jamais réaffiché après l’enregistrement. L’œil l’affiche le temps de le copier. Le bouton « Générer » remplit aussi la confirmation.');
+        yield Field::new('plainPassword', false)
             ->setColumns(FormColumns::MEDIUM)
-            ->setHelp($pageName === Crud::PAGE_NEW
-                ? 'Mot de passe de la première connexion. Il n’est pas affiché ensuite.'
-                : 'Laissez vide pour conserver le mot de passe actuel. S’il est renseigné, il remplace l’ancien et n’est pas réaffiché.')
-            ->setFormType(PasswordType::class)
+            ->setFormType(RepeatedType::class)
             ->setFormTypeOptions([
+                'type' => PasswordType::class,
                 'mapped' => false,
-                'required' => $pageName === Crud::PAGE_NEW,
-                'attr' => ['autocomplete' => 'new-password'],
+                'required' => $isNew,
+                'invalid_message' => 'Les deux mots de passe ne correspondent pas.',
+                'first_options' => [
+                    'label' => $isNew ? 'Mot de passe' : 'Nouveau mot de passe',
+                    'help' => $isNew
+                        ? 'Générez-le ou saisissez-le, puis confirmez-le. L’œil l’affiche le temps de le copier.'
+                        : 'Laissez les deux champs vides pour conserver le mot de passe actuel.',
+                    'attr' => [
+                        'autocomplete' => 'new-password',
+                        'data-dgi-password-generator' => '1',
+                    ],
+                ],
+                'second_options' => [
+                    'label' => 'Confirmation',
+                    'attr' => ['autocomplete' => 'new-password'],
+                ],
+                'constraints' => $isNew ? [new NotBlank(message: 'Indiquez un mot de passe.')] : [],
             ])
             ->onlyOnForms();
     }
@@ -87,7 +103,15 @@ final class UserCrudController extends AbstractCrudController
     private function applyPassword(User $user, bool $required): void
     {
         $payload = $this->getContext()?->getRequest()->request->all('User');
-        $plain = is_array($payload) ? (string) ($payload['plainPassword'] ?? '') : '';
+        $submitted = is_array($payload) ? ($payload['plainPassword'] ?? null) : null;
+        $plain = '';
+        if (is_string($submitted)) {
+            $plain = $submitted;
+        } elseif (is_array($submitted)) {
+            $first = (string) ($submitted['first'] ?? '');
+            $second = (string) ($submitted['second'] ?? '');
+            $plain = hash_equals($first, $second) ? $first : '';
+        }
 
         if ($plain === '') {
             if ($required) {
