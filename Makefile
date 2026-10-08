@@ -1,6 +1,6 @@
 # Diaré Groupe Industrie — commandes Docker
 
-.PHONY: up down stop restart ps bash logs install db-create db-migrate fixtures assets assets-watch cache-clear lint test export-chatgpt help
+.PHONY: up down stop restart ps bash logs install db-create db-migrate fixtures assets assets-watch cache-clear lint test export-chatgpt deploy help
 
 up:
 	docker compose up -d --build
@@ -59,6 +59,10 @@ export-chatgpt:
 	chmod +x scripts/export-site-public-chatgpt.sh
 	./scripts/export-site-public-chatgpt.sh
 
+deploy:
+	chmod +x bin/deploy.sh
+	./bin/deploy.sh
+
 help:
 	@echo "Diaré Groupe Industrie — commandes disponibles"
 	@echo "  make up              Démarrer Docker"
@@ -78,5 +82,5 @@ help:
 	@echo "  make lint            Twig, YAML, schéma Doctrine, cache"
 	@echo "  make test            PHPUnit"
 	@echo "  bin/install.sh       Préparation production sur le VPS (pas les fixtures)"
-	@echo "  bin/deploy.sh        Déploiement production sur le VPS"
+	@echo "  make deploy          Déploiement production sur le VPS (sudo make deploy)"
 	@echo "  make export-chatgpt  Archive légère sur le Bureau"

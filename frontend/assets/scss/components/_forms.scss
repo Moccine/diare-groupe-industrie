@@ -74,6 +74,44 @@
   margin: 0.25rem 0 0;
 }
 
+.password-field {
+  position: relative;
+  margin-bottom: 1.1rem;
+}
+
+.contact-form .password-field input {
+  margin-bottom: 0;
+  padding-right: 2.4rem;
+}
+
+.password-field__toggle {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 2.25rem;
+  height: 2.5rem;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  color: var(--dgi-muted);
+  cursor: pointer;
+}
+
+.password-field__toggle:hover {
+  color: var(--dgi-primary);
+}
+
+.password-field__icon {
+  width: 1.15rem;
+  height: 1.15rem;
+}
+
+.password-field__icon[hidden] {
+  display: none;
+}
+
 .contact-form .form-field input,
 .contact-form .form-field textarea {
   margin-bottom: 0.35rem;
