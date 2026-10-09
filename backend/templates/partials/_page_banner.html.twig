@@ -1,14 +1,17 @@
 {% set stage_products = banner_products|default([])|filter(product => product.mainImage)|slice(0, 3) %}
-{% set banner_media = null %}
+{% set default_banner_slugs = ['a-propos', 'nos-activites', 'nos-produits', 'distribution', 'actualites', 'contact', 'nous-rejoindre'] %}
+{% set banner_url = null %}
 {% if page is defined and page %}
     {% if page.bannerImage and page.bannerImage.fileName %}
-        {% set banner_media = page.bannerImage %}
+        {% set banner_url = page.bannerImage.publicPath %}
+    {% elseif page.slug in default_banner_slugs %}
+        {% set banner_url = asset('banners/' ~ page.slug ~ '.webp') %}
     {% endif %}
     {% if page.bannerLead %}
         {% set lead = page.bannerLead %}
     {% endif %}
 {% endif %}
-<header class="page-intro page-intro--{{ tone|default('default') }}{{ banner_media ? ' page-intro--photo' }}"{% if banner_media %} style="--page-banner-image: url('{{ banner_media.publicPath|e('css') }}')"{% endif %}>
+<header class="page-intro page-intro--{{ tone|default('default') }}{{ banner_url ? ' page-intro--photo' }}"{% if banner_url %} style="--page-banner-image: url('{{ banner_url|e('css') }}')"{% endif %}>
     <div class="container{% if stage_products is empty and (media|default(null) or placeholder|default(false)) %} page-intro__split{% endif %}">
         <div class="page-intro__copy">
             {% include 'partials/_breadcrumbs.html.twig' with { crumbs: crumbs|default([]) } %}

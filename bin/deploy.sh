@@ -253,6 +253,13 @@ if [ ! -d "${BACKEND_DIR}/public/uploads/media" ]; then
     exit 1
 fi
 
+echo "Bannières des pages intérieures..."
+cd "${BACKEND_DIR}"
+run_as_web_user "${PHP_BIN}" bin/console app:assign-default-page-banners \
+    --no-interaction \
+    --env=prod \
+    --no-debug
+
 echo "Worker Messenger..."
 cat > "${MESSENGER_SERVICE_FILE}" <<EOF
 [Unit]

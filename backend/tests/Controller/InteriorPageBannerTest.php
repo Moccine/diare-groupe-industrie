@@ -91,7 +91,7 @@ final class InteriorPageBannerTest extends WebTestCase
         self::assertStringNotContainsString('/uploads/media/presentation', $html);
     }
 
-    public function testInteriorPageWithoutBannerKeepsTheGraphicFallback(): void
+    public function testKnownInteriorPageUsesTheCommittedBannerWhenNoneIsChosen(): void
     {
         $manager = $this->manager();
         $page = (new Page())
@@ -106,6 +106,25 @@ final class InteriorPageBannerTest extends WebTestCase
         self::assertResponseIsSuccessful();
         $html = (string) $this->client->getResponse()->getContent();
         self::assertStringContainsString('page-intro--distribution', $html);
+        self::assertStringContainsString('page-intro--photo', $html);
+        self::assertStringContainsString("--page-banner-image: url('\\2F banners\\2F distribution\\2E webp')", $html);
+    }
+
+    public function testInteriorPageWithoutBannerKeepsTheGraphicFallback(): void
+    {
+        $manager = $this->manager();
+        $page = (new Page())
+            ->setTitle('Mentions légales')
+            ->setSlug('mentions-legales')
+            ->setIsPublished(true);
+        $manager->persist($page);
+        $manager->flush();
+
+        $this->client->request('GET', '/mentions-legales');
+
+        self::assertResponseIsSuccessful();
+        $html = (string) $this->client->getResponse()->getContent();
+        self::assertStringContainsString('page-intro', $html);
         self::assertStringNotContainsString('page-intro--photo', $html);
         self::assertStringNotContainsString('--page-banner-image', $html);
     }
