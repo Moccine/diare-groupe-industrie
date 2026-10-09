@@ -5,7 +5,7 @@
   position: relative;
   isolation: isolate;
   overflow: hidden;
-  padding: clamp(2rem, 4.2vw, 3.15rem) 0 clamp(1.7rem, 3.2vw, 2.45rem);
+  padding: clamp(1.15rem, 2vw, 1.65rem) 0 clamp(0.95rem, 1.6vw, 1.25rem);
   background-color: var(--dgi-cream);
   background-image:
     linear-gradient(102deg, rgba(246, 241, 228, 0.94) 0%, rgba(246, 241, 228, 0.8) 42%, rgba(246, 241, 228, 0.38) 100%),
@@ -28,12 +28,14 @@
 }
 
 .page-intro h1 {
-  max-width: 14em;
+  max-width: 16em;
+  font-size: clamp(1.85rem, 3.1vw, 2.65rem);
+  line-height: 1;
 }
 
 .page-intro__lead {
   max-width: 38rem;
-  margin: 0.8rem 0 0;
+  margin: 0.4rem 0 0;
   color: var(--dgi-warm);
   font-size: clamp(1rem, 1.2vw, 1.12rem);
   line-height: 1.5;
@@ -41,7 +43,7 @@
 
 .page-intro__split {
   display: grid;
-  gap: 1.15rem;
+  gap: 0.75rem;
   align-items: center;
 }
 
@@ -49,9 +51,9 @@
   display: grid;
   place-items: center;
   order: -1;
-  min-height: 13rem;
+  min-height: 8rem;
   margin: 0;
-  padding: 0.85rem;
+  padding: 0.65rem;
   border-radius: 1.25rem;
   background:
     radial-gradient(circle at 50% 62%, color-mix(in srgb, var(--dgi-biscuit) 42%, transparent), transparent 64%),
@@ -62,7 +64,7 @@
 .page-intro__pack .media-placeholder__logo {
   width: auto;
   max-width: min(100%, 22rem);
-  max-height: 18rem;
+  max-height: 9rem;
   object-fit: contain;
 }
 
@@ -85,7 +87,7 @@
   display: block;
   width: 2.75rem;
   height: 2px;
-  margin-top: 0.8rem;
+  margin-top: 0.45rem;
   background: linear-gradient(90deg, var(--dgi-product-red) 0.55rem, transparent 0.55rem 0.75rem, var(--dgi-gold) 0.75rem);
   content: "";
 }
@@ -263,7 +265,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 0.35rem 0.7rem;
-  margin-bottom: 1.15rem;
+  margin-bottom: 0.5rem;
   list-style: none;
   color: var(--dgi-muted);
   font-size: 0.88rem;
@@ -614,10 +616,10 @@
   }
 
   .page-intro__float--1 {
-    top: 0;
+    top: 0.2rem;
     right: 11%;
-    width: 9.25rem;
-    height: 11.15rem;
+    width: 7.6rem;
+    height: 8.75rem;
   }
 
   .page-intro__float--2 {
@@ -639,9 +641,9 @@
   .page-intro__stage--count-1 .page-intro__float--1 {
     top: 50%;
     right: 10%;
-    width: 10rem;
-    height: 12rem;
-    margin-top: -6rem;
+    width: 8.5rem;
+    height: 10rem;
+    margin-top: -5rem;
   }
 
   .page-intro__stage--count-2 .page-intro__float--1 {
@@ -654,12 +656,12 @@
 
   .page-intro__pack {
     order: 0;
-    min-height: 18rem;
+    min-height: 9.5rem;
   }
 
   .page-intro__pack img[data-media-image],
   .page-intro__pack .media-placeholder__logo {
-    max-height: 22rem;
+    max-height: 11rem;
   }
 
   .catalog .product-grid {
@@ -737,7 +739,7 @@
   display: block;
   width: 2.25rem;
   height: 2px;
-  margin-top: 0.7rem;
+  margin-top: 0.4rem;
   background: var(--dgi-gold);
   content: "";
 }

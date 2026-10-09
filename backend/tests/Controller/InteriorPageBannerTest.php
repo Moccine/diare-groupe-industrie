@@ -85,6 +85,9 @@ final class InteriorPageBannerTest extends WebTestCase
         self::assertStringContainsString('presentation-diare-groupe-poster.webp', $html);
         self::assertStringContainsString('presentation-diare-groupe.mp4', $html);
         self::assertDoesNotMatchRegularExpression('/<video[^>]*\scontrols/', $html);
+        self::assertStringContainsString('data-presentation-sound', $html);
+        self::assertStringContainsString('aria-label="Activer le son"', $html);
+        self::assertStringContainsString('aria-pressed="false"', $html);
         self::assertStringNotContainsString('/uploads/media/presentation', $html);
     }
 
