@@ -9,3 +9,20 @@
 /public/build/
 /public/uploads/media/*
 !/public/uploads/media/.gitkeep
+# Bannières intérieures actuellement servies par les pages.
+!/public/uploads/media/0f35497e8753569c00d65a125488044b.webp
+!/public/uploads/media/4a2d3e55765832cf23acee636615aa74.webp
+!/public/uploads/media/4efaee9b64702cc67946f7e98eaccfa6.webp
+!/public/uploads/media/5f73e3f942246efe6f6a025ea1756c73.webp
+!/public/uploads/media/708976fcc0bfc3a18a7788095da06019.webp
+!/public/uploads/media/94e079801c340f6ea97833ac74b31390.webp
+!/public/uploads/media/ef4a636145d665bc6aa99c85b1e10723.webp
+!/public/uploads/media/thumbnails/
+/public/uploads/media/thumbnails/*
+!/public/uploads/media/thumbnails/0f35497e8753569c00d65a125488044b.webp
+!/public/uploads/media/thumbnails/4a2d3e55765832cf23acee636615aa74.webp
+!/public/uploads/media/thumbnails/4efaee9b64702cc67946f7e98eaccfa6.webp
+!/public/uploads/media/thumbnails/5f73e3f942246efe6f6a025ea1756c73.webp
+!/public/uploads/media/thumbnails/708976fcc0bfc3a18a7788095da06019.webp
+!/public/uploads/media/thumbnails/94e079801c340f6ea97833ac74b31390.webp
+!/public/uploads/media/thumbnails/ef4a636145d665bc6aa99c85b1e10723.webp
