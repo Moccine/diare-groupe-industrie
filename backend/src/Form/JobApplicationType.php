@@ -27,7 +27,10 @@ final class JobApplicationType extends AbstractType
             $builder->add('desiredRole', TextType::class, [
                 'label' => 'Poste ou domaine recherché',
                 'empty_data' => '',
-                'attr' => ['maxlength' => 120],
+                'attr' => [
+                    'maxlength' => 120,
+                    'placeholder' => 'Ex. : Commercial terrain',
+                ],
                 'constraints' => [
                     new NotBlank(message: 'Indiquez le poste ou le domaine recherché.', normalizer: 'trim'),
                     new Length(max: 120),
@@ -39,17 +42,29 @@ final class JobApplicationType extends AbstractType
             ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
                 'empty_data' => '',
-                'attr' => ['autocomplete' => 'given-name', 'maxlength' => 100],
+                'attr' => [
+                    'autocomplete' => 'given-name',
+                    'maxlength' => 100,
+                    'placeholder' => 'Votre prénom',
+                ],
             ])
             ->add('lastName', TextType::class, [
                 'label' => 'Nom',
                 'empty_data' => '',
-                'attr' => ['autocomplete' => 'family-name', 'maxlength' => 100],
+                'attr' => [
+                    'autocomplete' => 'family-name',
+                    'maxlength' => 100,
+                    'placeholder' => 'Votre nom',
+                ],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Adresse e-mail',
                 'empty_data' => '',
-                'attr' => ['autocomplete' => 'email', 'maxlength' => 180],
+                'attr' => [
+                    'autocomplete' => 'email',
+                    'maxlength' => 180,
+                    'placeholder' => 'vous@exemple.com',
+                ],
             ])
             ->add('phone', TelType::class, [
                 'label' => 'Téléphone',
@@ -59,6 +74,7 @@ final class JobApplicationType extends AbstractType
                     'maxlength' => 40,
                     'inputmode' => 'tel',
                     'pattern' => '[+0-9][0-9\\s\\(\\)\\.\\/\\-]{6,39}',
+                    'placeholder' => '+224 6XX XX XX XX',
                 ],
             ])
             ->add('linkedinUrl', UrlType::class, [
@@ -75,7 +91,10 @@ final class JobApplicationType extends AbstractType
                 'label' => 'Disponibilité',
                 'required' => false,
                 'help' => 'Facultatif. Par exemple : immédiate, ou sous un mois.',
-                'attr' => ['maxlength' => 120],
+                'attr' => [
+                    'maxlength' => 120,
+                    'placeholder' => 'Ex. : immédiate, ou sous un mois',
+                ],
             ])
             ->add('cv', FileType::class, [
                 'label' => 'CV',
@@ -107,6 +126,7 @@ final class JobApplicationType extends AbstractType
                     'maxlength' => 2000,
                     'data-char-max' => '2000',
                     'aria-describedby' => 'job_application_motivation_help',
+                    'placeholder' => 'Présentez votre parcours et votre motivation…',
                 ],
             ])
             ->add('consent', CheckboxType::class, [

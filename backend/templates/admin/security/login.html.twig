@@ -16,10 +16,10 @@
             {% endif %}
             <form method="post" action="{{ path('admin_login') }}" class="contact-form">
                 <label for="username">Email <span class="form-required" aria-hidden="true">*</span></label>
-                <input type="email" id="username" name="_username" value="{{ last_username }}" autocomplete="username" required autofocus>
+                <input type="email" id="username" name="_username" value="{{ last_username }}" autocomplete="username" placeholder="vous@exemple.com" required autofocus>
                 <label for="password">Mot de passe <span class="form-required" aria-hidden="true">*</span></label>
                 <div class="password-field">
-                    <input type="password" id="password" name="_password" autocomplete="current-password" required>
+                    <input type="password" id="password" name="_password" autocomplete="current-password" placeholder="Mot de passe" required>
                     <button class="password-field__toggle" type="button" data-password-toggle aria-controls="password" aria-pressed="false" aria-label="Afficher le mot de passe">
                         <svg class="password-field__icon" data-password-icon="show" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false">
                             <path d="M2 12s3.5-6 10-6 10 6 10 6-3.5 6-10 6S2 12 2 12z"/>

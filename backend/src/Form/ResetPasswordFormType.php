@@ -21,11 +21,15 @@ final class ResetPasswordFormType extends AbstractType
                 'attr' => [
                     'autocomplete' => 'new-password',
                     'data-password-policy' => '1',
+                    'placeholder' => 'Nouveau mot de passe',
                 ],
             ],
             'second_options' => [
                 'label' => 'Confirmer le mot de passe',
-                'attr' => ['autocomplete' => 'new-password'],
+                'attr' => [
+                    'autocomplete' => 'new-password',
+                    'placeholder' => 'Confirmez le mot de passe',
+                ],
             ],
             'constraints' => PasswordPolicy::constraints(true),
         ]);

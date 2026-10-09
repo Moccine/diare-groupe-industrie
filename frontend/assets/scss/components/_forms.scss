@@ -20,6 +20,12 @@
   color: var(--dgi-ink);
 }
 
+.contact-form input::placeholder,
+.contact-form textarea::placeholder {
+  color: var(--dgi-muted);
+  opacity: 0.45;
+}
+
 .contact-form input:focus,
 .contact-form textarea:focus {
   outline: none;

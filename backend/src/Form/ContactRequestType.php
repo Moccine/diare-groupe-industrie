@@ -21,37 +21,65 @@ final class ContactRequestType extends AbstractType
             ->add('lastName', TextType::class, [
                 'label' => 'Nom',
                 'empty_data' => '',
-                'attr' => ['autocomplete' => 'family-name', 'maxlength' => 80],
+                'attr' => [
+                    'autocomplete' => 'family-name',
+                    'maxlength' => 80,
+                    'placeholder' => 'Votre nom',
+                ],
             ])
             ->add('firstName', TextType::class, [
                 'label' => 'Prénom',
                 'empty_data' => '',
-                'attr' => ['autocomplete' => 'given-name', 'maxlength' => 80],
+                'attr' => [
+                    'autocomplete' => 'given-name',
+                    'maxlength' => 80,
+                    'placeholder' => 'Votre prénom',
+                ],
             ])
             ->add('company', TextType::class, [
                 'label' => 'Entreprise',
                 'required' => false,
-                'attr' => ['autocomplete' => 'organization', 'maxlength' => 160],
+                'attr' => [
+                    'autocomplete' => 'organization',
+                    'maxlength' => 160,
+                    'placeholder' => 'Nom de votre entreprise',
+                ],
             ])
             ->add('email', EmailType::class, [
                 'label' => 'Email',
                 'empty_data' => '',
-                'attr' => ['autocomplete' => 'email', 'maxlength' => 180],
+                'attr' => [
+                    'autocomplete' => 'email',
+                    'maxlength' => 180,
+                    'placeholder' => 'vous@exemple.com',
+                ],
             ])
             ->add('phone', TelType::class, [
                 'label' => 'Téléphone',
                 'required' => false,
-                'attr' => ['autocomplete' => 'tel', 'maxlength' => 40],
+                'attr' => [
+                    'autocomplete' => 'tel',
+                    'maxlength' => 40,
+                    'placeholder' => '+224 6XX XX XX XX',
+                ],
             ])
             ->add('subject', TextType::class, [
                 'label' => 'Objet',
                 'empty_data' => '',
-                'attr' => ['maxlength' => 180],
+                'attr' => [
+                    'maxlength' => 180,
+                    'placeholder' => 'Objet de votre demande',
+                ],
             ])
             ->add('message', TextareaType::class, [
                 'label' => 'Message',
                 'empty_data' => '',
-                'attr' => ['rows' => 6, 'minlength' => 10, 'maxlength' => 5000],
+                'attr' => [
+                    'rows' => 6,
+                    'minlength' => 10,
+                    'maxlength' => 5000,
+                    'placeholder' => 'Décrivez votre demande…',
+                ],
             ])
             ->add('consent', CheckboxType::class, [
                 'label' => 'J’accepte que ces informations soient utilisées pour répondre à ma demande.',

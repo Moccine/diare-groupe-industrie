@@ -19,6 +19,7 @@ final class ForgotPasswordFormType extends AbstractType
                     'autocomplete' => 'email',
                     'maxlength' => 180,
                     'autofocus' => true,
+                    'placeholder' => 'vous@exemple.com',
                 ],
             ])
             ->add('website', TextType::class, [
