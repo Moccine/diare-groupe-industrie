@@ -1,12 +1,21 @@
 Nouveau message reçu
 
-Nom : {{ request.fullName }}
-Entreprise : {{ request.company|default('—') }}
-Email : {{ request.email }}
-Téléphone : {{ request.phone|default('—') }}
+Nom et prénom : {{ request.fullName }}
+{% if request.company %}
+Entreprise : {{ request.company }}
+{% endif %}
+E-mail : {{ request.email }}
+{% if request.phone %}
+Téléphone : {{ request.phone }}
+{% endif %}
 Objet : {{ request.subject }}
-Date : {{ request.createdAt|date('d/m/Y H:i') }}
+Date de réception : {{ request.createdAt|date('d/m/Y H:i') }}
 
+Message :
 {{ request.message }}
 
-Répondre : {{ request.email }}
+{% if adminUrl starts with 'https://' or adminUrl starts with 'http://' %}
+Consulter le message : {{ adminUrl }}
+{% endif %}
+
+{% include 'email/_footer.txt.twig' %}

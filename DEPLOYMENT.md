@@ -101,6 +101,7 @@ BREVO_API_KEY=
 MAILER_DSN=
 MAIL_FROM_EMAIL=
 MAIL_FROM_NAME=
+CONTACT_NOTIFY_EMAIL=
 RECAPTCHA_ENABLED=
 RECAPTCHA_SITE_KEY=
 RECAPTCHA_SECRET_KEY=
@@ -222,18 +223,25 @@ BREVO_API_KEY=
 MAILER_DSN=brevo+api://default
 MAIL_FROM_EMAIL=no-reply@domaine
 MAIL_FROM_NAME="Diaré Groupe Industrie"
+CONTACT_NOTIFY_EMAIL=
 ```
 
 Le formulaire de contact :
 
-- enregistre le message en base (`contact_request`)
+- enregistre le message en base (`contact_request`) avant tout envoi
 - expéditeur : `MAIL_FROM_NAME <MAIL_FROM_EMAIL>`
-- notification interne vers `SiteSettings.email` (back-office « Coordonnées et réglages »)
-- `Reply-To` de cette notification : l’adresse saisie par le visiteur
-- accusé de réception au visiteur, dont le `Reply-To` est `SiteSettings.email`
-- pas d’envoi si `SiteSettings.email` est vide
+- alerte administrateur, dans cet ordre, sans adresse inventée :
+  1. `CONTACT_NOTIFY_EMAIL`, s’il est renseigné et valide ;
+  2. email public du site (`SiteSettings.email`)
+- `ADMIN_EMAIL` n’est pas un destinataire de cette alerte
+- `Reply-To` de l’alerte : l’adresse saisie par le visiteur
+- accusé de réception au visiteur, même si aucun destinataire administrateur n’est configuré
+- `Reply-To` de l’accusé : l’email public du site, seulement s’il est valide ; sinon aucun `Reply-To`
+- sans destinataire administrateur : le message reste en base, l’accusé visiteur part si le transport fonctionne, et un avertissement est journalisé sans le contenu du message
+- l’échec d’un des deux envois n’empêche pas la tentative de l’autre et ne supprime pas le message
+- un second envoi identique (même email, objet et message) dans la minute ne crée pas un second message
 
-Il n’y a pas de variable `CONTACT_EMAIL` : l’adresse de réception a une seule source, le back-office.
+`CONTACT_NOTIFY_EMAIL` vide est accepté : la réception retombe alors sur l’email du back-office. Le tableau de bord signale l’absence de destinataire lorsque les deux sources sont vides. Ne pas y placer une adresse fictive.
 
 ## 11. DNS Brevo
 
@@ -247,6 +255,10 @@ Il n’y a pas de variable `CONTACT_EMAIL` : l’adresse de réception a une seu
 6. Créer et valider l’expéditeur `no-reply@domaine`.
 
 Brevo n’héberge pas les boîtes. `contact@`, `direction@` et `commercial@` restent des boîtes professionnelles séparées. Le site envoie depuis `no-reply@` vers `contact@` sans supposer que les deux sont chez Brevo.
+
+Les messages transactionnels partagent `backend/templates/email/layout.html.twig` (tableaux HTML, styles inline). Le logo n’est inséré que si `DEFAULT_URI` est une origine `https` publique : logo des réglages du site, sinon `/brand/logo.png`. Une URL `localhost`, privée ou non HTTPS laisse le nom de l’entreprise en texte. Aucun CV n’est joint.
+
+SPF, DKIM et DMARC ne sont pas contrôlés par l’application. Les valeurs à publier sont celles affichées par Brevo pour le domaine de `MAIL_FROM_EMAIL`. Ne pas les inventer, et ne pas considérer l’envoi comme authentifié tant que le compte Brevo n’affiche pas le domaine comme authentifié.
 
 ## 12. reCAPTCHA
 
@@ -327,9 +339,62 @@ journalctl -u diare-groupe-industrie-messenger -n 100 --no-pager
 
 ## 17. Uploads
 
-Les médias sont dans `backend/public/uploads/media` (VichUploader, préfixe public `/uploads/media`).
+Les médias publics sont dans `backend/public/uploads/media` (VichUploader, préfixe public `/uploads/media`).
 
-Le déploiement est un `git pull` dans le même dossier, comme BienChezVousOise. Ce répertoire est ignoré par Git, hors le fichier `.gitkeep`. `git pull` ne le supprime pas. `deploy.sh` ne fait aucun `rm` dessus : il crée le dossier s’il manque, puis pose le propriétaire `www-data` et les droits `2775` / `664`.
+Les CV de candidature sont privés, dans `backend/var/private/job-applications`. Ce dossier est hors de `public/`, donc Apache ne peut pas le servir par URL. Le déploiement est un `git pull` dans le même dossier : `var/` n’est pas dans Git et n’est pas vidé par `deploy.sh`. En Docker local, `./backend` est monté dans le conteneur, le dossier privé reste donc sur l’hôte.
+
+`deploy.sh` crée le dossier en `2770` (`www-data`), puis resserre les fichiers en `640` après le `chmod` général de `var/`. Aucun volume Docker supplémentaire n’est nécessaire tant que le code reste monté ou déployé sur place.
+
+PHP accepte déjà 12 Mo (`docker/php/php.ini`, `upload_max_filesize` et `post_max_size`). Le formulaire refuse un CV au-delà de 5 Mo (5 242 880 octets).
+
+Notification RH, dans cet ordre, sans adresse inventée :
+
+1. email de candidature de l’offre, s’il est valide ;
+2. `JOB_APPLICATION_NOTIFY_EMAIL`, s’il est renseigné dans l’environnement ;
+3. email public du site (`SiteSettings`).
+
+S’il n’y a aucune adresse, le dossier est quand même enregistré et l’accusé candidat part. L’échec d’envoi ne supprime pas la candidature. Les CV ne sont pas joints aux e-mails.
+
+Anti-spam du formulaire de candidature : CSRF, champ caché, 8 envois / 30 minutes / IP (limiteur `job_application`, distinct du contact), reCAPTCHA v3 avec l’action `apply`. Une même adresse peut postuler à plusieurs offres. Un second envoi identique dans la minute ne crée pas un second dossier.
+
+## 17 bis. Conservation des candidatures
+
+Aucune durée légale n’est codée en dur. Le cadre applicable à Diaré Groupe Industrie (Guinée, et le droit qui régit réellement l’entreprise) doit être confirmé avec un conseil. La case du formulaire informe le candidat ; elle ne constitue pas, à elle seule, une mise en conformité.
+
+La politique de confidentialité du site est encore un texte à renseigner depuis le back-office. Elle devrait préciser, au minimum : responsable du traitement, finalité du recrutement, destinataires (équipe RH), durée, droits d’accès, de rectification et de suppression, et le fait que le CV n’est pas public.
+
+`JOB_APPLICATION_RETENTION_MONTHS` vide : aucune date de fin n’est enregistrée.
+
+Quand une durée est décidée, renseigner le nombre de mois. Les nouvelles candidatures reçoivent alors `retention_until`. Les anciennes ne sont pas modifiées.
+
+La purge n’est pas planifiée :
+
+```bash
+cd /var/www/diare-groupe-industrie/backend
+sudo -u www-data php bin/console app:job-applications:purge --env=prod --no-debug
+sudo -u www-data php bin/console app:job-applications:purge --execute --env=prod --no-debug
+```
+
+Sans `--execute`, la commande ne supprime rien. Avec `--execute`, elle retire le dossier et le PDF seulement si la date de fin est dépassée. Une demande d’effacement se traite dans l’administration : ouvrir la candidature, puis la supprimer. Le PDF est supprimé avec le dossier. Il n’y a pas d’espace candidat.
+
+Sauvegarde des CV : `bin/backup.sh` produit aussi `daily/cv-AAAAMMJJ-HHMMSS.tar.gz`. Restauration :
+
+```bash
+sudo tar -C /var/www/diare-groupe-industrie/backend/var/private -xzf cv-CHOISI.tar.gz
+sudo chown -R www-data:www-data /var/www/diare-groupe-industrie/backend/var/private
+sudo find /var/www/diare-groupe-industrie/backend/var/private -type d -exec chmod 2770 {} +
+sudo find /var/www/diare-groupe-industrie/backend/var/private -type f -exec chmod 640 {} +
+```
+
+Migration à appliquer avec le déploiement habituel, après sauvegarde :
+
+```bash
+sudo -u www-data php bin/console doctrine:migrations:migrate --no-interaction --env=prod --no-debug
+```
+
+Elle crée `job_application` et ne modifie pas les offres existantes. La suppression d’une offre laisse les candidatures, avec l’intitulé enregistré au moment du dépôt.
+
+Le déploiement est un `git pull` dans le même dossier. `var/private` est ignoré par Git. `git pull` ne le supprime pas. `deploy.sh` ne fait aucun `rm` dessus : il crée le dossier s’il manque, puis pose le propriétaire `www-data` et les droits `2770` pour les dossiers et `640` pour les fichiers.
 
 Il n’y a pas de schéma `releases/current` : le VPS de référence n’en utilise pas.
 
@@ -343,6 +408,7 @@ Destination par défaut : `/var/backups/diare-groupe-industrie`.
 
 - `daily/db-AAAAMMJJ-HHMMSS.sql.gz` — `diare_groupe_industrie` seulement
 - `daily/media-AAAAMMJJ-HHMMSS.tar.gz` — `public/uploads/media`
+- `daily/cv-AAAAMMJJ-HHMMSS.tar.gz` — `var/private/job-applications`, si le dossier existe
 - le dimanche, copie dans `weekly/`
 - conservation : 7 quotidiennes, 4 hebdomadaires
 
@@ -415,7 +481,7 @@ Pas de `chmod -R 777`. Le bit setgid (`2775`) fait hériter le groupe `www-data`
 
 ## Cron
 
-Aucun cron métier. Les commandes `app:*` sont manuelles : `app:create-admin`, `app:generate-media-thumbnails`, `app:seed-editorial-demo`.
+Aucun cron métier. Les commandes `app:*` sont manuelles : `app:create-admin`, `app:generate-media-thumbnails`, `app:seed-editorial-demo`, `app:job-applications:purge`.
 
 La dernière ne doit pas être planifiée : elle ajoute des contenus de démonstration.
 

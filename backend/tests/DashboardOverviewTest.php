@@ -33,8 +33,10 @@ final class DashboardOverviewTest extends WebTestCase
         $databaseUrl = 'sqlite:///'.dirname(__DIR__).'/var/dashboard_phpunit.db';
         putenv('APP_ENV=test');
         putenv('DATABASE_URL='.$databaseUrl);
+        putenv('CONTACT_NOTIFY_EMAIL=');
         $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = 'test';
         $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = $databaseUrl;
+        $_SERVER['CONTACT_NOTIFY_EMAIL'] = $_ENV['CONTACT_NOTIFY_EMAIL'] = '';
 
         $this->client = static::createClient();
         $params = $this->manager()->getConnection()->getParams();
@@ -100,6 +102,7 @@ final class DashboardOverviewTest extends WebTestCase
         $text = implode("\n", $labels);
         self::assertStringContainsString('logo du site', $text);
         self::assertStringContainsString('email de contact', $text);
+        self::assertStringContainsString('alerte des messages de contact', $text);
         self::assertStringContainsString('carte du site', $text);
         self::assertStringContainsString('image principale', $text);
         self::assertStringContainsString('pas de catégorie', $text);
@@ -116,6 +119,31 @@ final class DashboardOverviewTest extends WebTestCase
             self::assertContains($gap['action'], ['Corriger', 'Voir']);
             self::assertContains($gap['type'], ['warning', 'info']);
         }
+    }
+
+    public function testContactAlertWarningIsHiddenWhenNotifyEmailIsConfigured(): void
+    {
+        self::ensureKernelShutdown();
+        putenv('CONTACT_NOTIFY_EMAIL=alertes@example.test');
+        $_SERVER['CONTACT_NOTIFY_EMAIL'] = $_ENV['CONTACT_NOTIFY_EMAIL'] = 'alertes@example.test';
+        $this->client = static::createClient();
+        $this->manager()->persist(new SiteSettings());
+        $this->manager()->flush();
+
+        $overview = static::getContainer()->get(DashboardOverview::class);
+        self::assertInstanceOf(DashboardOverview::class, $overview);
+        $text = implode("\n", array_column($overview->build()['gaps'], 'label'));
+
+        self::assertStringNotContainsString('alerte des messages de contact', $text);
+        self::assertStringContainsString('email de contact', $text);
+    }
+
+    protected function tearDown(): void
+    {
+        putenv('CONTACT_NOTIFY_EMAIL');
+        unset($_ENV['CONTACT_NOTIFY_EMAIL'], $_SERVER['CONTACT_NOTIFY_EMAIL']);
+
+        parent::tearDown();
     }
 
     private function manager(): EntityManagerInterface

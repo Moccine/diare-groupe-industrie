@@ -40,6 +40,7 @@ final class DashboardOverview
         private readonly SectionRepository $sectionRepository,
         private readonly HeroSlideRepository $heroSlideRepository,
         private readonly AdminLinkFactory $adminLinks,
+        private readonly ContactRecipientResolver $contactRecipients,
     ) {
     }
 
@@ -71,6 +72,7 @@ final class DashboardOverview
         $gaps = array_values(array_filter([
             $logoConfigured ? null : $this->notice('Le logo du site n’est pas configuré.', $settingsUrl),
             $emailConfigured ? null : $this->notice('L’adresse email de contact n’est pas renseignée.', $settingsUrl),
+            $this->contactRecipients->staff($settings) !== null ? null : $this->notice('Aucun destinataire n’est configuré pour l’alerte des messages de contact.', $settingsUrl),
             $mapConfigured ? null : $this->notice('La carte du site n’a pas de coordonnées.', $settingsUrl),
             $this->countGap(
                 $this->pageRepository->countPublishedWithoutVisibleSection(),
@@ -110,8 +112,8 @@ final class DashboardOverview
             ),
             $this->countGap(
                 $this->jobOfferRepository->countOpenWithoutApplication(),
-                'offre publiée n’a ni email ni lien de candidature.',
-                'offres publiées n’ont ni email ni lien de candidature.',
+                'offre ouverte n’a ni email RH dédié ni lien de candidature externe.',
+                'offres ouvertes n’ont ni email RH dédié ni lien de candidature externe.',
                 $this->adminLinks->to(JobOfferCrudController::class),
             ),
             $this->countGap(

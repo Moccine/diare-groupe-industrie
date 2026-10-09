@@ -1,0 +1,19 @@
+Nouvelle candidature — {{ application.jobTitleSnapshot }}
+
+Le CV n’est pas joint à ce message. Il se consulte dans l’administration, après connexion.
+
+Nom et prénom : {{ application.fullName }}
+Offre ou domaine : {% if application.spontaneous %}{% if application.desiredRole %}Candidature spontanée — {{ application.desiredRole }}{% else %}Candidature spontanée{% endif %}{% else %}{{ application.jobTitleSnapshot }}{% endif %}
+
+E-mail : {{ application.email }}
+Téléphone : {{ application.phone }}
+Date de réception : {{ application.createdAt|date('d/m/Y H:i') }}
+
+Motivation :
+{{ application.motivation|slice(0, 400) }}{% if application.motivation|length > 400 %}…{% endif %}
+
+{% if adminUrl starts with 'https://' or adminUrl starts with 'http://' %}
+Consulter la candidature : {{ adminUrl }}
+{% endif %}
+
+{% include 'email/_footer.txt.twig' %}

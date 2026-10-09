@@ -27,7 +27,10 @@ final class SecurityHeadersSubscriber
         $headers->set('Permissions-Policy', 'camera=(), microphone=(), geolocation=(), payment=()');
 
         $path = $event->getRequest()->getPathInfo();
-        if (!$this->appIndexable || str_starts_with($path, '/administration')) {
+        $private = str_contains($path, '/postuler/confirmation')
+            || $path === '/nous-rejoindre/candidature-spontanee/confirmation'
+            || preg_match('#^/administration/candidatures/\d+/cv(?:/telecharger)?$#', $path) === 1;
+        if (!$this->appIndexable || str_starts_with($path, '/administration') || $private) {
             $headers->set('X-Robots-Tag', 'noindex, nofollow');
         }
     }

@@ -4,6 +4,7 @@ namespace App\Admin\Help;
 
 use App\Controller\Admin\Crud\ContactRequestCrudController;
 use App\Controller\Admin\Crud\HeroSlideCrudController;
+use App\Controller\Admin\Crud\JobApplicationCrudController;
 use App\Controller\Admin\Crud\JobOfferCrudController;
 use App\Controller\Admin\Crud\MediaCrudController;
 use App\Controller\Admin\Crud\NewsCrudController;
@@ -49,6 +50,7 @@ final class AdminHelpRegistry
             StatisticCrudController::class => $this->statistics(),
             NewsCrudController::class => $this->news(),
             JobOfferCrudController::class => $this->jobs(),
+            JobApplicationCrudController::class => $this->applications(),
             PartnerCrudController::class => $this->partners(),
             ContactRequestCrudController::class => $this->messages(),
             UserCrudController::class => $this->users(),
@@ -218,6 +220,7 @@ final class AdminHelpRegistry
             ], icon: 'fa-list-check', tone: 'prepare'),
             $this->section('Comment ça fonctionne ?', [
                 'Le nom, le logo et les couleurs se retrouvent partout. L’email, le téléphone et l’adresse alimentent le pied de page et la page contact.',
+                'Cet email reçoit l’alerte des messages de contact lorsque CONTACT_NOTIFY_EMAIL n’est pas renseigné. Il sert aussi d’adresse de réponse à l’accusé envoyé au visiteur.',
                 'La carte reste masquée tant que la latitude et la longitude ne sont pas renseignées. Un réseau social vide n’affiche pas de lien. Le bouton du menu et le texte de pied de page sont facultatifs.',
             ], icon: 'fa-gears', tone: 'flow'),
             $this->section('Résultat dans Google', [
@@ -363,14 +366,36 @@ final class AdminHelpRegistry
             ], icon: 'fa-gears', tone: 'flow'),
             $this->section('Exemple', [
                 'Si vous renseignez un lien de candidature, le candidat sera envoyé vers ce lien.',
-                'Si aucun lien n’est renseigné, le bouton utilisera l’adresse email de candidature.',
+                'Sans lien, le bouton ouvre le formulaire du site. L’email de candidature reçoit alors la notification, s’il est renseigné.',
                 'Lien de candidature : https://exemple.com/candidature',
             ], icon: 'fa-lightbulb', tone: 'example'),
             $this->section('Résultat sur le site', [
-                'Le bouton Postuler ouvre le lien s’il est rempli. Sinon, il prépare un email vers l’adresse indiquée. « Voir sur le site » n’apparaît que pour une offre réellement ouverte.',
+                'Le bouton « Postuler à cette offre » ouvre le lien externe s’il est rempli. Sinon, le candidat dépose son CV sur le site. « Voir sur le site » n’apparaît que pour une offre réellement ouverte.',
             ], icon: 'fa-eye', tone: 'result'),
             $this->section('À savoir', [
                 'N’inventez pas d’adresse email. Une offre expirée reste dans l’administration, mais les visiteurs ne la voient plus.',
+            ], icon: 'fa-triangle-exclamation', tone: 'warning'),
+        ]);
+    }
+
+    private function applications(): AdminHelp
+    {
+        return $this->help('Candidatures', [
+            $this->section('À quoi sert cet écran ?', [
+                'Une candidature est un dossier reçu depuis le site : identité, téléphone, motivation et CV PDF. Elle n’est pas publiée.',
+            ], icon: 'fa-compass', tone: 'info'),
+            $this->section('Comment ça fonctionne ?', [
+                'Les dossiers les plus récents apparaissent en premier. Le badge du menu compte uniquement les candidatures au statut Nouvelle.',
+                'Une candidature spontanée n’est pas liée à une offre. Le domaine recherché est indiqué à la place.',
+                'Consulter le CV et le télécharger passent par l’administration. Il n’existe pas d’adresse publique vers le fichier.',
+            ], icon: 'fa-gears', tone: 'flow'),
+            $this->section('Exemple', [
+                'Vous ouvrez une nouvelle candidature, vous lisez la motivation, vous consultez le PDF, puis vous passez le statut à « À étudier ». Aucun e-mail n’est envoyé au candidat.',
+            ], icon: 'fa-lightbulb', tone: 'example'),
+            $this->section('À savoir', [
+                'Les notes internes restent dans l’administration. Changer le statut ne prévient pas le candidat.',
+                'Supprimer un dossier supprime aussi son CV. La case de consentement du formulaire ne sert pas à une newsletter.',
+                'La durée de conservation n’est pas imposée par le logiciel. La commande de purge ne s’exécute que si vous la lancez.',
             ], icon: 'fa-triangle-exclamation', tone: 'warning'),
         ]);
     }
@@ -417,6 +442,7 @@ final class AdminHelpRegistry
             ], icon: 'fa-lightbulb', tone: 'example'),
             $this->section('À savoir', [
                 'Vous pouvez supprimer un message de l’administration. Cela ne change rien au site public. Il n’est pas possible d’en créer un depuis cet écran.',
+                'L’alerte part vers CONTACT_NOTIFY_EMAIL s’il est valide, sinon vers l’email public du site. Sans aucune de ces adresses, le message reste ici et le tableau de bord le signale.',
             ], icon: 'fa-triangle-exclamation', tone: 'warning'),
         ]);
     }

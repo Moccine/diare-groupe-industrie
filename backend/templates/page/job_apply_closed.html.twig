@@ -1,0 +1,22 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: 'Offre indisponible',
+        lead: 'Cette offre n’accepte plus de candidatures.',
+        tone: 'nous-rejoindre',
+        crumbs: [
+            { label: 'Nous rejoindre', url: path('jobs') },
+            { label: 'Offre indisponible' }
+        ]
+    } %}
+    <section class="section job-apply">
+        <div class="container job-apply__layout">
+            <p role="alert">Le lien n’est plus valable : l’offre est peut-être expirée, pas encore publiée, ou elle n’existe pas. Aucun dossier ne peut être déposé.</p>
+            <p class="section-actions">
+                <a class="button" href="{{ path('jobs') }}">Voir les offres ouvertes</a>
+                <a class="button button--ghost" href="{{ path('job_apply_spontaneous') }}">Candidature spontanée</a>
+            </p>
+        </div>
+    </section>
+{% endblock %}

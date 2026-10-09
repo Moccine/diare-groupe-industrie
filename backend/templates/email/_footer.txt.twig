@@ -1,0 +1,20 @@
+--
+{{ settings.companyName|default('Diaré Groupe Industrie') }}
+{% if settings.address %}
+{{ settings.address }}
+{% endif %}
+{% if settings.phone %}
+{{ settings.phone }}
+{% endif %}
+{% if settings.hasPublicEmail %}
+{{ settings.email }}
+{% endif %}
+{% set siteUrl = email_site_url() %}
+{% if siteUrl %}
+{{ siteUrl }}
+{% endif %}
+{% if settings.copyright %}
+{{ settings.copyright }}
+{% endif %}
+
+Message transactionnel envoyé automatiquement par le site. Il fait suite à une action réalisée en ligne.

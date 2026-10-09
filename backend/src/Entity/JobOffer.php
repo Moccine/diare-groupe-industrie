@@ -28,6 +28,7 @@ class JobOffer
     #[ORM\Column(length: 180)]
     #[Assert\NotBlank]
     #[Assert\Regex(pattern: '/^[a-z0-9]+(?:-[a-z0-9]+)*$/')]
+    #[Assert\NotEqualTo(value: 'candidature-spontanee', message: 'Cette adresse est réservée à la candidature spontanée.')]
     private string $slug = '';
 
     #[ORM\Column(length: 120, nullable: true)]
@@ -278,16 +279,16 @@ class JobOffer
 
     public function getApplicationHref(): ?string
     {
-        if ($this->isExternalApplication()) {
-            return $this->applicationUrl;
-        }
-
-        $email = trim((string) $this->applicationEmail);
-        if (filter_var($email, FILTER_VALIDATE_EMAIL) === false) {
+        if (!$this->isExternalApplication()) {
             return null;
         }
 
-        return 'mailto:'.$email.'?subject='.rawurlencode('Candidature : '.$this->title);
+        $url = trim((string) $this->applicationUrl);
+        if (!preg_match('#^https?://#i', $url)) {
+            return null;
+        }
+
+        return $url;
     }
 
     private static function blankToNull(?string $value): ?string

@@ -90,6 +90,9 @@
                 {{- label|trans(label_translation_parameters, translation_domain)|raw -}}
             {%- endif -%}
         {%- endif -%}
+        {%- if required and 'checkbox' not in form.vars.block_prefixes -%}
+            <span class="form-required" aria-hidden="true">*</span>
+        {%- endif -%}
         {%- if help_text is not same as('') -%}
             <button type="button" class="dgi-field-tip" data-bs-toggle="tooltip" data-bs-placement="top" data-bs-custom-class="ea-detail-label-tooltip" data-bs-title="{{ help_text|e('html_attr') }}" aria-label="{{ help_text }}">
                 <twig:ea:Icon name="internal:circle-info" />

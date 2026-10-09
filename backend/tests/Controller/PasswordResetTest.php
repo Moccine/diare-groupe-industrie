@@ -3,8 +3,11 @@
 namespace App\Tests\Controller;
 
 use App\Command\TestMailCommand;
+use App\Controller\Admin\Crud\JobOfferCrudController;
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Service\AdminLinkFactory;
+use EasyCorp\Bundle\EasyAdminBundle\Config\Action;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
 use Psr\Cache\CacheItemPoolInterface;
@@ -54,6 +57,31 @@ final class PasswordResetTest extends WebTestCase
         self::assertResponseIsSuccessful();
         self::assertResponseHeaderSame('X-Robots-Tag', 'noindex, nofollow');
         self::assertSelectorExists('a[href="/administration/mot-de-passe-oublie"]');
+        self::assertSelectorExists('label .form-required');
+    }
+
+    public function testRequiredBackOfficeFieldsShowARedStar(): void
+    {
+        $admin = $this->createAdmin('AncienMotDePasse1!');
+        $this->client->loginUser($admin, 'admin');
+        $links = static::getContainer()->get(AdminLinkFactory::class);
+        self::assertInstanceOf(AdminLinkFactory::class, $links);
+        $url = $links->to(JobOfferCrudController::class, Action::NEW);
+        $parts = parse_url($url);
+        self::assertIsArray($parts);
+
+        $this->client->request('GET', ($parts['path'] ?? '/').(isset($parts['query']) ? '?'.$parts['query'] : ''));
+
+        self::assertResponseIsSuccessful();
+        $content = (string) $this->client->getResponse()->getContent();
+        self::assertMatchesRegularExpression(
+            '/Intitulé du poste\s*<span class="form-required" aria-hidden="true">\*<\/span>/',
+            $content,
+        );
+        self::assertDoesNotMatchRegularExpression(
+            '/Publiée\s*<span class="form-required"/',
+            $content,
+        );
     }
 
     public function testUnknownEmailShowsTheSameConfirmationAndSendsNothing(): void

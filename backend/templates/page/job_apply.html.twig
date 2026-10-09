@@ -1,0 +1,111 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: offer ? 'Postuler — ' ~ offer.title : 'Postuler — Candidature spontanée',
+        lead: offer ? offer.contractType.label : 'Présentez votre profil, même sans offre ouverte.',
+        tone: 'nous-rejoindre',
+        crumbs: offer ? [
+            { label: 'Nous rejoindre', url: path('jobs') },
+            { label: offer.title, url: path('job_show', { slug: offer.slug }) },
+            { label: 'Postuler' }
+        ] : [
+            { label: 'Nous rejoindre', url: path('jobs') },
+            { label: 'Candidature spontanée' }
+        ]
+    } %}
+    <section class="section job-apply">
+        <div class="container job-apply__layout">
+            <p class="job-apply__back">
+                {% if offer %}
+                    <a href="{{ path('job_show', { slug: offer.slug }) }}">Retour à l’offre</a>
+                {% else %}
+                    <a href="{{ path('jobs') }}">Retour aux offres</a>
+                {% endif %}
+            </p>
+            {% if offer %}
+                <ul class="job-card__meta">
+                    <li>{{ offer.contractType.label }}</li>
+                    {% if offer.location %}
+                        <li>{{ offer.location }}</li>
+                    {% endif %}
+                </ul>
+            {% endif %}
+
+            {% form_theme form 'form/job_application_layout.html.twig' %}
+            {% for message in app.flashes('success') %}
+                <p class="form-banner form-banner--success" role="status">{{ message }}</p>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <p class="form-banner form-banner--error" role="alert">{{ message }}</p>
+            {% endfor %}
+
+            {{ form_start(form, { attr: {
+                class: 'contact-form job-apply__form',
+                novalidate: 'novalidate',
+                'data-validate': '1',
+                'data-form-submit-lock': '1',
+                'data-job-application': '1',
+                'data-recaptcha-site-key': recaptcha_site_key|default(''),
+                'data-recaptcha-action': 'apply'
+            } }) }}
+                {% if form.desiredRole is defined %}
+                    {{ form_row(form.desiredRole) }}
+                {% endif %}
+                <div class="form-grid">
+                    {{ form_row(form.firstName) }}
+                    {{ form_row(form.lastName) }}
+                </div>
+                <div class="form-grid">
+                    {{ form_row(form.email) }}
+                    {{ form_row(form.phone) }}
+                </div>
+                {{ form_row(form.linkedinUrl) }}
+                {{ form_row(form.availability) }}
+
+                <div class="cv-drop" data-cv-drop>
+                    {{ form_label(form.cv) }}
+                    {{ form_errors(form.cv) }}
+                    <div class="cv-drop__panel">
+                        <p class="cv-drop__title">Déposer votre CV</p>
+                        <p>Sélectionnez un fichier PDF depuis votre appareil.</p>
+                        <p class="cv-drop__limit">PDF uniquement — 5 Mo maximum</p>
+                        {{ form_widget(form.cv) }}
+                        <div class="cv-drop__file" data-cv-file hidden>
+                            <span class="cv-drop__badge" aria-hidden="true">PDF</span>
+                            <span>
+                                <strong data-cv-name></strong>
+                                <span data-cv-size></span>
+                            </span>
+                            <button class="button button--ghost button--small" type="button" data-cv-clear>Retirer</button>
+                        </div>
+                    </div>
+                </div>
+
+                {{ form_label(form.motivation) }}
+                {{ form_help(form.motivation) }}
+                {{ form_errors(form.motivation) }}
+                {{ form_widget(form.motivation) }}
+                <p class="char-count" id="job_application_motivation_count" data-char-count aria-live="polite">0 / 2000</p>
+
+                <div class="consent">
+                    {{ form_widget(form.consent) }}
+                    <label class="form-check-label" for="{{ form.consent.vars.id }}">
+                        J’accepte que les informations transmises soient utilisées par Diaré Groupe Industrie uniquement pour le traitement de ma candidature, conformément à la <a href="{{ path('page_show', { slug: 'politique-de-confidentialite' }) }}">politique de confidentialité</a>.
+                        <span class="form-required" aria-hidden="true">*</span>
+                    </label>
+                    {{ form_errors(form.consent) }}
+                </div>
+                {{ form_row(form.website) }}
+                <button class="button" type="submit">Envoyer ma candidature</button>
+            {{ form_end(form) }}
+        </div>
+    </section>
+{% endblock %}
+
+{% block javascripts %}
+    {{ parent() }}
+    {% if recaptcha_site_key|default('') %}
+        <script src="https://www.google.com/recaptcha/api.js?render={{ recaptcha_site_key|e('url') }}" async defer></script>
+    {% endif %}
+{% endblock %}

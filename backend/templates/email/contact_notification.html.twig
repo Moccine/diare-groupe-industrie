@@ -1,21 +1,20 @@
 {% extends 'email/layout.html.twig' %}
 
 {% block title %}Nouveau message reçu{% endblock %}
+{% block preheader %}Un nouveau message est arrivé depuis le formulaire de contact.{% endblock %}
 
 {% block body %}
-    <h1 style="margin:0 0 12px;color:#185424;font-size:22px;">Nouveau message reçu</h1>
-    <p style="margin:0 0 16px;">Un visiteur a écrit depuis le formulaire de contact.</p>
-    <table role="presentation" width="100%" cellspacing="0" cellpadding="0">
-        <tr><td style="padding:6px 0;"><strong>Nom :</strong> {{ request.fullName }}</td></tr>
-        <tr><td style="padding:6px 0;"><strong>Entreprise :</strong> {{ request.company|default('—') }}</td></tr>
-        <tr><td style="padding:6px 0;"><strong>Email :</strong> {{ request.email }}</td></tr>
-        <tr><td style="padding:6px 0;"><strong>Téléphone :</strong> {{ request.phone|default('—') }}</td></tr>
-        <tr><td style="padding:6px 0;"><strong>Objet :</strong> {{ request.subject }}</td></tr>
-        <tr><td style="padding:6px 0;"><strong>Date :</strong> {{ request.createdAt|date('d/m/Y H:i') }}</td></tr>
-    </table>
-    <p style="margin:18px 0 8px;"><strong>Message</strong></p>
-    <p style="margin:0;white-space:pre-line;">{{ request.message }}</p>
-    <p style="margin:22px 0 0;">
-        <a href="mailto:{{ request.email }}" style="display:inline-block;padding:10px 16px;background:#185424;color:#ffffff;text-decoration:none;">Répondre</a>
-    </p>
+    <h1 style="{{ titleStyle }}">Nouveau message reçu</h1>
+    <p style="{{ textStyle }}">Un visiteur a écrit depuis le formulaire de contact.</p>
+    {% include 'email/_rows.html.twig' with { rows: [
+        { label: 'Nom et prénom', value: request.fullName },
+        { label: 'Entreprise', value: request.company },
+        { label: 'E-mail', value: request.email },
+        { label: 'Téléphone', value: request.phone },
+        { label: 'Objet', value: request.subject },
+        { label: 'Date de réception', value: request.createdAt|date('d/m/Y H:i') },
+    ] } %}
+    <p style="{{ textStyle }}margin-top:18px;margin-bottom:8px;"><strong>Message</strong></p>
+    <p style="{{ textStyle }}">{{ request.message|nl2br }}</p>
+    {% include 'email/_button.html.twig' with { url: adminUrl, label: 'Consulter le message' } %}
 {% endblock %}

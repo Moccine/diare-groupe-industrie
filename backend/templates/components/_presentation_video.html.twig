@@ -1,0 +1,21 @@
+<figure class="presentation-video" data-reveal="{{ reveal|default('fade-left') }}">
+    <div class="presentation-video__frame">
+        <video
+            class="presentation-video__player"
+            autoplay
+            muted
+            loop
+            playsinline
+            preload="metadata"
+            poster="{{ asset('videos/presentation-diare-groupe-poster.webp') }}"
+            width="848"
+            height="480"
+            data-presentation-video
+            aria-label="Présentation de Diaré Groupe Industrie"
+        >
+            <source src="{{ asset('videos/presentation-diare-groupe.mp4') }}" type="video/mp4">
+            <img src="{{ asset('videos/presentation-diare-groupe-poster.webp') }}" alt="Conditionnement des produits Diaré Groupe Industrie">
+        </video>
+        <img class="presentation-video__still" src="{{ asset('videos/presentation-diare-groupe-poster.webp') }}" alt="Conditionnement des produits Diaré Groupe Industrie">
+    </div>
+</figure>

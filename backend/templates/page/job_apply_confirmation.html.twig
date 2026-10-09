@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block main %}
+    {% include 'partials/_page_banner.html.twig' with {
+        title: 'Candidature envoyée',
+        lead: 'Diaré Groupe Industrie',
+        tone: 'nous-rejoindre',
+        crumbs: [
+            { label: 'Nous rejoindre', url: path('jobs') },
+            { label: 'Confirmation' }
+        ]
+    } %}
+    <section class="section job-apply">
+        <div class="container job-apply__layout">
+            {% if receipt %}
+                <p class="form-banner form-banner--success" role="status">Votre candidature a bien été envoyée.</p>
+                <h2>Merci {{ receipt.firstName }}</h2>
+                <p>Nous avons bien reçu votre candidature{% if receipt.title %} pour « {{ receipt.title }} »{% endif %}. Notre équipe l’examinera et vous contactera si votre profil correspond.</p>
+            {% else %}
+                <h2>Aucune candidature à confirmer</h2>
+                <p>Cette page ne confirme un envoi que juste après le formulaire. Si votre dossier a déjà été transmis, il reste enregistré.</p>
+            {% endif %}
+            <p class="section-actions">
+                <a class="button" href="{{ path('jobs') }}">Retour aux offres</a>
+            </p>
+        </div>
+    </section>
+{% endblock %}

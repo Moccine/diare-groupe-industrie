@@ -11,6 +11,7 @@ final class SeoDocument
         public readonly ?string $imagePath = null,
         public readonly string $type = 'website',
         public readonly ?string $jsonLd = null,
+        public readonly bool $noindex = false,
     ) {
     }
 }

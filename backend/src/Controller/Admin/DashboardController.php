@@ -4,6 +4,7 @@ namespace App\Controller\Admin;
 
 use App\Controller\Admin\Crud\ContactRequestCrudController;
 use App\Controller\Admin\Crud\HeroSlideCrudController;
+use App\Controller\Admin\Crud\JobApplicationCrudController;
 use App\Controller\Admin\Crud\JobOfferCrudController;
 use App\Controller\Admin\Crud\MediaCrudController;
 use App\Controller\Admin\Crud\NewsCrudController;
@@ -15,7 +16,9 @@ use App\Controller\Admin\Crud\SectionCrudController;
 use App\Controller\Admin\Crud\SiteSettingsCrudController;
 use App\Controller\Admin\Crud\StatisticCrudController;
 use App\Controller\Admin\Crud\UserCrudController;
+use App\Enum\JobApplicationStatus;
 use App\Repository\ContactRequestRepository;
+use App\Repository\JobApplicationRepository;
 use App\Service\AdminLinkFactory;
 use App\Service\DashboardOverview;
 use EasyCorp\Bundle\EasyAdminBundle\Attribute\AdminDashboard;
@@ -32,6 +35,7 @@ final class DashboardController extends AbstractDashboardController
 {
     public function __construct(
         private readonly ContactRequestRepository $contactRequestRepository,
+        private readonly JobApplicationRepository $jobApplicationRepository,
         private readonly DashboardOverview $dashboardOverview,
         private readonly AdminLinkFactory $adminLinks,
     ) {
@@ -102,8 +106,16 @@ final class DashboardController extends AbstractDashboardController
 
         yield MenuItem::section('Communication');
         yield MenuItem::linkTo(NewsCrudController::class, 'Actualités', 'fa fa-newspaper');
-        yield MenuItem::linkTo(JobOfferCrudController::class, 'Offres d’emploi', 'fa fa-briefcase');
         yield MenuItem::linkTo(PartnerCrudController::class, 'Partenaires', 'fa fa-handshake');
+
+        yield MenuItem::section('Recrutement');
+        yield MenuItem::linkTo(JobOfferCrudController::class, 'Offres d’emploi', 'fa fa-briefcase');
+        $applications = MenuItem::linkTo(JobApplicationCrudController::class, 'Candidatures', 'fa fa-file-lines');
+        $newApplications = $this->jobApplicationRepository->countByStatus(JobApplicationStatus::New);
+        if ($newApplications > 0) {
+            $applications = $applications->setBadge($newApplications, 'warning');
+        }
+        yield $applications;
 
         $messages = MenuItem::linkTo(ContactRequestCrudController::class, 'Messages reçus', 'fa fa-envelope');
         $unread = $this->contactRequestRepository->countUnread();

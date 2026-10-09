@@ -3,6 +3,7 @@
 # Sauvegarde isolée de Diaré Groupe Industrie :
 #   - base diare_groupe_industrie
 #   - médias backend/public/uploads/media
+#   - CV privés backend/var/private/job-applications
 #
 # Le mot de passe n'est ni affiché, ni écrit dans ce script.
 # Il est lu depuis backend/.env.local vers un fichier temporaire en 0600.
@@ -80,9 +81,23 @@ echo "Sauvegarde des médias..."
 tar -C "${BACKEND_DIR}/public/uploads" -czf "${MEDIA_ARCHIVE}" media
 chmod 640 "${MEDIA_ARCHIVE}"
 
+CV_DIR="${BACKEND_DIR}/var/private/job-applications"
+CV_ARCHIVE="${BACKUP_DIR}/daily/cv-${STAMP}.tar.gz"
+if [ -d "${CV_DIR}" ]; then
+    echo "Sauvegarde des CV..."
+    tar -C "${BACKEND_DIR}/var/private" -czf "${CV_ARCHIVE}" job-applications
+    chmod 640 "${CV_ARCHIVE}"
+else
+    echo "Aucun dossier de CV à sauvegarder."
+    CV_ARCHIVE=""
+fi
+
 if [ "$(date +%u)" = "7" ]; then
     cp -a "${DB_ARCHIVE}" "${BACKUP_DIR}/weekly/db-${STAMP}.sql.gz"
     cp -a "${MEDIA_ARCHIVE}" "${BACKUP_DIR}/weekly/media-${STAMP}.tar.gz"
+    if [ -n "${CV_ARCHIVE}" ] && [ -f "${CV_ARCHIVE}" ]; then
+        cp -a "${CV_ARCHIVE}" "${BACKUP_DIR}/weekly/cv-${STAMP}.tar.gz"
+    fi
 fi
 
 prune()
@@ -97,9 +112,14 @@ prune()
 
 prune "${BACKUP_DIR}/daily" 'db-*.sql.gz' 7
 prune "${BACKUP_DIR}/daily" 'media-*.tar.gz' 7
+prune "${BACKUP_DIR}/daily" 'cv-*.tar.gz' 7
 prune "${BACKUP_DIR}/weekly" 'db-*.sql.gz' 4
 prune "${BACKUP_DIR}/weekly" 'media-*.tar.gz' 4
+prune "${BACKUP_DIR}/weekly" 'cv-*.tar.gz' 4
 
 echo "Sauvegarde terminée : ${BACKUP_DIR}"
 echo "SQL    : ${DB_ARCHIVE}"
 echo "Médias : ${MEDIA_ARCHIVE}"
+if [ -n "${CV_ARCHIVE}" ]; then
+    echo "CV     : ${CV_ARCHIVE}"
+fi

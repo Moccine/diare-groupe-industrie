@@ -99,14 +99,14 @@ final class JobOfferCrudController extends AbstractCrudController
             ->hideOnIndex();
 
         yield FormField::addFieldset('Candidature', 'fa fa-paper-plane')
-            ->setHelp('Si un lien de candidature est renseigné, le candidat est envoyé vers ce lien. Sinon, l’adresse email est utilisée.');
+            ->setHelp('Si un lien externe est renseigné, le candidat y est envoyé. Sinon, il dépose son CV sur le formulaire du site. L’email sert uniquement à prévenir l’équipe RH.');
         yield EmailField::new('applicationEmail', 'Email de candidature')
             ->setColumns(FormColumns::MEDIUM)
-            ->setHelp('Utilisé seulement si aucun lien de candidature n’est renseigné. N’inventez pas d’adresse.')
+            ->setHelp('Utilisé comme destinataire de la notification lorsqu’il n’y a pas de lien externe. N’inventez pas d’adresse.')
             ->hideOnIndex();
         yield UrlField::new('applicationUrl', 'Lien de candidature')
             ->setColumns(FormColumns::MEDIUM)
-            ->setHelp('Si ce lien est rempli, le candidat y est envoyé. Sinon, le bouton utilise l’email. Exemple : https://exemple.com/candidature.')
+            ->setHelp('Si ce lien est rempli, le candidat quitte le site vers cette adresse. Exemple : https://exemple.com/candidature.')
             ->hideOnIndex();
 
         yield FormField::addFieldset('Publication', 'fa fa-calendar');

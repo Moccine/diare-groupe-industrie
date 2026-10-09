@@ -1,0 +1,18 @@
+{% use 'form/contact_layout.html.twig' %}
+
+{% block form_row %}
+    {% set row_class = (row_attr.class|default('') ~ (valid ? '' : ' is-invalid'))|trim %}
+    {% set row_attr = row_attr|merge({ class: (row_class ~ ' form-field')|trim }) %}
+    <div{% with { attr: row_attr } %}{{ block('attributes') }}{% endwith %}>
+        {{ form_label(form) }}
+        {{ form_help(form) }}
+        {{ form_errors(form) }}
+        {{ form_widget(form) }}
+    </div>
+{% endblock %}
+
+{% block form_help %}
+    {% if help is not empty %}
+        <p class="field-help" id="{{ id }}_help">{{ help }}</p>
+    {% endif %}
+{% endblock %}

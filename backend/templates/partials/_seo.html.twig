@@ -5,7 +5,7 @@
 {% set share_image = seo is defined ? seo.imagePath : null %}
 <title>{{ seo_title }}</title>
 <meta name="description" content="{{ seo_description }}">
-{% if not app_indexable %}
+{% if not app_indexable or (seo is defined and seo.noindex) %}
     <meta name="robots" content="noindex, nofollow">
 {% endif %}
 <link rel="canonical" href="{{ canonical }}">

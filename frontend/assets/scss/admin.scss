@@ -308,6 +308,19 @@
   max-width: 9rem;
 }
 
+.form-group label.required::after,
+.form-group legend.required::after,
+.form-group .col-form-label.required::after {
+  content: none !important;
+  display: none !important;
+}
+
+.form-required {
+  margin-inline-start: 0.25rem;
+  color: #c23b32;
+  font-weight: 700;
+}
+
 .form-widget .password-field {
   position: relative;
 }

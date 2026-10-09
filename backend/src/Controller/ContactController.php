@@ -4,8 +4,10 @@ namespace App\Controller;
 
 use App\Entity\ContactRequest;
 use App\Form\ContactRequestType;
+use App\Repository\ContactRequestRepository;
 use App\Repository\PageRepository;
 use App\Service\ContactNotifier;
+use App\Service\ContactSubmissionLock;
 use App\Service\PublicContent;
 use App\Service\RecaptchaVerifier;
 use App\Service\SeoFactory;
@@ -23,6 +25,8 @@ final class ContactController extends AbstractController
         private readonly PublicContent $publicContent,
         private readonly SeoFactory $seoFactory,
         private readonly EntityManagerInterface $entityManager,
+        private readonly ContactRequestRepository $contactRequests,
+        private readonly ContactSubmissionLock $submissionLock,
         private readonly ContactNotifier $contactNotifier,
         private readonly RateLimiterFactory $contactFormLimiter,
         private readonly RecaptchaVerifier $recaptchaVerifier,
@@ -59,9 +63,25 @@ final class ContactController extends AbstractController
                 if (!$decision->isAccepted()) {
                     $this->addFlash('error', 'La vérification anti-spam a échoué. Merci de réessayer.');
                 } else {
-                    $this->entityManager->persist($contactRequest);
-                    $this->entityManager->flush();
-                    $this->contactNotifier->notify($contactRequest, $this->publicContent->settings());
+                    $stored = $this->submissionLock->exclusive($contactRequest, function () use ($contactRequest): bool {
+                        $duplicate = $this->contactRequests->findRecentDuplicate(
+                            $contactRequest->getEmail(),
+                            $contactRequest->getSubject(),
+                            $contactRequest->getMessage(),
+                            new \DateTimeImmutable('-60 seconds'),
+                        );
+                        if ($duplicate !== null) {
+                            return false;
+                        }
+
+                        $this->entityManager->persist($contactRequest);
+                        $this->entityManager->flush();
+
+                        return true;
+                    });
+                    if ($stored === true) {
+                        $this->contactNotifier->notify($contactRequest, $this->publicContent->settings());
+                    }
                     $this->addFlash('success', 'Votre message a bien été envoyé. Nous vous répondrons dès que possible.');
 
                     return $this->redirectToRoute('contact');

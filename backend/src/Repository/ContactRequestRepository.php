@@ -14,6 +14,26 @@ class ContactRequestRepository extends ServiceEntityRepository
         parent::__construct($registry, ContactRequest::class);
     }
 
+    public function findRecentDuplicate(
+        string $email,
+        string $subject,
+        string $message,
+        \DateTimeImmutable $since,
+    ): ?ContactRequest {
+        return $this->createQueryBuilder('request')
+            ->andWhere('LOWER(request.email) = :email')
+            ->andWhere('request.subject = :subject')
+            ->andWhere('request.message = :message')
+            ->andWhere('request.createdAt >= :since')
+            ->setParameter('email', mb_strtolower(trim($email)))
+            ->setParameter('subject', trim($subject))
+            ->setParameter('message', trim($message))
+            ->setParameter('since', $since)
+            ->setMaxResults(1)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function countUnread(): int
     {
         return (int) $this->createQueryBuilder('c')

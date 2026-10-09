@@ -31,7 +31,7 @@ final class SeoController extends AbstractController
         }
 
         $sitemap = $this->generateUrl('sitemap', [], 0);
-        $body = "User-agent: *\nAllow: /\nDisallow: /administration\n\nSitemap: ".$sitemap."\n";
+        $body = "User-agent: *\nAllow: /\nDisallow: /administration\nDisallow: /nous-rejoindre/candidature-spontanee/confirmation\nDisallow: /nous-rejoindre/*/postuler/confirmation\n\nSitemap: ".$sitemap."\n";
 
         return new Response($body, 200, ['Content-Type' => 'text/plain; charset=UTF-8']);
     }

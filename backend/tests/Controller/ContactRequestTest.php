@@ -29,9 +29,11 @@ final class ContactRequestTest extends WebTestCase
         putenv('APP_ENV=test');
         putenv('DATABASE_URL='.$databaseUrl);
         putenv('RECAPTCHA_ENABLED=0');
+        putenv('CONTACT_NOTIFY_EMAIL=');
         $_SERVER['APP_ENV'] = $_ENV['APP_ENV'] = 'test';
         $_SERVER['DATABASE_URL'] = $_ENV['DATABASE_URL'] = $databaseUrl;
         $_SERVER['RECAPTCHA_ENABLED'] = $_ENV['RECAPTCHA_ENABLED'] = '0';
+        $_SERVER['CONTACT_NOTIFY_EMAIL'] = $_ENV['CONTACT_NOTIFY_EMAIL'] = '';
 
         $this->client = static::createClient();
         $manager = $this->manager();
@@ -45,6 +47,14 @@ final class ContactRequestTest extends WebTestCase
         $tool->dropSchema($metadata);
         $tool->createSchema($metadata);
         $this->clearRateLimiter();
+    }
+
+    protected function tearDown(): void
+    {
+        putenv('CONTACT_NOTIFY_EMAIL');
+        unset($_ENV['CONTACT_NOTIFY_EMAIL'], $_SERVER['CONTACT_NOTIFY_EMAIL']);
+
+        parent::tearDown();
     }
 
     public function testValidContactPersistsAndSendsBothEmails(): void
@@ -61,15 +71,22 @@ final class ContactRequestTest extends WebTestCase
         $visitor = $this->findEmail('amina@example.com');
 
         self::assertEmailAddressContains($staff, 'From', 'noreply@diaregroupe.local');
+        self::assertSame('Diaré Groupe Industrie', $staff->getFrom()[0]->getName());
         self::assertEmailAddressContains($staff, 'Reply-To', 'amina@example.com');
         self::assertEmailSubjectContains($staff, 'Nouveau message reçu');
         self::assertEmailHtmlBodyContains($staff, 'Nouveau message reçu');
         self::assertEmailHtmlBodyContains($staff, 'Diaré Distribution');
+        self::assertEmailHtmlBodyContains($staff, 'Demande commerciale');
+        self::assertEmailHtmlBodyContains($staff, 'Consulter le message');
+        self::assertEmailTextBodyContains($staff, 'informations sur vos produits');
+        self::assertStringNotContainsString('href="mailto:amina@example.com"', (string) $staff->getHtmlBody());
 
         self::assertEmailAddressContains($visitor, 'To', 'amina@example.com');
         self::assertEmailAddressContains($visitor, 'Reply-To', 'contact@diare.example');
         self::assertEmailSubjectContains($visitor, 'Nous avons bien reçu votre message');
         self::assertEmailHtmlBodyContains($visitor, 'Bonjour Amina');
+        self::assertEmailHtmlBodyContains($visitor, 'concernant « Demande commerciale »');
+        self::assertStringNotContainsString('/administration', (string) $visitor->getHtmlBody());
     }
 
     public function testInvalidEmailIsRejected(): void
@@ -166,13 +183,65 @@ final class ContactRequestTest extends WebTestCase
         self::assertSame(1, $this->countContacts());
     }
 
-    public function testNoEmailIsSentWhenSiteEmailIsMissing(): void
+    public function testVisitorReceiptIsSentWhenNoAdminRecipientIsConfigured(): void
     {
         $this->submitContact();
 
         self::assertResponseRedirects('/contact');
         self::assertSame(1, $this->countContacts());
+        self::assertEmailCount(1);
+        $visitor = $this->findEmail('amina@example.com');
+        self::assertEmailSubjectContains($visitor, 'Nous avons bien reçu votre message');
+        self::assertSame([], $visitor->getReplyTo());
+        self::assertStringNotContainsString('/administration', (string) $visitor->getHtmlBody());
+    }
+
+    public function testNotifyEmailAloneAlertsThatAddressAndConfirmsTheVisitor(): void
+    {
+        $this->rebootWithNotifyEmail('alertes@example.test');
+
+        $this->submitContact();
+
+        self::assertResponseRedirects('/contact');
+        self::assertSame(1, $this->countContacts());
+        self::assertEmailCount(2);
+        $staff = $this->findEmail('alertes@example.test');
+        $visitor = $this->findEmail('amina@example.com');
+        self::assertEmailHtmlBodyContains($staff, 'Consulter le message');
+        self::assertEmailTextBodyContains($staff, 'informations sur vos produits');
+        self::assertSame([], $visitor->getReplyTo());
+    }
+
+    public function testNotifyEmailTakesPriorityAndPublicEmailStaysTheReplyAddress(): void
+    {
+        $this->rebootWithNotifyEmail('alertes@example.test');
+        $this->configureSiteEmail('contact@diare.example');
+
+        $this->submitContact();
+
+        self::assertEmailCount(2);
+        self::assertEmailAddressContains($this->findEmail('alertes@example.test'), 'To', 'alertes@example.test');
+        self::assertEmailAddressContains($this->findEmail('amina@example.com'), 'Reply-To', 'contact@diare.example');
+    }
+
+    public function testIdenticalResubmitDoesNotNotifyTwice(): void
+    {
+        $this->configureSiteEmail('contact@diare.example');
+
+        $this->submitContact();
+
+        self::assertSame(1, $this->countContacts());
+        self::assertEmailCount(2);
+
+        $this->submitContact();
+
+        self::assertSame(1, $this->countContacts());
         self::assertEmailCount(0);
+
+        $this->submitContact(['contact_request[subject]' => 'Autre demande']);
+
+        self::assertSame(2, $this->countContacts());
+        self::assertEmailCount(2);
     }
 
     public function testRejectedRecaptchaDoesNotPersist(): void
@@ -191,6 +260,15 @@ final class ContactRequestTest extends WebTestCase
         self::assertStringContainsString('La vérification anti-spam a échoué.', (string) $this->client->getResponse()->getContent());
         self::assertSame(0, $this->countContacts());
         self::assertEmailCount(0);
+    }
+
+    private function rebootWithNotifyEmail(string $email): void
+    {
+        self::ensureKernelShutdown();
+        putenv('CONTACT_NOTIFY_EMAIL='.$email);
+        $_SERVER['CONTACT_NOTIFY_EMAIL'] = $_ENV['CONTACT_NOTIFY_EMAIL'] = $email;
+        $this->client = static::createClient();
+        $this->clearRateLimiter();
     }
 
     private function configureSiteEmail(string $email): void

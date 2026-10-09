@@ -109,6 +109,9 @@ function errorNode(field) {
 
 function messageFor(field) {
   const validity = field.validity;
+  if (validity.customError && field.validationMessage) {
+    return field.validationMessage;
+  }
   if (validity.valueMissing) {
     return field.type === "checkbox"
       ? "Le consentement est obligatoire."

@@ -1,0 +1,48 @@
+.presentation-video {
+  min-width: 0;
+  margin: 0;
+}
+
+.presentation-video__frame {
+  position: relative;
+  width: 100%;
+  max-width: 100%;
+  aspect-ratio: 848 / 480;
+  overflow: hidden;
+  border-radius: 1rem;
+  background: color-mix(in srgb, var(--dgi-secondary) 10%, var(--dgi-cream));
+}
+
+.presentation-video__player,
+.presentation-video__still {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+
+.presentation-video__still {
+  position: absolute;
+  inset: 0;
+  display: none;
+}
+
+.presentation-video__player.is-unavailable {
+  display: none;
+}
+
+.presentation-video__player.is-unavailable + .presentation-video__still {
+  display: block;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .presentation-video__player {
+    display: none;
+  }
+
+  .presentation-video__still,
+  .presentation-video__player.is-unavailable + .presentation-video__still {
+    display: block;
+  }
+}

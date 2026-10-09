@@ -36,10 +36,10 @@
                 <div class="prose">{{ offer.requirements|nl2br }}</div>
             {% endif %}
             <div class="section-actions">
-                {% if offer.applicationHref %}
-                    <a class="button" href="{{ offer.applicationHref }}"{% if offer.applicationUrl|default('') starts with 'http' %} target="_blank" rel="noopener noreferrer"{% endif %}>Postuler</a>
+                {% if offer.externalApplication %}
+                    <a class="button" href="{{ offer.applicationHref }}" target="_blank" rel="noopener noreferrer">Postuler à cette offre</a>
                 {% else %}
-                    <a class="button" href="{{ path('contact') }}">Candidater</a>
+                    <a class="button" href="{{ path('job_apply', { slug: offer.slug }) }}">Postuler à cette offre</a>
                 {% endif %}
             </div>
         </div>

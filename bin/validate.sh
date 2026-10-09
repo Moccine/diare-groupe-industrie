@@ -76,6 +76,12 @@ else
     bad "var/cache ou var/log non inscriptible"
 fi
 
+if [ -d "${BACKEND_DIR}/var/private/job-applications" ] && sudo -u "${WEB_USER}" test -w "${BACKEND_DIR}/var/private/job-applications"; then
+    ok "dossier privé des CV inscriptible"
+else
+    bad "dossier privé des CV absent ou non inscriptible"
+fi
+
 if [ -f "${BACKEND_DIR}/vendor/autoload.php" ]; then
     if run_as_web_user "${PHP_BIN}" "${PROJECT_ROOT}/bin/lib/prod-env.php" check; then
         ok "variables critiques"

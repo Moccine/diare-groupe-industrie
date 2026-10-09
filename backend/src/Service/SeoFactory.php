@@ -133,6 +133,42 @@ final class SeoFactory
         );
     }
 
+    public function forJobApplication(?JobOffer $offer, bool $confirmation, ?string $slug = null): SeoDocument
+    {
+        $settings = $this->publicContent->settings();
+        $company = $settings->getCompanyName();
+        if ($offer !== null) {
+            $title = ($confirmation ? 'Candidature envoyée' : 'Postuler').' — '.$offer->getTitle();
+            $path = '/nous-rejoindre/'.$offer->getSlug().'/postuler'.($confirmation ? '/confirmation' : '');
+            $description = 'Candidature au poste '.$offer->getTitle().' chez '.$company.'.';
+        } elseif ($slug !== null) {
+            $title = 'Candidature envoyée — '.$company;
+            $path = '/nous-rejoindre/'.$slug.'/postuler/confirmation';
+            $description = 'Confirmation de candidature.';
+        } else {
+            $title = ($confirmation ? 'Candidature envoyée' : 'Candidature spontanée').' — '.$company;
+            $path = '/nous-rejoindre/candidature-spontanee'.($confirmation ? '/confirmation' : '');
+            $description = 'Déposer une candidature spontanée auprès de '.$company.'.';
+        }
+
+        return new SeoDocument($title, $description, $path, null, 'website', null, $confirmation);
+    }
+
+    public function forClosedJobApplication(): SeoDocument
+    {
+        $company = $this->publicContent->settings()->getCompanyName();
+
+        return new SeoDocument(
+            'Offre indisponible — '.$company,
+            'Cette offre n’accepte plus de candidatures.',
+            '/nous-rejoindre',
+            null,
+            'website',
+            null,
+            true,
+        );
+    }
+
     public function organizationJson(string $siteUrl): string
     {
         $settings = $this->publicContent->settings();

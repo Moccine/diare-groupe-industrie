@@ -10,6 +10,7 @@ final class AdminLinkFactory
 {
     public function __construct(
         private readonly AdminUrlGeneratorInterface $adminUrlGenerator,
+        private readonly string $defaultUri,
     ) {
     }
 
@@ -31,6 +32,20 @@ final class AdminLinkFactory
         }
 
         return $url->generateUrl();
+    }
+
+    public function qualify(string $url): string
+    {
+        if ($url === '' || str_starts_with($url, 'http://') || str_starts_with($url, 'https://')) {
+            return $url;
+        }
+
+        $base = rtrim($this->defaultUri, '/');
+        if ($base === '') {
+            return $url;
+        }
+
+        return $base.'/'.ltrim($url, '/');
     }
 
     /** @param array<string, mixed> $parameters */

@@ -34,7 +34,7 @@ final class JobOfferController extends AbstractController
         ] + $this->publicContent->sectionData());
     }
 
-    #[Route('/nous-rejoindre/{slug}', name: 'job_show', requirements: ['slug' => '[a-z0-9]+(?:-[a-z0-9]+)*'], methods: ['GET'])]
+    #[Route('/nous-rejoindre/{slug}', name: 'job_show', requirements: ['slug' => '(?!candidature-spontanee$)[a-z0-9]+(?:-[a-z0-9]+)*'], methods: ['GET'])]
     public function show(string $slug): Response
     {
         $offer = $this->jobOfferRepository->findOpenBySlug($slug);

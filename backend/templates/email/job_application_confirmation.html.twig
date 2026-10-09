@@ -1,0 +1,21 @@
+{% extends 'email/layout.html.twig' %}
+
+{% block title %}Confirmation de votre candidature{% endblock %}
+{% block preheader %}Votre candidature a bien été reçue.{% endblock %}
+
+{% block body %}
+    <h1 style="{{ titleStyle }}">Candidature bien reçue</h1>
+    <p style="{{ textStyle }}">Bonjour {{ application.firstName }},</p>
+    {% if application.spontaneous %}
+        {% if application.desiredRole %}
+            <p style="{{ textStyle }}">Nous vous confirmons la bonne réception de votre candidature spontanée concernant « {{ application.desiredRole }} ».</p>
+        {% else %}
+            <p style="{{ textStyle }}">Nous vous confirmons la bonne réception de votre candidature spontanée.</p>
+        {% endif %}
+    {% else %}
+        <p style="{{ textStyle }}">Nous vous confirmons la bonne réception de votre candidature au poste de « {{ application.jobTitleSnapshot }} ».</p>
+    {% endif %}
+    <p style="{{ textStyle }}">Nous vous remercions de l’intérêt que vous portez à Diaré Groupe Industrie.</p>
+    <p style="{{ textStyle }}">Notre équipe examinera votre dossier et vous contactera si votre profil correspond aux besoins du poste.</p>
+    <p style="{{ textStyle }}margin-bottom:8px;">Cordialement,<br>L’équipe Diaré Groupe Industrie</p>
+{% endblock %}

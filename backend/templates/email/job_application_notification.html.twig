@@ -1,0 +1,25 @@
+{% extends 'email/layout.html.twig' %}
+
+{% block title %}Nouvelle candidature{% endblock %}
+{% block preheader %}Une nouvelle candidature est à consulter dans l’administration.{% endblock %}
+
+{% block body %}
+    {% if application.spontaneous %}
+        {% set position = application.desiredRole ? 'Candidature spontanée — ' ~ application.desiredRole : 'Candidature spontanée' %}
+    {% else %}
+        {% set position = application.jobTitleSnapshot %}
+    {% endif %}
+    {% set excerpt = application.motivation|slice(0, 400) %}
+    <h1 style="{{ titleStyle }}">Nouvelle candidature</h1>
+    <p style="{{ textStyle }}">Un dossier vient d’être enregistré. Le CV n’est pas joint à ce message : il se consulte dans l’administration, après connexion.</p>
+    {% include 'email/_rows.html.twig' with { rows: [
+        { label: 'Nom et prénom', value: application.fullName },
+        { label: 'Offre ou domaine', value: position },
+        { label: 'E-mail', value: application.email },
+        { label: 'Téléphone', value: application.phone },
+        { label: 'Date de réception', value: application.createdAt|date('d/m/Y H:i') },
+    ] } %}
+    <p style="{{ textStyle }}margin-top:18px;margin-bottom:8px;"><strong>Motivation</strong></p>
+    <p style="{{ textStyle }}">{{ excerpt|nl2br }}{% if application.motivation|length > 400 %}…{% endif %}</p>
+    {% include 'email/_button.html.twig' with { url: adminUrl, label: 'Consulter la candidature' } %}
+{% endblock %}

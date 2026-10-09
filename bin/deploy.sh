@@ -173,6 +173,9 @@ install -d -o "${WEB_USER}" -g "${WEB_GROUP}" -m 2775 \
     "${BACKEND_DIR}/var/log" \
     "${BACKEND_DIR}/public/uploads" \
     "${BACKEND_DIR}/public/uploads/media"
+install -d -o "${WEB_USER}" -g "${WEB_GROUP}" -m 2770 \
+    "${BACKEND_DIR}/var/private" \
+    "${BACKEND_DIR}/var/private/job-applications"
 
 echo "Composer (production)..."
 cd "${BACKEND_DIR}"
@@ -238,6 +241,10 @@ chown -R "${WEB_USER}:${WEB_GROUP}" \
 
 find "${BACKEND_DIR}/var" "${BACKEND_DIR}/public/uploads" -type d -exec chmod 2775 {} +
 find "${BACKEND_DIR}/var" "${BACKEND_DIR}/public/uploads" -type f -exec chmod 664 {} +
+if [ -d "${BACKEND_DIR}/var/private" ]; then
+    find "${BACKEND_DIR}/var/private" -type d -exec chmod 2770 {} +
+    find "${BACKEND_DIR}/var/private" -type f -exec chmod 640 {} +
+fi
 chmod 640 "${BACKEND_DIR}/.env.local"
 chown "${WEB_USER}:${WEB_GROUP}" "${BACKEND_DIR}/.env.local"
 
@@ -318,5 +325,6 @@ echo "============================================================"
 echo "Branche           : ${CURRENT_BRANCH}"
 echo "Worker            : ${MESSENGER_SERVICE}"
 echo "Médias            : ${BACKEND_DIR}/public/uploads/media"
-echo "Aucun cron métier : aucun cron n'a été créé."
+echo "CV candidats      : ${BACKEND_DIR}/var/private/job-applications"
+echo "Aucun cron métier : la purge des candidatures reste manuelle."
 echo "============================================================"

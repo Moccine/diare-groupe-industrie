@@ -11,7 +11,13 @@
                 {% include 'components/_button.html.twig' with { label: section.buttonLabel, url: section.buttonUrl } %}
             </div>
         </div>
-        {% if section.image %}
+        {% set company_presentation = section.page and section.page.slug == 'a-propos' and section.type.value == 'text_image' and section.title == 'Présentation de la société' %}
+        {% set legacy_logo = section.image and ('logo' in section.image.title|default('')|lower or 'logo' in section.image.alt|default('')|lower) %}
+        {% if company_presentation and (not section.image or legacy_logo) %}
+            {% include 'components/_presentation_video.html.twig' with {
+                reveal: section.theme.value == 'image_left' ? 'fade-right' : 'fade-left'
+            } %}
+        {% elseif section.image %}
             <figure class="text-image__figure" data-reveal="{{ section.theme.value == 'image_left' ? 'fade-right' : 'fade-left' }}">
                 <div class="text-image__frame" data-parallax="16">
                     {% include 'components/_media.html.twig' with { media: section.image } %}

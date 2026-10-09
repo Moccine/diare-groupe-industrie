@@ -1,0 +1,10 @@
+<table role="presentation" width="100%" cellpadding="0" cellspacing="0" border="0" style="margin:8px 0 0;background-color:#f7f8f4;">
+    {% for row in rows %}
+        {% if row.value is not null and row.value is not same as('') %}
+            <tr>
+                <td class="dgi-label" width="168" valign="top" style="padding:10px 14px;width:168px;font-family:'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:13px;line-height:1.45;color:#4e5c54;">{{ row.label }}</td>
+                <td valign="top" style="padding:10px 14px;font-family:'Segoe UI','Helvetica Neue',Helvetica,Arial,sans-serif;font-size:15px;line-height:1.45;color:#142018;">{{ row.value }}</td>
+            </tr>
+        {% endif %}
+    {% endfor %}
+</table>

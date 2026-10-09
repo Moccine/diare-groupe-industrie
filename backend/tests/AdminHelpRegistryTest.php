@@ -7,6 +7,7 @@ use App\Admin\Help\AdminHelpRegistry;
 use App\Admin\Help\AdminHelpSection;
 use App\Controller\Admin\Crud\ContactRequestCrudController;
 use App\Controller\Admin\Crud\HeroSlideCrudController;
+use App\Controller\Admin\Crud\JobApplicationCrudController;
 use App\Controller\Admin\Crud\JobOfferCrudController;
 use App\Controller\Admin\Crud\MediaCrudController;
 use App\Controller\Admin\Crud\NewsCrudController;
@@ -38,6 +39,7 @@ final class AdminHelpRegistryTest extends TestCase
             StatisticCrudController::class => 'Chiffres clés',
             NewsCrudController::class => 'Actualités',
             JobOfferCrudController::class => 'Offres d’emploi',
+            JobApplicationCrudController::class => 'Candidatures',
             PartnerCrudController::class => 'Partenaires',
             ContactRequestCrudController::class => 'Messages reçus',
             UserCrudController::class => 'Administrateurs',

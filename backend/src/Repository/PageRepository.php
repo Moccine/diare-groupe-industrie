@@ -17,6 +17,7 @@ class PageRepository extends ServiceEntityRepository
     public function findPublishedBySlug(string $slug): ?Page
     {
         return $this->createQueryBuilder('p')
+            ->leftJoin('p.bannerImage', 'banner')->addSelect('banner')
             ->leftJoin('p.sections', 's')->addSelect('s')
             ->leftJoin('s.image', 'si')->addSelect('si')
             ->leftJoin('s.backgroundImage', 'sb')->addSelect('sb')

@@ -153,6 +153,12 @@
   gap: 0.45rem;
 }
 
+.form-required {
+  margin-inline-start: 0.2rem;
+  color: #c23b32;
+  font-weight: 700;
+}
+
 .form-field__icon {
   display: inline-grid;
   place-items: center;

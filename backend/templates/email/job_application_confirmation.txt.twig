@@ -1,0 +1,20 @@
+Bonjour {{ application.firstName }},
+
+{% if application.spontaneous %}
+{% if application.desiredRole %}
+Nous vous confirmons la bonne réception de votre candidature spontanée concernant « {{ application.desiredRole }} ».
+{% else %}
+Nous vous confirmons la bonne réception de votre candidature spontanée.
+{% endif %}
+{% else %}
+Nous vous confirmons la bonne réception de votre candidature au poste de « {{ application.jobTitleSnapshot }} ».
+{% endif %}
+
+Nous vous remercions de l’intérêt que vous portez à Diaré Groupe Industrie.
+
+Notre équipe examinera votre dossier et vous contactera si votre profil correspond aux besoins du poste.
+
+Cordialement,
+L’équipe Diaré Groupe Industrie
+
+{% include 'email/_footer.txt.twig' %}

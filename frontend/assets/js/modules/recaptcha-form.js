@@ -29,10 +29,11 @@ export function initRecaptchaForms() {
         return;
       }
 
+      const action = form.dataset.recaptchaAction || "contact";
       event.preventDefault();
       form.dataset.recaptchaPending = "1";
       grecaptcha.ready(() => {
-        grecaptcha.execute(siteKey, { action: "contact" }).then((token) => {
+        grecaptcha.execute(siteKey, { action }).then((token) => {
           input.value = token;
           form.dataset.recaptchaPending = "0";
           form.dataset.recaptchaReady = "1";

@@ -36,6 +36,7 @@ final class EditorialDemoSeeder
         $this->ensureNews($manager);
         $this->ensureJobs($manager);
         $this->tightenSparsePages($manager);
+        $this->assignDefaultPageBanners($manager);
         $manager->flush();
     }
 
@@ -257,6 +258,71 @@ final class EditorialDemoSeeder
             ->setButtonUrl('/contact')
             ->setTheme(SectionTheme::Dark);
         $distribution->addSection($cta);
+    }
+
+    /**
+     * Photos Unsplash (licence libre, usage commercial) : lignes agroalimentaires,
+     * fabrication, logistique. Elles ne remplacent pas une bannière déjà choisie.
+     *
+     * @var array<string, array{0: string, 1: string, 2: string}>
+     */
+    private const DEFAULT_BANNERS = [
+        'a-propos' => ['banners/a-propos.jpg', 'Équipe sur une ligne de production agroalimentaire', 'Bannière — À propos'],
+        'nos-activites' => ['banners/nos-activites.jpg', 'Ligne industrielle de conditionnement alimentaire', 'Bannière — Nos activités'],
+        'nos-produits' => ['banners/nos-produits.jpg', 'Produits de boulangerie en cours de fabrication', 'Bannière — Nos produits'],
+        'distribution' => ['banners/distribution.jpg', 'Poids lourd de livraison', 'Bannière — Distribution'],
+        'actualites' => ['banners/actualites.jpg', 'Équipe au travail dans une usine agroalimentaire', 'Bannière — Actualités'],
+        'contact' => ['banners/contact.jpg', 'Entrepôt logistique', 'Bannière — Contact'],
+        'nous-rejoindre' => ['banners/nous-rejoindre.jpg', 'Contrôle de produits alimentaires', 'Bannière — Nous rejoindre'],
+    ];
+
+    public function assignDefaultPageBanners(ObjectManager $manager): void
+    {
+        foreach (self::DEFAULT_BANNERS as $slug => [$file, $alt, $title]) {
+            $page = $manager->getRepository(Page::class)->findOneBy(['slug' => $slug]);
+            if (!$page instanceof Page || $page->getBannerImage() instanceof Media) {
+                continue;
+            }
+
+            $media = $this->mediaByTitle($manager, $title);
+            if (!$media instanceof Media) {
+                $path = $this->fixtureMediaDir.'/'.$file;
+                if (!is_file($path)) {
+                    continue;
+                }
+
+                $media = $this->mediaUploader->upload($path, $alt, $title);
+                $manager->persist($media);
+            }
+
+            $page->setBannerImage($media);
+        }
+
+        $this->detachAboutPresentationLogo($manager);
+    }
+
+    private function detachAboutPresentationLogo(ObjectManager $manager): void
+    {
+        $about = $manager->getRepository(Page::class)->findOneBy(['slug' => 'a-propos']);
+        if (!$about instanceof Page) {
+            return;
+        }
+
+        foreach ($about->getSections() as $section) {
+            if ($section->getType() !== SectionType::TextImage || $section->getTitle() !== 'Présentation de la société') {
+                continue;
+            }
+
+            $image = $section->getImage();
+            if (!$image instanceof Media) {
+                continue;
+            }
+
+            $label = mb_strtolower(trim($image->getTitle().' '.$image->getAlt()));
+            if (str_contains($label, 'logo')) {
+                $section->setImage(null);
+            }
+        }
     }
 
     private function pageHasTitle(Page $page, string $title): bool

@@ -118,7 +118,7 @@ final class AppFixtures extends Fixture
         $this->section($home, SectionType::Cta, 14, 'Contact', 'Échanger avec Diaré Groupe Industrie', null, 'Pour une demande commerciale ou une information, écrivez-nous.', null, $vanilla, 'Nous contacter', '/contact', null, null, SectionTheme::Dark);
 
         $about = $this->page($manager, 'À propos', 'a-propos', 'À propos', 'À propos — Diaré Groupe Industrie', $company, true, 2);
-        $this->section($about, SectionType::TextImage, 1, 'Diaré Groupe Industrie', 'Présentation de la société', null, $company, $logo, null, null, null, null, null, SectionTheme::Default);
+        $this->section($about, SectionType::TextImage, 1, 'Diaré Groupe Industrie', 'Présentation de la société', null, $company, null, null, null, null, null, null, SectionTheme::Default);
         $this->section($about, SectionType::Mission, 2, 'Mission', 'Produits de qualité, accessibles et exigeants', null, $mission, null, $sugar, null, null, null, null, SectionTheme::Dark);
         $this->section($about, SectionType::Vision, 3, 'Vision', 'Un acteur pionnier de l’agroalimentaire', null, $vision, null, $vanilla, null, null, null, null, SectionTheme::Light);
         $aboutValues = $this->section($about, SectionType::Values, 4, 'Philosophie', 'Excellence, innovation et intégrité', null, $philosophy, null, null, null, null, null, null, SectionTheme::Default);

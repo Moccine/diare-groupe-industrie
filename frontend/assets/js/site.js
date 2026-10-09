@@ -12,6 +12,8 @@ import { initCatalogFilter } from "./modules/catalog-filter";
 import { initFormValidation } from "./modules/form-validation";
 import { initFormSubmitLock } from "./modules/form-submit-lock";
 import { initRecaptchaForms } from "./modules/recaptcha-form";
+import { initJobApplicationForm } from "./modules/job-application-form";
+import { initPresentationVideo } from "./modules/presentation-video";
 import { initAnalyticsConsent } from "./modules/analytics-consent";
 import { initPasswordToggle } from "./modules/password-toggle";
 import { initPasswordStrength } from "./modules/password-strength";
@@ -29,6 +31,8 @@ document.addEventListener("DOMContentLoaded", () => {
   initProductsSlider();
   initCatalogFilter();
   initFormValidation();
+  initJobApplicationForm();
+  initPresentationVideo();
   initRecaptchaForms();
   initFormSubmitLock();
   initAnalyticsConsent();

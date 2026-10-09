@@ -2,7 +2,6 @@
 {% from 'components/icons.html.twig' import icon %}
 
 {% block main %}
-    {% set settings = site_settings() %}
     {% include 'partials/_page_banner.html.twig' with {
         title: page.title|default('Rejoignez DGI'),
         lead: 'Production, qualité, distribution et logistique : les postes ouverts à Dubréka.',
@@ -45,13 +44,13 @@
                     <span class="icon-badge icon-badge--lg" aria-hidden="true">{{ icon('emploi', 'icon--lg') }}</span>
                     <h2>Aucune offre ouverte actuellement</h2>
                     <p>Nous sommes toujours intéressés par les bons profils. Vous pouvez nous transmettre une candidature spontanée.</p>
-                    {% if settings.hasPublicEmail %}
-                        <a class="button" href="mailto:{{ settings.email }}?subject={{ 'Candidature spontanée'|url_encode }}">Candidature spontanée</a>
-                    {% else %}
-                        <a class="button" href="{{ path('contact') }}">Nous écrire</a>
-                    {% endif %}
                 </div>
             {% endif %}
+            <div class="job-spontaneous">
+                <h2>Candidature spontanée</h2>
+                <p>Vous ne trouvez pas le poste qui vous correspond ? Déposez votre CV directement.</p>
+                <a class="button" href="{{ path('job_apply_spontaneous') }}">Candidature spontanée</a>
+            </div>
         </div>
     </section>
 {% endblock %}

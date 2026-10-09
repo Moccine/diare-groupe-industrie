@@ -121,6 +121,9 @@ install -d -o "${WEB_USER}" -g "${WEB_GROUP}" -m 2775 \
     "${BACKEND_DIR}/public/uploads/media" \
     /var/www/.composer \
     /var/www/.npm
+install -d -o "${WEB_USER}" -g "${WEB_GROUP}" -m 2770 \
+    "${BACKEND_DIR}/var/private" \
+    "${BACKEND_DIR}/var/private/job-applications"
 
 if [ ! -f "${BACKEND_DIR}/.env.local" ]; then
     cp "${BACKEND_DIR}/.env.prod.dist" "${BACKEND_DIR}/.env.local"

@@ -52,12 +52,13 @@ final class JobOfferTest extends TestCase
         self::assertTrue($offer->isExternalApplication());
     }
 
-    public function testMailtoWhenNoUrl(): void
+    public function testEmailDoesNotReplaceTheInternalForm(): void
     {
         $offer = $this->offer()->setApplicationEmail('jobs@example.com');
 
-        self::assertStringStartsWith('mailto:jobs@example.com?subject=', (string) $offer->getApplicationHref());
+        self::assertNull($offer->getApplicationHref());
         self::assertFalse($offer->isExternalApplication());
+        self::assertSame('jobs@example.com', $offer->getApplicationEmail());
     }
 
     public function testNoApplicationTargetWithoutContact(): void

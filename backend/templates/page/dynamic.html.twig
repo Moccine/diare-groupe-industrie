@@ -2,7 +2,7 @@
 
 {% block main %}
     {% set first = sections|first %}
-    {% if first is null or first.section.type.value != 'hero' %}
+        {% if first is not iterable or first.section.type.value != 'hero' %}
         {% include 'partials/_page_banner.html.twig' with {
             title: page.title,
             lead: page.metaDescription,

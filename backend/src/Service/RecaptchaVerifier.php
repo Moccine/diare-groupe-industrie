@@ -32,7 +32,7 @@ final class RecaptchaVerifier
         return $this->isEnabled() ? $this->siteKey : '';
     }
 
-    public function verify(?string $token, ?string $remoteIp): RecaptchaDecision
+    public function verify(?string $token, ?string $remoteIp, string $expectedAction = 'contact'): RecaptchaDecision
     {
         if (!$this->enabled) {
             return RecaptchaDecision::accepted();
@@ -96,7 +96,7 @@ final class RecaptchaVerifier
         }
 
         $action = $payload['action'] ?? null;
-        if (is_string($action) && $action !== '' && $action !== 'contact') {
+        if (is_string($action) && $action !== '' && $action !== $expectedAction) {
             $this->logger->info('Action reCAPTCHA inattendue.');
 
             return RecaptchaDecision::rejected();
