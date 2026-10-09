@@ -84,6 +84,9 @@
                         'data-form-submit-lock': '1',
                         'data-recaptcha-site-key': recaptcha_site_key|default('')
                     } }) }}
+                        {% if contact_product|default(null) %}
+                            <p class="contact-product" role="status">Cette demande concerne le produit <strong>{{ contact_product.name }}</strong>.</p>
+                        {% endif %}
                         <div class="form-grid">
                             {{ form_row(form.lastName) }}
                             {{ form_row(form.firstName) }}
@@ -99,6 +102,7 @@
                             {{ form_errors(form.consent) }}
                         </div>
                         {{ form_row(form.website) }}
+                        {{ form_widget(form.productSlug) }}
                         <button class="button" type="submit">Envoyer le message</button>
                     {{ form_end(form) }}
                 </div>

@@ -144,7 +144,8 @@ final class AppFixtures extends Fixture
 
         $this->page($manager, 'Actualités', 'actualites', 'Actualités', 'Actualités — Diaré Groupe Industrie', 'Les actualités de Diaré Groupe Industrie.', true, 6);
 
-        $this->page($manager, 'Contact', 'contact', 'Contact', 'Contact — Diaré Groupe Industrie', 'Contacter Diaré Groupe Industrie à Dubréka, Carrefour Kaléma.', true, 7);
+        $contact = $this->page($manager, 'Contact', 'contact', 'Contact', 'Contact — Diaré Groupe Industrie', 'Contacter Diaré Groupe Industrie à Dubréka, Carrefour Kaléma.', true, 7);
+        $contact->setShowInMenu(false);
         $this->page($manager, 'Rejoignez DGI', 'nous-rejoindre', 'Nous rejoindre', 'Rejoignez DGI — Diaré Groupe Industrie', 'Les offres d’emploi de Diaré Groupe Industrie.', true, 8);
 
         $legal = $this->page($manager, 'Mentions légales', 'mentions-legales', null, 'Mentions légales', 'À renseigner depuis le back-office.', true, 20);

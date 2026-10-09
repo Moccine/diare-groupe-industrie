@@ -85,6 +85,107 @@ final class ProductCatalogTest extends WebTestCase
         self::assertStringContainsString('Découvrir aussi', $content);
         self::assertStringContainsString('Biscuit ABC', $content);
         self::assertStringNotContainsString('Lait masqué', $content);
+        self::assertStringNotContainsString('page-intro', $content);
+        self::assertStringContainsString('media-placeholder', $content);
+        self::assertStringNotContainsString('data-product-gallery', $content);
+        self::assertStringContainsString('href="/contact?produit=lait-frais"', $content);
+        self::assertStringContainsString('Demander des informations sur ce produit', $content);
+        self::assertSame(1, substr_count($content, '<h1'));
+    }
+
+    public function testProductGalleryKeepsASingleCopyOfTheMainImage(): void
+    {
+        $manager = $this->manager();
+        $lait = $manager->getRepository(ProductCategory::class)->findOneBy(['slug' => 'lait']);
+        self::assertInstanceOf(ProductCategory::class, $lait);
+
+        $cover = $this->media('cover.webp');
+        $side = $this->media('side.webp');
+        $manager->persist($cover);
+        $manager->persist($side);
+        $product = $this->product('Pack photo', 'pack-photo', $lait, true)
+            ->setMainImage($cover)
+            ->setShortDescription('Résumé visible.')
+            ->setDescription('Résumé visible.');
+        $product->addGallery($cover);
+        $product->addGallery($side);
+        $manager->persist($product);
+        $manager->flush();
+
+        $this->client->request('GET', '/nos-produits/pack-photo');
+
+        self::assertResponseIsSuccessful();
+        $content = (string) $this->client->getResponse()->getContent();
+        self::assertSame(1, substr_count($content, 'data-src="/uploads/media/cover.webp"'));
+        self::assertSame(1, substr_count($content, 'data-src="/uploads/media/side.webp"'));
+        self::assertSame(1, substr_count($content, ' src="/uploads/media/cover.webp"'));
+        self::assertStringContainsString('src="/uploads/media/thumbnails/side.webp"', $content);
+        self::assertSame(0, substr_count($content, ' src="/uploads/media/side.webp"'));
+        self::assertStringContainsString('fetchpriority="high"', $content);
+        self::assertStringContainsString('class="product-sheet__lead">Résumé visible.</p>', $content);
+        self::assertStringNotContainsString('product-sheet__description', $content);
+        self::assertStringContainsString('href="/nos-produits?categorie=lait"', $content);
+    }
+
+    public function testProductPageShowsDistinctDescriptionInTheInfoColumn(): void
+    {
+        $manager = $this->manager();
+        $lait = $manager->getRepository(ProductCategory::class)->findOneBy(['slug' => 'lait']);
+        self::assertInstanceOf(ProductCategory::class, $lait);
+        $product = $manager->getRepository(Product::class)->findOneBy(['slug' => 'lait-frais']);
+        self::assertInstanceOf(Product::class, $product);
+        $product->setShortDescription('Résumé de la fiche.');
+        $product->setDescription("Détail de fabrication.\nSeconde ligne.");
+        $manager->flush();
+
+        $this->client->request('GET', '/nos-produits/lait-frais');
+
+        self::assertResponseIsSuccessful();
+        $content = (string) $this->client->getResponse()->getContent();
+        self::assertStringContainsString('Résumé de la fiche.', $content);
+        self::assertStringContainsString('<h2>Description</h2>', $content);
+        self::assertStringContainsString('Détail de fabrication.', $content);
+        self::assertStringContainsString('<br', $content);
+        $info = strpos($content, 'class="product-sheet__info"');
+        $summary = strpos($content, 'class="product-sheet__lead">Résumé de la fiche.</p>');
+        $description = strpos($content, 'class="product-sheet__description"');
+        $contact = strpos($content, 'Demander des informations sur ce produit');
+        $back = strpos($content, 'class="product-sheet__back"');
+        self::assertNotFalse($info);
+        self::assertNotFalse($summary);
+        self::assertNotFalse($description);
+        self::assertNotFalse($contact);
+        self::assertNotFalse($back);
+        self::assertLessThan($summary, $info);
+        self::assertLessThan($description, $summary);
+        self::assertLessThan($contact, $description);
+        self::assertLessThan($back, $contact);
+    }
+
+    public function testLargeGalleryExposesEveryPhotoWithoutLoadingEachOriginal(): void
+    {
+        $manager = $this->manager();
+        $biscuits = $manager->getRepository(ProductCategory::class)->findOneBy(['slug' => 'biscuits']);
+        self::assertInstanceOf(ProductCategory::class, $biscuits);
+        $product = $this->product('Gamme complète', 'gamme-complete', $biscuits, true);
+        for ($index = 1; $index <= 50; ++$index) {
+            $media = $this->media(sprintf('shot-%02d.webp', $index));
+            $manager->persist($media);
+            $product->addGallery($media);
+        }
+        $manager->persist($product);
+        $manager->flush();
+
+        $this->client->request('GET', '/nos-produits/gamme-complete');
+
+        self::assertResponseIsSuccessful();
+        $content = (string) $this->client->getResponse()->getContent();
+        self::assertSame(50, substr_count($content, 'data-product-gallery-thumb') - substr_count($content, 'data-product-gallery-thumbs'));
+        self::assertSame(1, substr_count($content, ' src="/uploads/media/shot-01.webp"'));
+        self::assertSame(0, substr_count($content, ' src="/uploads/media/shot-02.webp"'));
+        self::assertStringContainsString('data-src="/uploads/media/shot-50.webp"', $content);
+        self::assertStringContainsString('src="/uploads/media/thumbnails/shot-50.webp"', $content);
+        self::assertStringContainsString('loading="lazy"', $content);
     }
 
     public function testAjaxReturnsOnlyTheCatalogResults(): void

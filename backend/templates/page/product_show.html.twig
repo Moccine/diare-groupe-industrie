@@ -1,39 +1,149 @@
 {% extends 'base.html.twig' %}
-{% from 'components/icons.html.twig' import icon %}
 
 {% block main %}
-    {% include 'partials/_page_banner.html.twig' with {
-        title: product.name,
-        lead: product.shortDescription,
-        tone: 'produit',
-        eyebrow: product.category ? product.category.name : null,
-        crumbs: [
-            { label: 'Nos produits', url: path('products') },
-            { label: product.name }
-        ],
-        media: product.mainImage,
-        placeholder: product.mainImage is null,
-        action_label: 'Nous contacter',
-        action_url: path('contact')
-    } %}
-    {% if product.description or product.gallery is not empty %}
-        <article class="section product-detail">
-            <div class="container">
-                {% if product.description %}
-                    <div class="prose product-detail__copy">{{ product.description|nl2br }}</div>
-                {% endif %}
-                {% if product.gallery is not empty %}
-                    <div class="gallery__grid">
-                        {% for media in product.gallery %}
-                            <figure>
-                                {% include 'components/_media.html.twig' with { media: media } %}
-                            </figure>
-                        {% endfor %}
-                    </div>
-                {% endif %}
-            </div>
-        </article>
+    {% set images = [] %}
+    {% set seen = [] %}
+    {% if product.mainImage and product.mainImage.fileName %}
+        {% set images = images|merge([product.mainImage]) %}
+        {% set seen = seen|merge([product.mainImage.id]) %}
     {% endif %}
+    {% for media in product.gallery %}
+        {% if media.fileName and media.id not in seen %}
+            {% set images = images|merge([media]) %}
+            {% set seen = seen|merge([media.id]) %}
+        {% endif %}
+    {% endfor %}
+    {% set short = product.shortDescription|default('')|trim %}
+    {% set long = product.description|default('')|trim %}
+    {% set show_long = long != '' and long != short %}
+
+    <article class="section product-sheet-page">
+        <div class="container">
+            <div class="product-sheet__crumbs">
+                {% include 'partials/_breadcrumbs.html.twig' with {
+                    crumbs: [
+                        { label: 'Nos produits', url: path('products') },
+                        { label: product.name }
+                    ]
+                } %}
+            </div>
+
+            <div class="product-sheet">
+                <div class="product-sheet__gallery">
+                    {% if images is empty %}
+                        <div class="product-gallery product-gallery--empty">
+                            <div class="product-gallery__frame">
+                                {% include 'components/_media_placeholder.html.twig' with {
+                                    type: 'produit',
+                                    label: 'Produit',
+                                    decorative: true
+                                } %}
+                            </div>
+                        </div>
+                    {% else %}
+                        {% set active = images|first %}
+                        {% set active_alt = active.alt|trim != '' ? active.alt : product.name %}
+                        <div class="product-gallery{{ images|length > 1 ? ' product-gallery--multiple' : '' }}" data-product-gallery>
+                            {% if images|length > 1 %}
+                                <div class="product-gallery__rail" data-product-gallery-rail>
+                                    <button class="product-gallery__scroll product-gallery__scroll--prev" type="button" data-product-gallery-scroll="-1" hidden>
+                                        <span class="visually-hidden">Voir les photos précédentes</span>
+                                    </button>
+                                    <div class="product-gallery__thumbs" data-product-gallery-thumbs role="group" aria-label="Miniatures du produit">
+                                        {% for media in images %}
+                                            {% set image_alt = media.alt|trim != '' ? media.alt : product.name %}
+                                            <button
+                                                class="product-gallery__thumb{{ loop.first ? ' is-active' : '' }}"
+                                                type="button"
+                                                data-product-gallery-thumb
+                                                data-src="{{ media.publicPath }}"
+                                                data-alt="{{ image_alt }}"
+                                                {% if media.width %}data-width="{{ media.width }}"{% endif %}
+                                                {% if media.height %}data-height="{{ media.height }}"{% endif %}
+                                                aria-label="Afficher la photo {{ loop.index }} sur {{ loop.length }} : {{ image_alt }}"
+                                                aria-pressed="{{ loop.first ? 'true' : 'false' }}"
+                                                {% if loop.first %}aria-current="true"{% endif %}
+                                            >
+                                                <img
+                                                    src="{{ media.thumbnailPath }}"
+                                                    alt=""
+                                                    width="320"
+                                                    height="240"
+                                                    loading="{{ loop.index0 < 6 ? 'eager' : 'lazy' }}"
+                                                    decoding="async"
+                                                >
+                                            </button>
+                                        {% endfor %}
+                                    </div>
+                                    <button class="product-gallery__scroll product-gallery__scroll--next" type="button" data-product-gallery-scroll="1" hidden>
+                                        <span class="visually-hidden">Voir les photos suivantes</span>
+                                    </button>
+                                </div>
+                            {% endif %}
+                            <div class="product-gallery__frame">
+                                <button class="product-gallery__stage" type="button" data-product-gallery-open aria-label="Agrandir la photo : {{ active_alt }}">
+                                    <span class="media-slot" data-media-slot>
+                                        <img
+                                            data-product-gallery-main
+                                            data-media-image
+                                            src="{{ active.publicPath }}"
+                                            alt="{{ active_alt }}"
+                                            {% if active.width %}width="{{ active.width }}"{% endif %}
+                                            {% if active.height %}height="{{ active.height }}"{% endif %}
+                                            loading="eager"
+                                            fetchpriority="high"
+                                            decoding="async"
+                                        >
+                                        <span class="media-slot__fallback" data-media-fallback hidden>
+                                            {% include 'components/_media_placeholder.html.twig' with {
+                                                type: 'produit',
+                                                label: 'Produit',
+                                                decorative: true
+                                            } %}
+                                        </span>
+                                    </span>
+                                    <span class="product-gallery__zoom" aria-hidden="true">Agrandir</span>
+                                </button>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="product-sheet__info">
+                    {% if product.category %}
+                        <p class="eyebrow">
+                            {% if product.category.published %}
+                                <a href="{{ path('products', { categorie: product.category.slug }) }}">{{ product.category.name }}</a>
+                            {% else %}
+                                {{ product.category.name }}
+                            {% endif %}
+                        </p>
+                    {% endif %}
+                    <h1>{{ product.name }}</h1>
+                    {% if short %}
+                        <p class="product-sheet__lead">{{ short|nl2br }}</p>
+                    {% endif %}
+                    {% if show_long %}
+                        <div class="product-sheet__description">
+                            <h2>Description</h2>
+                            <div class="prose">{{ product.description|nl2br }}</div>
+                        </div>
+                    {% endif %}
+                    <div class="section-actions">
+                        {% include 'components/_button.html.twig' with {
+                            label: 'Demander des informations sur ce produit',
+                            url: path('contact', { produit: product.slug })
+                        } %}
+                    </div>
+                </div>
+            </div>
+
+            <p class="product-sheet__back">
+                <a href="{{ path('products') }}">Retour au catalogue</a>
+            </p>
+        </div>
+    </article>
+
     {% if related_products|default([]) is not empty %}
         <section class="section catalog product-related">
             <div class="container">

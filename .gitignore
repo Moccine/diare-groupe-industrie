@@ -1,6 +1,10 @@
 .DS_Store
 .idea/
 
+# Images sources des fixtures (livrées hors dépôt)
+backend/assets/fixtures/**
+!backend/assets/fixtures/.gitkeep
+
 # Symfony
 backend/.env.local
 backend/.env.local.php

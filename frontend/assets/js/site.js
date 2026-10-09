@@ -9,6 +9,7 @@ import { initParallax } from "./modules/parallax";
 import { initHeroSlider } from "./modules/hero-slider";
 import { initProductsSlider } from "./modules/products-slider";
 import { initCatalogFilter } from "./modules/catalog-filter";
+import { initProductGalleries } from "./modules/product-gallery";
 import { initFormValidation } from "./modules/form-validation";
 import { initFormSubmitLock } from "./modules/form-submit-lock";
 import { initRecaptchaForms } from "./modules/recaptcha-form";
@@ -30,6 +31,7 @@ document.addEventListener("DOMContentLoaded", () => {
   initHeroSlider();
   initProductsSlider();
   initCatalogFilter();
+  initProductGalleries();
   initFormValidation();
   initJobApplicationForm();
   initPresentationVideo();

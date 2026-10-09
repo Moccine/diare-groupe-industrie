@@ -67,6 +67,11 @@ final class ContactRequestType extends AbstractType
                 ],
                 'row_attr' => ['class' => 'visually-hidden', 'aria-hidden' => 'true'],
             ])
+            ->add('productSlug', HiddenType::class, [
+                'mapped' => false,
+                'required' => false,
+                'label' => false,
+            ])
             ->add('recaptchaToken', HiddenType::class, [
                 'mapped' => false,
                 'required' => false,

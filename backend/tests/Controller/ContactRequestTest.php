@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\ContactRequest;
+use App\Entity\Product;
 use App\Entity\SiteSettings;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\Tools\SchemaTool;
@@ -242,6 +243,54 @@ final class ContactRequestTest extends WebTestCase
 
         self::assertSame(2, $this->countContacts());
         self::assertEmailCount(2);
+    }
+
+    public function testPublishedProductIsIdentifiedFromTheContactForm(): void
+    {
+        $product = (new Product())->setName('Lait frais')->setSlug('lait-frais')->setIsPublished(true);
+        $this->manager()->persist($product);
+        $this->manager()->flush();
+
+        $crawler = $this->client->request('GET', '/contact?produit=lait-frais');
+
+        self::assertResponseIsSuccessful();
+        self::assertStringContainsString('Cette demande concerne le produit', (string) $this->client->getResponse()->getContent());
+        self::assertSame('lait-frais', $crawler->filter('input[name="contact_request[productSlug]"]')->attr('value'));
+        self::assertSame('Demande d\'informations — Lait frais', $crawler->filter('#contact_request_subject')->attr('value'));
+
+        $form = $crawler->selectButton('Envoyer le message')->form($this->payload([
+            'contact_request[message]' => 'Bonjour, merci de me transmettre la fiche technique.',
+        ]));
+        $this->client->submit($form);
+
+        self::assertResponseRedirects('/contact');
+        $this->manager()->clear();
+        $stored = $this->manager()->getRepository(ContactRequest::class)->findOneBy([]);
+        self::assertInstanceOf(ContactRequest::class, $stored);
+        self::assertStringStartsWith("Produit concerné : Lait frais.\n\n", $stored->getMessage());
+        self::assertStringContainsString('fiche technique', $stored->getMessage());
+    }
+
+    public function testUnknownOrUnpublishedProductDoesNotChangeTheMessage(): void
+    {
+        $hidden = (new Product())->setName('Produit masqué')->setSlug('produit-masque')->setIsPublished(false);
+        $this->manager()->persist($hidden);
+        $this->manager()->flush();
+
+        $crawler = $this->client->request('GET', '/contact?produit=produit-masque');
+        self::assertResponseIsSuccessful();
+        self::assertStringNotContainsString('Cette demande concerne le produit', (string) $this->client->getResponse()->getContent());
+        $hiddenValue = $crawler->filter('input[name="contact_request[productSlug]"]')->attr('value');
+        self::assertTrue($hiddenValue === null || $hiddenValue === '');
+
+        $this->submitContact(['contact_request[productSlug]' => 'inconnu']);
+
+        self::assertResponseRedirects('/contact');
+        $this->manager()->clear();
+        $stored = $this->manager()->getRepository(ContactRequest::class)->findOneBy([]);
+        self::assertInstanceOf(ContactRequest::class, $stored);
+        self::assertSame('Bonjour, nous souhaitons des informations sur vos produits.', $stored->getMessage());
+        self::assertStringNotContainsString('Produit concerné', $stored->getMessage());
     }
 
     public function testRejectedRecaptchaDoesNotPersist(): void
