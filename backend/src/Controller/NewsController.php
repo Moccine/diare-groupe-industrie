@@ -45,6 +45,7 @@ final class NewsController extends AbstractController
 
         return $this->render('page/news_show.html.twig', [
             'article' => $article,
+            'related_news' => $this->newsRepository->findRelated($article),
             'seo' => $this->seoFactory->forNews($article),
             'header_overlay' => false,
         ] + $this->publicContent->sectionData());

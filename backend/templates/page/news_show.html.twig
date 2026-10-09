@@ -1,28 +1,64 @@
 {% extends 'base.html.twig' %}
 
+{% set excerpt = article.excerpt|default('')|trim %}
+{% set content = article.content|default('')|trim %}
+{% set cover = article.image and article.image.fileName ? article.image : null %}
+{% set cover_alt = cover and cover.alt|trim != '' ? cover.alt : article.title %}
+
 {% block main %}
-    {% include 'partials/_page_banner.html.twig' with {
-        title: article.title,
-        lead: article.excerpt,
-        tone: 'actualites',
-        eyebrow: article.publishedAt|date('d/m/Y'),
-        crumbs: [
-            { label: 'Actualités', url: path('news') },
-            { label: article.title }
-        ]
-    } %}
-    <article class="section article">
-        <div class="container prose-block">
-            <figure>
-                {% if article.image %}
-                    {% include 'components/_media.html.twig' with { media: article.image, loading: 'eager', placeholder_type: 'actualite', placeholder_label: 'Actualité' } %}
-                {% else %}
-                    {% include 'components/_media_placeholder.html.twig' with { type: 'actualite', label: 'Actualité', decorative: true } %}
+    <article class="section news-article-page">
+        <div class="container">
+            <header class="news-article__hero{% if not cover %} news-article__hero--text-only{% endif %}">
+                <div class="news-article__hero-copy">
+                    <div class="news-article__crumbs">
+                        {% include 'partials/_breadcrumbs.html.twig' with {
+                            crumbs: [
+                                { label: 'Actualités', url: path('news') },
+                                { label: article.title }
+                            ]
+                        } %}
+                    </div>
+
+                    <p class="eyebrow">Actualités du groupe</p>
+                    <h1>{{ article.title }}</h1>
+                    <p class="news-article__meta">
+                        <time datetime="{{ article.publishedAt|date('c') }}">{{ article.publishedAt|date('d/m/Y') }}</time>
+                    </p>
+                    {% if excerpt %}
+                        <p class="news-article__lead">{{ excerpt }}</p>
+                    {% endif %}
+                    {% if content %}
+                        <div class="prose news-article__prose">{{ article.content|nl2br }}</div>
+                    {% endif %}
+                </div>
+
+                {% if cover %}
+                    <figure class="news-article__hero-media">
+                        {% include 'components/_media.html.twig' with {
+                            media: cover,
+                            alt: cover_alt,
+                            class: 'news-article__hero-image',
+                            loading: 'eager',
+                            fetchpriority: 'high',
+                            placeholder_type: 'actualite',
+                            placeholder_label: 'Actualité'
+                        } %}
+                    </figure>
                 {% endif %}
-            </figure>
-            {% if article.content %}
-                <div class="prose">{{ article.content|nl2br }}</div>
-            {% endif %}
+            </header>
         </div>
     </article>
+
+    {% if related_news|default([]) is not empty %}
+        <section class="section news-related" aria-labelledby="news-related-title">
+            <div class="container">
+                <h2 id="news-related-title">À découvrir également</h2>
+                <div class="news-list">
+                    {% for related in related_news %}
+                        {% include 'components/_news_card.html.twig' with { article: related } %}
+                    {% endfor %}
+                </div>
+            </div>
+        </section>
+    {% endif %}
 {% endblock %}

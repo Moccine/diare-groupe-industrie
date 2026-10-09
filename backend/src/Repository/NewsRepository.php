@@ -65,6 +65,22 @@ class NewsRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
+    /** @return list<News> */
+    public function findRelated(News $news, int $limit = 3): array
+    {
+        if ($limit < 1 || $news->getId() === null) {
+            return [];
+        }
+
+        return $this->publishedQuery()
+            ->andWhere('n.id != :id')
+            ->setParameter('id', $news->getId())
+            ->addOrderBy('n.id', 'DESC')
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
+
     private function publishedQuery(): \Doctrine\ORM\QueryBuilder
     {
         return $this->createQueryBuilder('n')
